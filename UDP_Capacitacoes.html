@@ -18,67 +18,65 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:15px;}
 
-/* ── Páginas ── */
-.page{display:none;min-height:100vh;}
-.page.active{display:block;}
+/* Páginas */
+.pg{display:none;min-height:100vh;padding-bottom:60px;}
+.pg.active{display:block;}
 
-/* ── Header mobile ── */
-.header{background:var(--azul);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50;}
-.header-back{font-size:22px;cursor:pointer;padding:4px 8px;margin-left:-8px;}
-.header-title{font-size:16px;font-weight:700;flex:1;}
-.header-sub{font-size:11px;opacity:.7;}
+/* Header */
+.hdr{background:var(--azul);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50;}
+.hdr-back{font-size:24px;cursor:pointer;padding:2px 8px;margin-left:-8px;line-height:1;}
+.hdr-title{font-size:16px;font-weight:700;flex:1;}
+.hdr-sub{font-size:11px;opacity:.7;margin-top:1px;}
 
-/* ── Home ── */
-.home-hero{background:var(--azul);padding:32px 20px 24px;color:#fff;text-align:center;}
-.home-hero h1{font-size:22px;font-weight:700;margin-bottom:4px;}
-.home-hero p{font-size:13px;opacity:.75;}
+/* Home */
+.hero{background:var(--azul);padding:32px 20px 28px;color:#fff;text-align:center;}
+.hero h1{font-size:24px;font-weight:700;margin-bottom:4px;}
+.hero p{font-size:13px;opacity:.7;}
 .home-cards{padding:20px 16px;display:flex;flex-direction:column;gap:12px;}
-.home-card{background:var(--white);border:1px solid var(--borda);border-radius:var(--radius);padding:20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all .15s;}
-.home-card:active{background:var(--cinza);}
-.home-card-icon{width:52px;height:52px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
-.home-card-title{font-size:16px;font-weight:700;margin-bottom:3px;}
-.home-card-sub{font-size:13px;color:var(--txt3);}
-.home-card-arrow{margin-left:auto;font-size:20px;color:var(--txt3);}
+.hcard{background:var(--white);border:1px solid var(--borda);border-radius:var(--radius);padding:18px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;}
+.hcard:active{background:var(--cinza);}
+.hcard-icon{width:50px;height:50px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.hcard-title{font-size:16px;font-weight:700;}
+.hcard-sub{font-size:13px;color:var(--txt3);margin-top:2px;}
+.hcard-arrow{margin-left:auto;font-size:22px;color:var(--txt3);}
 
-/* ── Cards e conteúdo ── */
-.content{padding:16px;}
+/* Conteúdo */
+.cnt{padding:16px;}
 .card{background:var(--white);border:1px solid var(--borda);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
 .card-title{font-size:15px;font-weight:700;color:var(--azul);margin-bottom:12px;}
-.section-title{font-size:13px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.06em;margin:20px 0 10px;}
+.sec-title{font-size:12px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.06em;margin:20px 0 10px;}
 
-/* ── Formulários mobile ── */
-.form-group{margin-bottom:16px;}
-.form-label{font-size:13px;font-weight:700;color:var(--txt2);display:block;margin-bottom:6px;}
-.form-hint{font-size:12px;color:var(--txt3);margin-top:4px;}
-input[type=text],input[type=email],input[type=tel],input[type=number],select,textarea{
+/* Forms */
+.fg{margin-bottom:16px;}
+.fl{font-size:13px;font-weight:700;color:var(--txt2);display:block;margin-bottom:6px;}
+.fh{font-size:12px;color:var(--txt3);margin-top:4px;}
+input[type=text],input[type=email],input[type=tel],input[type=password],select,textarea{
   width:100%;padding:13px 14px;border:1.5px solid var(--borda);
   border-radius:var(--radius-sm);font-size:15px;font-family:Arial;
   background:var(--white);color:var(--txt);-webkit-appearance:none;
 }
-input[type=tel],input[type=number]{font-size:18px;letter-spacing:.05em;}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--azul2);box-shadow:0 0 0 3px rgba(24,95,165,0.12);}
+input[type=tel]{font-size:18px;letter-spacing:.04em;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--azul2);box-shadow:0 0 0 3px rgba(24,95,165,.12);}
+input[readonly]{background:var(--cinza);color:var(--txt3);}
 
-/* ── Botões mobile ── */
-.btn{width:100%;padding:15px;border-radius:var(--radius-sm);font-size:16px;font-weight:700;cursor:pointer;border:none;transition:all .15s;text-align:center;display:block;}
+/* Botões */
+.btn{width:100%;padding:15px;border-radius:var(--radius-sm);font-size:16px;font-weight:700;cursor:pointer;border:none;text-align:center;display:block;}
 .btn-primary{background:var(--azul);color:#fff;}
-.btn-primary:active{background:var(--azul2);}
 .btn-green{background:var(--verde);color:#fff;}
-.btn-green:active{background:#0a5040;}
-.btn-outline{background:transparent;color:var(--txt);border:1.5px solid var(--borda);}
-.btn-outline:active{background:var(--cinza);}
-.btn-danger{background:transparent;color:#A32D2D;border:1.5px solid #F09595;}
 .btn-amber{background:var(--amber);color:#fff;}
-.btn-sm{padding:10px 14px;font-size:14px;width:auto;display:inline-block;}
+.btn-outline{background:transparent;color:var(--txt);border:1.5px solid var(--borda);}
+.btn-danger{background:transparent;color:#A32D2D;border:1.5px solid #F09595;}
+.btn-roxo{background:var(--roxo);color:#fff;}
+.btn-sm{padding:9px 14px;font-size:13px;width:auto;display:inline-block;font-weight:600;}
 .btn-row{display:flex;gap:10px;}
 .btn-row .btn{flex:1;}
 
-/* ── Chips ── */
+/* Chips */
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
-.chip{padding:10px 14px;border-radius:20px;font-size:14px;cursor:pointer;border:1.5px solid var(--borda);background:var(--white);color:var(--txt2);transition:all .15s;}
+.chip{padding:10px 14px;border-radius:20px;font-size:14px;cursor:pointer;border:1.5px solid var(--borda);background:var(--white);color:var(--txt2);}
 .chip.sel{background:var(--azul);color:#fff;border-color:var(--azul);}
-.chip:active{background:var(--cinza);}
 
-/* ── Badges ── */
+/* Badges */
 .badge{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;}
 .badge-green{background:var(--verde-cl);color:var(--verde);}
 .badge-blue{background:var(--azul-cl);color:var(--azul2);}
@@ -86,610 +84,484 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--azul2);b
 .badge-gray{background:var(--cinza);color:var(--txt2);}
 .badge-roxo{background:var(--roxo-cl);color:var(--roxo);}
 
-/* ── Info/warn boxes ── */
+/* Boxes */
 .info-box{background:var(--azul-cl);border:1px solid #B5D4F4;border-radius:var(--radius-sm);padding:12px;font-size:13px;color:var(--azul2);margin-bottom:14px;}
 .warn-box{background:var(--amber-cl);border:1px solid #FAC775;border-radius:var(--radius-sm);padding:12px;font-size:13px;color:var(--amber);margin-bottom:14px;}
 .success-box{background:var(--verde-cl);border:1px solid #9FE1CB;border-radius:var(--radius-sm);padding:12px;font-size:13px;color:var(--verde);margin-bottom:14px;}
 .lgpd-box{background:var(--roxo-cl);border:1px solid #F4C0D1;border-radius:var(--radius-sm);padding:12px;font-size:12px;color:var(--roxo);margin-bottom:14px;}
+.encerrado-box{background:#FCEBEB;border:1px solid #F09595;border-radius:var(--radius);padding:32px 20px;text-align:center;}
 
-/* ── Resultado busca CPF ── */
+/* Resultado CPF */
 .found-card{background:var(--verde-cl);border:1.5px solid #9FE1CB;border-radius:var(--radius);padding:16px;margin-top:12px;}
 .notfound-card{background:var(--amber-cl);border:1.5px solid #FAC775;border-radius:var(--radius);padding:16px;margin-top:12px;}
 
-/* ── Lista de ações ── */
-.acao-item{background:var(--white);border:1px solid var(--borda);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
-.acao-titulo{font-size:15px;font-weight:700;margin-bottom:4px;}
-.acao-meta{font-size:12px;color:var(--txt3);margin-bottom:10px;}
-.acao-btns{display:flex;gap:8px;flex-wrap:wrap;}
+/* Evento card */
+.ev-card{background:var(--white);border:1.5px solid var(--borda);border-radius:var(--radius);padding:14px;margin-bottom:10px;cursor:pointer;}
+.ev-card:active{background:var(--cinza);}
+.ev-card.sel{border-color:var(--azul);background:var(--azul-cl);}
+.ev-titulo{font-size:15px;font-weight:700;}
+.ev-meta{font-size:13px;color:var(--txt3);margin-top:3px;}
 
-/* ── QR Code ── */
-.qr-container{text-align:center;padding:20px;}
-.qr-box{background:var(--white);border:3px solid var(--azul);border-radius:var(--radius);padding:16px;display:inline-block;margin:12px auto;}
-.qr-titulo{font-size:14px;font-weight:700;color:var(--azul);margin-top:10px;}
-.qr-sub{font-size:12px;color:var(--txt3);}
+/* Sucesso grande */
+.suc-big{text-align:center;padding:48px 20px;}
+.suc-icon{font-size:72px;margin-bottom:16px;}
+.suc-title{font-size:22px;font-weight:700;margin-bottom:8px;}
+.suc-sub{font-size:15px;color:var(--txt3);}
 
-/* ── Métricas ── */
-.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-.metric{background:var(--white);border:1px solid var(--borda);border-radius:var(--radius);padding:14px;text-align:center;}
-.metric-val{font-size:26px;font-weight:700;}
-.metric-label{font-size:11px;color:var(--txt3);margin-top:3px;}
+/* Matriz avaliação */
+.matriz{width:100%;border-collapse:collapse;font-size:13px;}
+.matriz th{background:var(--azul);color:#fff;padding:8px 4px;text-align:center;font-size:11px;}
+.matriz th:first-child{text-align:left;padding-left:8px;}
+.matriz td{padding:10px 4px;border-bottom:1px solid var(--cinza);text-align:center;vertical-align:middle;}
+.matriz td:first-child{text-align:left;font-size:13px;font-weight:500;padding-left:8px;}
+.matriz input[type=radio]{width:20px;height:20px;cursor:pointer;accent-color:var(--azul);}
 
-/* ── Barras gráfico ── */
-.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
-.bar-label{font-size:12px;color:var(--txt2);width:110px;text-align:right;flex-shrink:0;}
-.bar-track{flex:1;background:var(--cinza);border-radius:4px;height:22px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:12px;font-weight:700;transition:width .6s ease;}
-.bar-count{font-size:12px;color:var(--txt3);width:30px;}
-
-/* ── Avaliação estrelas ── */
-.stars{display:flex;gap:10px;justify-content:center;margin:10px 0;}
-.star{font-size:40px;cursor:pointer;color:#D3D1C7;transition:color .15s;}
+/* Estrelas */
+.stars{display:flex;gap:8px;justify-content:center;margin:12px 0;}
+.star{font-size:42px;cursor:pointer;color:#D3D1C7;}
 .star.sel{color:#EF9F27;}
 
-/* ── Matriz avaliação ── */
-.matriz{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:8px;}
-.matriz th{background:var(--azul);color:#fff;padding:8px 6px;text-align:center;font-size:12px;}
-.matriz th:first-child{text-align:left;}
-.matriz td{padding:10px 6px;border-bottom:1px solid var(--cinza);text-align:center;vertical-align:middle;}
-.matriz td:first-child{text-align:left;font-size:13px;font-weight:500;}
-.matriz tr:last-child td{border-bottom:none;}
-.matriz input[type=radio]{width:20px;height:20px;cursor:pointer;}
-
-/* ── Tabela participantes ── */
-.part-item{padding:12px 0;border-bottom:1px solid var(--cinza);display:flex;justify-content:space-between;align-items:center;}
-.part-item:last-child{border-bottom:none;}
+/* Participante item */
+.part-row{padding:12px 0;border-bottom:1px solid var(--cinza);display:flex;justify-content:space-between;align-items:center;}
+.part-row:last-child{border-bottom:none;}
 .part-nome{font-size:14px;font-weight:700;}
 .part-meta{font-size:12px;color:var(--txt3);}
 
-/* ── Sucesso grande ── */
-.success-big{text-align:center;padding:40px 20px;}
-.success-icon{font-size:72px;margin-bottom:16px;}
-.success-title{font-size:22px;font-weight:700;color:var(--verde);margin-bottom:8px;}
-.success-sub{font-size:15px;color:var(--txt3);}
+/* Métricas */
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.metric{background:var(--white);border:1px solid var(--borda);border-radius:var(--radius);padding:14px;text-align:center;}
+.metric-val{font-size:26px;font-weight:700;}
+.metric-lbl{font-size:11px;color:var(--txt3);margin-top:3px;}
 
-/* ── Nav UDP desktop ── */
+/* Barras */
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.bar-lbl{font-size:12px;color:var(--txt2);width:120px;text-align:right;flex-shrink:0;}
+.bar-track{flex:1;background:var(--cinza);border-radius:4px;height:22px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:12px;font-weight:700;}
+.bar-cnt{font-size:12px;color:var(--txt3);width:30px;}
+
+/* UDP sidebar desktop */
 @media(min-width:768px){
-  .udp-layout{display:flex;min-height:100vh;}
-  .udp-sidebar{width:220px;background:var(--azul);flex-shrink:0;position:fixed;height:100vh;overflow-y:auto;}
-  .udp-sidebar-logo{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,.12);}
-  .udp-sidebar-logo .t{font-size:15px;font-weight:700;color:#fff;}
-  .udp-sidebar-logo .s{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;}
-  .udp-nav-section{padding:12px 16px 4px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.45);}
-  .udp-nav-item{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;font-size:13px;color:rgba(255,255,255,.85);transition:background .15s;border-left:3px solid transparent;}
-  .udp-nav-item:hover{background:rgba(255,255,255,.08);}
-  .udp-nav-item.active{background:rgba(255,255,255,.15);border-left-color:#fff;font-weight:700;color:#fff;}
+  .udp-wrap{display:flex;min-height:100vh;}
+  .udp-side{width:220px;background:var(--azul);flex-shrink:0;position:fixed;height:100vh;overflow-y:auto;display:flex;flex-direction:column;}
+  .udp-logo{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,.12);}
+  .udp-logo .t{font-size:15px;font-weight:700;color:#fff;}
+  .udp-logo .s{font-size:11px;color:rgba(255,255,255,.55);margin-top:2px;}
+  .udp-sec{padding:12px 16px 4px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.4);}
+  .udp-nav{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;font-size:13px;color:rgba(255,255,255,.8);border-left:3px solid transparent;}
+  .udp-nav:hover{background:rgba(255,255,255,.08);}
+  .udp-nav.active{background:rgba(255,255,255,.15);border-left-color:#fff;font-weight:700;color:#fff;}
   .udp-main{margin-left:220px;flex:1;}
-  .udp-topbar{background:var(--white);border-bottom:1px solid var(--borda);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
-  .udp-content{padding:24px;max-width:1000px;}
+  .udp-top{background:var(--white);border-bottom:1px solid var(--borda);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+  .udp-cnt{padding:24px;max-width:1000px;}
   .metrics{grid-template-columns:repeat(4,1fr);}
 }
 
-/* ── Rodapé ── */
-.rodape{background:var(--azul);color:rgba(255,255,255,.6);font-size:11px;text-align:center;padding:10px;margin-top:20px;}
+/* Rodapé */
+.rodape{background:var(--azul);color:rgba(255,255,255,.55);font-size:11px;text-align:center;padding:10px 16px;position:fixed;bottom:0;left:0;right:0;z-index:40;}
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════════════════════════
-     PÁGINA HOME — escolha de perfil
-══════════════════════════════════════════════════════════════ -->
-<div id="pg-home" class="page active">
-  <div class="home-hero">
+<!-- ═══════════════════════════════════════
+     HOME
+═══════════════════════════════════════ -->
+<div id="pg-home" class="pg active">
+  <div class="hero">
     <h1>UDP Capacitações</h1>
     <p>Hospital das Clínicas · EBSERH</p>
   </div>
   <div class="home-cards">
-    <div class="home-card" onclick="ir('pg-checkin-cpf')">
-      <div class="home-card-icon" style="background:var(--verde-cl);">✅</div>
-      <div>
-        <div class="home-card-title">Confirmar presença</div>
-        <div class="home-card-sub">Check-in no evento</div>
-      </div>
-      <div class="home-card-arrow">›</div>
+    <div class="hcard" onclick="irCheckin()">
+      <div class="hcard-icon" style="background:var(--verde-cl);">✅</div>
+      <div><div class="hcard-title">Confirmar presença</div><div class="hcard-sub">Check-in no evento</div></div>
+      <div class="hcard-arrow">›</div>
     </div>
-    <div class="home-card" onclick="ir('pg-avaliacao-cpf')">
-      <div class="home-card-icon" style="background:var(--amber-cl);">⭐</div>
-      <div>
-        <div class="home-card-title">Avaliar capacitação</div>
-        <div class="home-card-sub">Pesquisa de reação</div>
-      </div>
-      <div class="home-card-arrow">›</div>
+    <div class="hcard" onclick="irAvaliacao()">
+      <div class="hcard-icon" style="background:var(--amber-cl);">⭐</div>
+      <div><div class="hcard-title">Avaliar capacitação</div><div class="hcard-sub">Pesquisa de reação</div></div>
+      <div class="hcard-arrow">›</div>
     </div>
-    <div class="home-card" onclick="ir('pg-equidade-cpf')">
-      <div class="home-card-icon" style="background:var(--roxo-cl);">👤</div>
-      <div>
-        <div class="home-card-title">Meu perfil</div>
-        <div class="home-card-sub">Dados de equidade</div>
-      </div>
-      <div class="home-card-arrow">›</div>
+    <div class="hcard" onclick="ir('pg-coord-login')">
+      <div class="hcard-icon" style="background:var(--azul-cl);">📋</div>
+      <div><div class="hcard-title">Área do coordenador</div><div class="hcard-sub">Gerenciar eventos</div></div>
+      <div class="hcard-arrow">›</div>
     </div>
-    <div class="home-card" onclick="irUDP()">
-      <div class="home-card-icon" style="background:var(--azul-cl);">📊</div>
-      <div>
-        <div class="home-card-title">Painel UDP</div>
-        <div class="home-card-sub">Coordenador / Gestão</div>
-      </div>
-      <div class="home-card-arrow">›</div>
+    <div class="hcard" onclick="irUDP()">
+      <div class="hcard-icon" style="background:var(--roxo-cl);">📊</div>
+      <div><div class="hcard-title">Painel UDP</div><div class="hcard-sub">Gestão e relatórios</div></div>
+      <div class="hcard-arrow">›</div>
     </div>
   </div>
   <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     CHECK-IN — CPF
-══════════════════════════════════════════════════════════════ -->
-<div id="pg-checkin-cpf" class="page">
-  <div class="header">
-    <span class="header-back" onclick="ir('pg-home')">‹</span>
-    <div><div class="header-title">Check-in</div><div class="header-sub">Confirmar presença</div></div>
+<!-- ═══════════════════════════════════════
+     CHECK-IN: CPF
+═══════════════════════════════════════ -->
+<div id="pg-ci-cpf" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-home')">‹</span>
+    <div><div class="hdr-title">Check-in</div><div class="hdr-sub">Confirmar presença</div></div>
   </div>
-  <div class="content">
-    <div id="ci-acao-info" class="info-box" style="display:none;"></div>
-    <div class="card">
-      <div class="form-group">
-        <label class="form-label">Digite seu CPF</label>
-        <input type="tel" id="ci-cpf" placeholder="000.000.000-00" maxlength="14"
-               oninput="formatarCPF(this)" inputmode="numeric"/>
-      </div>
-      <button class="btn btn-primary" onclick="buscarCheckin()">Buscar</button>
+  <div class="cnt">
+    <div id="ci-fechado" class="encerrado-box" style="display:none;">
+      <div style="font-size:48px;">🔒</div>
+      <div style="font-size:18px;font-weight:700;color:#A32D2D;margin:12px 0 8px;">Check-in encerrado</div>
+      <div style="font-size:14px;color:var(--txt3);">Nenhum evento com check-in aberto no momento.</div>
     </div>
-    <div id="ci-resultado"></div>
+    <div id="ci-form">
+      <div class="card">
+        <div class="fg">
+          <label class="fl">Digite seu CPF</label>
+          <input type="tel" id="ci-cpf" placeholder="00000000000" maxlength="14"
+                 oninput="formatarCPF(this)" inputmode="numeric"/>
+        </div>
+        <button class="btn btn-primary" onclick="buscarCI()">Continuar</button>
+      </div>
+      <div id="ci-resultado"></div>
+    </div>
   </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     CHECK-IN — EXTERNO
-══════════════════════════════════════════════════════════════ -->
-<div id="pg-checkin-externo" class="page">
-  <div class="header">
-    <span class="header-back" onclick="ir('pg-checkin-cpf')">‹</span>
-    <div><div class="header-title">Cadastro</div><div class="header-sub">Participante externo</div></div>
+<!-- ═══════════════════════════════════════
+     CHECK-IN: ESCOLHER EVENTO
+═══════════════════════════════════════ -->
+<div id="pg-ci-evento" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-ci-cpf')">‹</span>
+    <div><div class="hdr-title">Qual é o seu evento?</div><div class="hdr-sub">Selecione para confirmar presença</div></div>
   </div>
-  <div class="content">
-    <div class="warn-box">CPF não encontrado na base. Preencha seus dados para registrar presença.</div>
+  <div class="cnt">
+    <div id="ci-lista-eventos"></div>
+    <div id="ci-confirmar-btn" style="display:none;margin-top:8px;">
+      <button class="btn btn-green" onclick="confirmarPresenca()">✅ Confirmar presença</button>
+    </div>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     CHECK-IN: CADASTRO EXTERNO
+═══════════════════════════════════════ -->
+<div id="pg-ci-externo" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-ci-cpf')">‹</span>
+    <div><div class="hdr-title">Cadastro</div><div class="hdr-sub">Participante externo</div></div>
+  </div>
+  <div class="cnt">
+    <div class="warn-box">CPF não encontrado na base EBSERH. Preencha seus dados.</div>
     <div class="card">
-      <div class="form-group">
-        <label class="form-label">CPF</label>
-        <input type="tel" id="ext-cpf" readonly style="background:var(--cinza);"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Nome completo *</label>
-        <input type="text" id="ext-nome" placeholder="Nome como aparecerá no certificado"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">E-mail *</label>
-        <input type="email" id="ext-email" placeholder="email@instituicao.br"/>
-        <div class="form-hint">Necessário para emissão do certificado.</div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Vínculo *</label>
-        <select id="ext-vinculo">
-          <option>UFPE/RJU</option>
-          <option>Residente</option>
-          <option>Externo</option>
-          <option>Outro</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Cargo / função</label>
-        <input type="text" id="ext-cargo"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Instituição / unidade</label>
-        <input type="text" id="ext-unidade"/>
-      </div>
-      <div class="form-group">
-        <label style="display:flex;align-items:center;gap:10px;font-size:15px;cursor:pointer;">
-          <input type="checkbox" id="ext-chefia" style="width:22px;height:22px;"/>
-          Sou chefia / gestor desta unidade
-        </label>
-      </div>
+      <div class="fg"><label class="fl">CPF</label><input type="tel" id="ext-cpf" readonly/></div>
+      <div class="fg"><label class="fl">Nome completo *</label><input type="text" id="ext-nome" placeholder="Nome como no certificado"/></div>
+      <div class="fg"><label class="fl">E-mail *</label><input type="email" id="ext-email" placeholder="email@instituicao.br"/>
+        <div class="fh">Necessário para o certificado.</div></div>
+      <div class="fg"><label class="fl">Vínculo *</label>
+        <select id="ext-vinculo"><option>UFPE/RJU</option><option>Residente</option><option>Externo</option><option>Outro</option></select></div>
+      <div class="fg"><label class="fl">Cargo / função</label><input type="text" id="ext-cargo"/></div>
+      <div class="fg"><label class="fl">Instituição / unidade</label><input type="text" id="ext-unidade"/></div>
       <button class="btn btn-green" onclick="registrarExterno()">Registrar presença</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     CHECK-IN — EQUIDADE (aparece após confirmar presença)
-══════════════════════════════════════════════════════════════ -->
-<div id="pg-checkin-equidade" class="page">
-  <div class="header">
-    <span class="header-back" onclick="ir('pg-checkin-sucesso')">‹</span>
-    <div><div class="header-title">Meu perfil</div><div class="header-sub">Opcional · Confidencial</div></div>
-  </div>
-  <div class="content">
-    <div class="lgpd-box">Dados confidenciais. Acesso restrito à UDP. Não aparecem em listas. Responder é voluntário.</div>
-    <div class="card">
-      <div class="form-group">
-        <label class="form-label">Gênero</label>
-        <div class="chips" id="ci-chips-genero">
-          <span class="chip" onclick="selChip(this,'ci-genero')">Mulher cis</span>
-          <span class="chip" onclick="selChip(this,'ci-genero')">Homem cis</span>
-          <span class="chip" onclick="selChip(this,'ci-genero')">Mulher trans</span>
-          <span class="chip" onclick="selChip(this,'ci-genero')">Homem trans</span>
-          <span class="chip" onclick="selChip(this,'ci-genero')">Não-binário</span>
-          <span class="chip" onclick="selChip(this,'ci-genero')">Outro</span>
-          <span class="chip" onclick="selChip(this,'ci-genero')">Prefiro não informar</span>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Raça / cor (IBGE)</label>
-        <div class="chips" id="ci-chips-raca">
-          <span class="chip" onclick="selChip(this,'ci-raca')">Branca</span>
-          <span class="chip" onclick="selChip(this,'ci-raca')">Preta</span>
-          <span class="chip" onclick="selChip(this,'ci-raca')">Parda</span>
-          <span class="chip" onclick="selChip(this,'ci-raca')">Amarela</span>
-          <span class="chip" onclick="selChip(this,'ci-raca')">Indígena</span>
-          <span class="chip" onclick="selChip(this,'ci-raca')">Prefiro não informar</span>
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Pessoa com Deficiência (PCD)?</label>
-        <div class="chips" id="ci-chips-pcd">
-          <span class="chip" onclick="selChip(this,'ci-pcd');togglePCD(this,'ci-def-grupo')">Sim</span>
-          <span class="chip" onclick="selChip(this,'ci-pcd');togglePCD(this,'ci-def-grupo')">Não</span>
-          <span class="chip" onclick="selChip(this,'ci-pcd');togglePCD(this,'ci-def-grupo')">Prefiro não informar</span>
-        </div>
-      </div>
-      <div id="ci-def-grupo" style="display:none;" class="form-group">
-        <label class="form-label">Tipo de deficiência</label>
-        <div class="chips" id="ci-chips-def">
-          <span class="chip" onclick="selChip(this,'ci-def')">Física</span>
-          <span class="chip" onclick="selChip(this,'ci-def')">Auditiva</span>
-          <span class="chip" onclick="selChip(this,'ci-def')">Visual</span>
-          <span class="chip" onclick="selChip(this,'ci-def')">Intelectual</span>
-          <span class="chip" onclick="selChip(this,'ci-def')">Psicossocial</span>
-          <span class="chip" onclick="selChip(this,'ci-def')">Múltipla</span>
-          <span class="chip" onclick="selChip(this,'ci-def')">Outra</span>
-        </div>
-      </div>
-      <div class="btn-row" style="margin-top:8px;">
-        <button class="btn btn-outline" onclick="ir('pg-checkin-sucesso')">Pular</button>
-        <button class="btn btn-green" onclick="salvarEquidadeCheckin()">Salvar</button>
-      </div>
+<!-- ═══════════════════════════════════════
+     CHECK-IN: SUCESSO
+═══════════════════════════════════════ -->
+<div id="pg-ci-sucesso" class="pg">
+  <div class="cnt" style="padding-top:40px;">
+    <div class="suc-big">
+      <div class="suc-icon">✅</div>
+      <div class="suc-title" style="color:var(--verde);">Presença confirmada!</div>
+      <div class="suc-sub" id="ci-suc-nome"></div>
+      <div class="suc-sub" id="ci-suc-evento" style="margin-top:4px;font-size:13px;"></div>
     </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════
-     CHECK-IN — SUCESSO
-══════════════════════════════════════════════════════════════ -->
-<div id="pg-checkin-sucesso" class="page">
-  <div class="content" style="padding-top:40px;">
-    <div class="success-big">
-      <div class="success-icon">✅</div>
-      <div class="success-title">Presença confirmada!</div>
-      <div class="success-sub" id="ci-sucesso-nome"></div>
-    </div>
-    <button class="btn btn-outline" onclick="ir('pg-home')" style="margin-top:20px;">Voltar ao início</button>
+    <button class="btn btn-outline" onclick="ir('pg-home')">Voltar ao início</button>
   </div>
   <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     AVALIAÇÃO — CPF
-══════════════════════════════════════════════════════════════ -->
-<div id="pg-avaliacao-cpf" class="page">
-  <div class="header">
-    <span class="header-back" onclick="ir('pg-home')">‹</span>
-    <div><div class="header-title">Avaliação</div><div class="header-sub">Pesquisa de reação</div></div>
+<!-- ═══════════════════════════════════════
+     AVALIAÇÃO: CPF
+═══════════════════════════════════════ -->
+<div id="pg-av-cpf" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-home')">‹</span>
+    <div><div class="hdr-title">Avaliação</div><div class="hdr-sub">Pesquisa de reação</div></div>
   </div>
-  <div class="content">
-    <div id="av-acao-info" class="info-box" style="display:none;"></div>
-    <div class="card">
-      <div class="form-group">
-        <label class="form-label">Digite seu CPF</label>
-        <input type="tel" id="av-cpf" placeholder="000.000.000-00" maxlength="14"
-               oninput="formatarCPF(this)" inputmode="numeric"/>
+  <div class="cnt">
+    <div id="av-fechado" class="encerrado-box" style="display:none;">
+      <div style="font-size:48px;">🔒</div>
+      <div style="font-size:18px;font-weight:700;color:#A32D2D;margin:12px 0 8px;">Avaliação encerrada</div>
+      <div style="font-size:14px;color:var(--txt3);">Nenhum evento com avaliação aberta no momento.</div>
+    </div>
+    <div id="av-form-cpf">
+      <div class="card">
+        <div class="fg">
+          <label class="fl">Digite seu CPF</label>
+          <input type="tel" id="av-cpf" placeholder="00000000000" maxlength="14"
+                 oninput="formatarCPF(this)" inputmode="numeric"/>
+        </div>
+        <button class="btn btn-amber" onclick="buscarAV()">Continuar</button>
       </div>
-      <button class="btn btn-amber" onclick="iniciarAvaliacao()">Iniciar avaliação</button>
+    </div>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     AVALIAÇÃO: ESCOLHER EVENTO
+═══════════════════════════════════════ -->
+<div id="pg-av-evento" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-av-cpf')">‹</span>
+    <div><div class="hdr-title">Qual evento avaliar?</div></div>
+  </div>
+  <div class="cnt">
+    <div id="av-lista-eventos"></div>
+    <div id="av-ir-btn" style="display:none;margin-top:8px;">
+      <button class="btn btn-amber" onclick="ir('pg-av-form')">Iniciar avaliação ›</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     AVALIAÇÃO — FORMULÁRIO
-══════════════════════════════════════════════════════════════ -->
-<div id="pg-avaliacao-form" class="page">
-  <div class="header">
-    <span class="header-back" onclick="ir('pg-avaliacao-cpf')">‹</span>
-    <div><div class="header-title">Avaliação</div><div class="header-sub" id="av-titulo-header"></div></div>
+<!-- ═══════════════════════════════════════
+     AVALIAÇÃO: FORMULÁRIO
+═══════════════════════════════════════ -->
+<div id="pg-av-form" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-av-evento')">‹</span>
+    <div><div class="hdr-title">Avaliação</div><div class="hdr-sub" id="av-hdr-sub"></div></div>
   </div>
-  <div class="content">
-    <!-- Seção 1: Avaliação da capacitação -->
-    <div class="section-title">1. Avaliação da capacitação</div>
+  <div class="cnt">
+    <div class="sec-title">1. Avaliação da capacitação</div>
     <div class="card" style="overflow-x:auto;">
       <table class="matriz">
-        <thead>
-          <tr>
-            <th style="width:45%;">Item</th>
-            <th>SIM</th><th>PARCIAL</th><th>NÃO</th><th>N/A</th>
-          </tr>
-        </thead>
+        <thead><tr><th style="width:44%;">Item</th><th>SIM</th><th>PARCIAL</th><th>NÃO</th><th>N/A</th></tr></thead>
         <tbody>
-          <tr><td>O evento atingiu seu objetivo?</td>
-            <td><input type="radio" name="q1" value="SIM"/></td>
-            <td><input type="radio" name="q1" value="PARCIAL"/></td>
-            <td><input type="radio" name="q1" value="NÃO"/></td>
-            <td><input type="radio" name="q1" value="N/A"/></td></tr>
-          <tr><td>A carga horária foi bem distribuída?</td>
-            <td><input type="radio" name="q2" value="SIM"/></td>
-            <td><input type="radio" name="q2" value="PARCIAL"/></td>
-            <td><input type="radio" name="q2" value="NÃO"/></td>
-            <td><input type="radio" name="q2" value="N/A"/></td></tr>
-          <tr><td>O programa estabelecido foi desenvolvido?</td>
-            <td><input type="radio" name="q3" value="SIM"/></td>
-            <td><input type="radio" name="q3" value="PARCIAL"/></td>
-            <td><input type="radio" name="q3" value="NÃO"/></td>
-            <td><input type="radio" name="q3" value="N/A"/></td></tr>
-          <tr><td>A abordagem prática foi suficiente?</td>
-            <td><input type="radio" name="q4" value="SIM"/></td>
-            <td><input type="radio" name="q4" value="PARCIAL"/></td>
-            <td><input type="radio" name="q4" value="NÃO"/></td>
-            <td><input type="radio" name="q4" value="N/A"/></td></tr>
-          <tr><td>As instalações e recursos foram adequados?</td>
-            <td><input type="radio" name="q5" value="SIM"/></td>
-            <td><input type="radio" name="q5" value="PARCIAL"/></td>
-            <td><input type="radio" name="q5" value="NÃO"/></td>
-            <td><input type="radio" name="q5" value="N/A"/></td></tr>
-          <tr><td>O material didático foi satisfatório?</td>
-            <td><input type="radio" name="q6" value="SIM"/></td>
-            <td><input type="radio" name="q6" value="PARCIAL"/></td>
-            <td><input type="radio" name="q6" value="NÃO"/></td>
-            <td><input type="radio" name="q6" value="N/A"/></td></tr>
-          <tr><td>Seu aproveitamento foi bom?</td>
-            <td><input type="radio" name="q7" value="SIM"/></td>
-            <td><input type="radio" name="q7" value="PARCIAL"/></td>
-            <td><input type="radio" name="q7" value="NÃO"/></td>
-            <td><input type="radio" name="q7" value="N/A"/></td></tr>
-          <tr><td>Poderá aplicar os conhecimentos na prática?</td>
-            <td><input type="radio" name="q8" value="SIM"/></td>
-            <td><input type="radio" name="q8" value="PARCIAL"/></td>
-            <td><input type="radio" name="q8" value="NÃO"/></td>
-            <td><input type="radio" name="q8" value="N/A"/></td></tr>
+          <tr><td>O evento atingiu seu objetivo?</td><td><input type="radio" name="q1" value="SIM"/></td><td><input type="radio" name="q1" value="PARCIAL"/></td><td><input type="radio" name="q1" value="NÃO"/></td><td><input type="radio" name="q1" value="N/A"/></td></tr>
+          <tr><td>A carga horária foi bem distribuída?</td><td><input type="radio" name="q2" value="SIM"/></td><td><input type="radio" name="q2" value="PARCIAL"/></td><td><input type="radio" name="q2" value="NÃO"/></td><td><input type="radio" name="q2" value="N/A"/></td></tr>
+          <tr><td>O programa foi desenvolvido?</td><td><input type="radio" name="q3" value="SIM"/></td><td><input type="radio" name="q3" value="PARCIAL"/></td><td><input type="radio" name="q3" value="NÃO"/></td><td><input type="radio" name="q3" value="N/A"/></td></tr>
+          <tr><td>A abordagem prática foi suficiente?</td><td><input type="radio" name="q4" value="SIM"/></td><td><input type="radio" name="q4" value="PARCIAL"/></td><td><input type="radio" name="q4" value="NÃO"/></td><td><input type="radio" name="q4" value="N/A"/></td></tr>
+          <tr><td>As instalações foram adequadas?</td><td><input type="radio" name="q5" value="SIM"/></td><td><input type="radio" name="q5" value="PARCIAL"/></td><td><input type="radio" name="q5" value="NÃO"/></td><td><input type="radio" name="q5" value="N/A"/></td></tr>
+          <tr><td>O material didático foi satisfatório?</td><td><input type="radio" name="q6" value="SIM"/></td><td><input type="radio" name="q6" value="PARCIAL"/></td><td><input type="radio" name="q6" value="NÃO"/></td><td><input type="radio" name="q6" value="N/A"/></td></tr>
+          <tr><td>Seu aproveitamento foi bom?</td><td><input type="radio" name="q7" value="SIM"/></td><td><input type="radio" name="q7" value="PARCIAL"/></td><td><input type="radio" name="q7" value="NÃO"/></td><td><input type="radio" name="q7" value="N/A"/></td></tr>
+          <tr><td>Poderá aplicar os conhecimentos?</td><td><input type="radio" name="q8" value="SIM"/></td><td><input type="radio" name="q8" value="PARCIAL"/></td><td><input type="radio" name="q8" value="NÃO"/></td><td><input type="radio" name="q8" value="N/A"/></td></tr>
         </tbody>
       </table>
     </div>
-
-    <!-- Seção 2: Avaliação do instrutor -->
-    <div class="section-title">2. Avaliação do instrutor</div>
+    <div class="sec-title">2. Avaliação do instrutor</div>
     <div class="card" style="overflow-x:auto;">
       <table class="matriz">
-        <thead>
-          <tr>
-            <th style="width:45%;">Item</th>
-            <th>Fraco</th><th>Regular</th><th>Bom</th><th>Ótimo</th>
-          </tr>
-        </thead>
+        <thead><tr><th style="width:44%;">Item</th><th>Fraco</th><th>Regular</th><th>Bom</th><th>Ótimo</th></tr></thead>
         <tbody>
-          <tr><td>Clareza e objetividade</td>
-            <td><input type="radio" name="i1" value="Fraco"/></td>
-            <td><input type="radio" name="i1" value="Regular"/></td>
-            <td><input type="radio" name="i1" value="Bom"/></td>
-            <td><input type="radio" name="i1" value="Ótimo"/></td></tr>
-          <tr><td>Métodos e técnicas de ensino</td>
-            <td><input type="radio" name="i2" value="Fraco"/></td>
-            <td><input type="radio" name="i2" value="Regular"/></td>
-            <td><input type="radio" name="i2" value="Bom"/></td>
-            <td><input type="radio" name="i2" value="Ótimo"/></td></tr>
-          <tr><td>Conhecimento da temática</td>
-            <td><input type="radio" name="i3" value="Fraco"/></td>
-            <td><input type="radio" name="i3" value="Regular"/></td>
-            <td><input type="radio" name="i3" value="Bom"/></td>
-            <td><input type="radio" name="i3" value="Ótimo"/></td></tr>
-          <tr><td>Uso de recursos didáticos</td>
-            <td><input type="radio" name="i4" value="Fraco"/></td>
-            <td><input type="radio" name="i4" value="Regular"/></td>
-            <td><input type="radio" name="i4" value="Bom"/></td>
-            <td><input type="radio" name="i4" value="Ótimo"/></td></tr>
-          <tr><td>Relacionamento com o grupo</td>
-            <td><input type="radio" name="i5" value="Fraco"/></td>
-            <td><input type="radio" name="i5" value="Regular"/></td>
-            <td><input type="radio" name="i5" value="Bom"/></td>
-            <td><input type="radio" name="i5" value="Ótimo"/></td></tr>
+          <tr><td>Clareza e objetividade</td><td><input type="radio" name="i1" value="Fraco"/></td><td><input type="radio" name="i1" value="Regular"/></td><td><input type="radio" name="i1" value="Bom"/></td><td><input type="radio" name="i1" value="Ótimo"/></td></tr>
+          <tr><td>Métodos e técnicas</td><td><input type="radio" name="i2" value="Fraco"/></td><td><input type="radio" name="i2" value="Regular"/></td><td><input type="radio" name="i2" value="Bom"/></td><td><input type="radio" name="i2" value="Ótimo"/></td></tr>
+          <tr><td>Conhecimento da temática</td><td><input type="radio" name="i3" value="Fraco"/></td><td><input type="radio" name="i3" value="Regular"/></td><td><input type="radio" name="i3" value="Bom"/></td><td><input type="radio" name="i3" value="Ótimo"/></td></tr>
+          <tr><td>Uso de recursos didáticos</td><td><input type="radio" name="i4" value="Fraco"/></td><td><input type="radio" name="i4" value="Regular"/></td><td><input type="radio" name="i4" value="Bom"/></td><td><input type="radio" name="i4" value="Ótimo"/></td></tr>
+          <tr><td>Relacionamento com o grupo</td><td><input type="radio" name="i5" value="Fraco"/></td><td><input type="radio" name="i5" value="Regular"/></td><td><input type="radio" name="i5" value="Bom"/></td><td><input type="radio" name="i5" value="Ótimo"/></td></tr>
         </tbody>
       </table>
     </div>
-
-    <!-- Seção 3: Comentários e nota -->
-    <div class="section-title">3. Comentários</div>
+    <div class="sec-title">3. Comentários e nota geral</div>
     <div class="card">
-      <div class="form-group">
-        <label class="form-label">Ponto positivo (opcional)</label>
-        <textarea id="av-positivo" rows="3" placeholder="O que foi bom nesta capacitação?"></textarea>
+      <div class="fg">
+        <label class="fl">Ponto positivo (opcional)</label>
+        <textarea id="av-pos" rows="3" placeholder="O que foi bom nesta capacitação?"></textarea>
       </div>
-      <div class="form-group">
-        <label class="form-label">Ponto de melhoria (opcional)</label>
-        <textarea id="av-negativo" rows="3" placeholder="O que poderia melhorar?"></textarea>
+      <div class="fg">
+        <label class="fl">Ponto de melhoria (opcional)</label>
+        <textarea id="av-neg" rows="3" placeholder="O que poderia melhorar?"></textarea>
       </div>
-      <div class="form-group">
-        <label class="form-label" style="text-align:center;display:block;">Nota geral *</label>
+      <div class="fg">
+        <label class="fl" style="text-align:center;display:block;">Nota geral *</label>
         <div class="stars" id="av-stars">
-          <span class="star" onclick="selecionarEstrela(1)">★</span>
-          <span class="star" onclick="selecionarEstrela(2)">★</span>
-          <span class="star" onclick="selecionarEstrela(3)">★</span>
-          <span class="star" onclick="selecionarEstrela(4)">★</span>
-          <span class="star" onclick="selecionarEstrela(5)">★</span>
+          <span class="star" onclick="selEstrela(1)">★</span>
+          <span class="star" onclick="selEstrela(2)">★</span>
+          <span class="star" onclick="selEstrela(3)">★</span>
+          <span class="star" onclick="selEstrela(4)">★</span>
+          <span class="star" onclick="selEstrela(5)">★</span>
         </div>
-        <div style="text-align:center;font-size:13px;color:var(--txt3);">1 estrela = Péssimo · 5 estrelas = Ótimo</div>
+        <div style="text-align:center;font-size:12px;color:var(--txt3);">1 = Péssimo · 5 = Ótimo</div>
       </div>
       <button class="btn btn-amber" onclick="enviarAvaliacao()">Enviar avaliação</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     AVALIAÇÃO — SUCESSO
-══════════════════════════════════════════════════════════════ -->
-<div id="pg-avaliacao-sucesso" class="page">
-  <div class="content" style="padding-top:40px;">
-    <div class="success-big">
-      <div class="success-icon">⭐</div>
-      <div class="success-title">Avaliação enviada!</div>
-      <div class="success-sub">Obrigada pela sua participação.</div>
+<!-- ═══════════════════════════════════════
+     AVALIAÇÃO: SUCESSO
+═══════════════════════════════════════ -->
+<div id="pg-av-sucesso" class="pg">
+  <div class="cnt" style="padding-top:40px;">
+    <div class="suc-big">
+      <div class="suc-icon">⭐</div>
+      <div class="suc-title" style="color:var(--amber);">Avaliação enviada!</div>
+      <div class="suc-sub">Obrigada pela sua participação.</div>
     </div>
-    <button class="btn btn-outline" onclick="ir('pg-home')" style="margin-top:20px;">Voltar ao início</button>
+    <button class="btn btn-outline" onclick="ir('pg-home')">Voltar ao início</button>
   </div>
   <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     EQUIDADE — CPF
-══════════════════════════════════════════════════════════════ -->
-<div id="pg-equidade-cpf" class="page">
-  <div class="header">
-    <span class="header-back" onclick="ir('pg-home')">‹</span>
-    <div><div class="header-title">Meu perfil</div><div class="header-sub">Dados de equidade</div></div>
+<!-- ═══════════════════════════════════════
+     COORDENADOR: LOGIN
+═══════════════════════════════════════ -->
+<div id="pg-coord-login" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-home')">‹</span>
+    <div><div class="hdr-title">Área do coordenador</div><div class="hdr-sub">Acesso com CPF</div></div>
   </div>
-  <div class="content">
-    <div class="lgpd-box">Dados confidenciais — LGPD Art. 11. Acesso restrito à UDP. Responder é voluntário.</div>
+  <div class="cnt">
     <div class="card">
-      <div class="form-group">
-        <label class="form-label">Digite seu CPF</label>
-        <input type="tel" id="eq-cpf" placeholder="000.000.000-00" maxlength="14"
+      <div class="fg">
+        <label class="fl">Seu CPF</label>
+        <input type="tel" id="coord-cpf" placeholder="00000000000" maxlength="14"
                oninput="formatarCPF(this)" inputmode="numeric"/>
       </div>
-      <button class="btn btn-primary" onclick="buscarPerfil()">Continuar</button>
+      <button class="btn btn-primary" onclick="loginCoord()">Entrar</button>
     </div>
+    <div id="coord-login-erro"></div>
   </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     EQUIDADE — FORMULÁRIO
-══════════════════════════════════════════════════════════════ -->
-<div id="pg-equidade-form" class="page">
-  <div class="header">
-    <span class="header-back" onclick="ir('pg-equidade-cpf')">‹</span>
-    <div><div class="header-title">Meu perfil</div><div class="header-sub" id="eq-nome-header"></div></div>
+<!-- ═══════════════════════════════════════
+     COORDENADOR: PAINEL
+═══════════════════════════════════════ -->
+<div id="pg-coord-painel" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="sairCoord()">‹</span>
+    <div><div class="hdr-title" id="coord-hdr-nome">Coordenador</div><div class="hdr-sub">Minhas ações</div></div>
   </div>
-  <div class="content">
-    <div class="lgpd-box">Preenchido uma vez, vale para todas as capacitações. Acesso restrito à UDP.</div>
+  <div class="cnt">
+    <div class="info-box" id="coord-info-abertos"></div>
+    <div id="coord-lista-acoes"></div>
+    <div style="margin-top:8px;">
+      <button class="btn btn-outline" onclick="ir('pg-coord-checkin-manual')">👤 Confirmar presença manualmente</button>
+    </div>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     COORDENADOR: CHECK-IN MANUAL
+═══════════════════════════════════════ -->
+<div id="pg-coord-checkin-manual" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-coord-painel')">‹</span>
+    <div><div class="hdr-title">Confirmar presença</div><div class="hdr-sub">Check-in manual</div></div>
+  </div>
+  <div class="cnt">
     <div class="card">
-      <div class="form-group">
-        <label class="form-label">Gênero</label>
-        <div class="chips" id="eq-chips-genero">
-          <span class="chip" onclick="selChip(this,'eq-genero')">Mulher cis</span>
-          <span class="chip" onclick="selChip(this,'eq-genero')">Homem cis</span>
-          <span class="chip" onclick="selChip(this,'eq-genero')">Mulher trans</span>
-          <span class="chip" onclick="selChip(this,'eq-genero')">Homem trans</span>
-          <span class="chip" onclick="selChip(this,'eq-genero')">Não-binário</span>
-          <span class="chip" onclick="selChip(this,'eq-genero')">Outro</span>
-          <span class="chip" onclick="selChip(this,'eq-genero')">Prefiro não informar</span>
-        </div>
+      <div class="fg">
+        <label class="fl">Selecione o evento</label>
+        <select id="manual-evento">
+          <option value="">-- selecione --</option>
+        </select>
       </div>
-      <div class="form-group">
-        <label class="form-label">Raça / cor (IBGE)</label>
-        <div class="chips" id="eq-chips-raca">
-          <span class="chip" onclick="selChip(this,'eq-raca')">Branca</span>
-          <span class="chip" onclick="selChip(this,'eq-raca')">Preta</span>
-          <span class="chip" onclick="selChip(this,'eq-raca')">Parda</span>
-          <span class="chip" onclick="selChip(this,'eq-raca')">Amarela</span>
-          <span class="chip" onclick="selChip(this,'eq-raca')">Indígena</span>
-          <span class="chip" onclick="selChip(this,'eq-raca')">Prefiro não informar</span>
-        </div>
+      <div class="fg">
+        <label class="fl">CPF do participante</label>
+        <input type="tel" id="manual-cpf" placeholder="00000000000" maxlength="14"
+               oninput="formatarCPF(this)" inputmode="numeric"/>
       </div>
-      <div class="form-group">
-        <label class="form-label">Pessoa com Deficiência (PCD)?</label>
-        <div class="chips" id="eq-chips-pcd">
-          <span class="chip" onclick="selChip(this,'eq-pcd');togglePCD(this,'eq-def-grupo')">Sim</span>
-          <span class="chip" onclick="selChip(this,'eq-pcd');togglePCD(this,'eq-def-grupo')">Não</span>
-          <span class="chip" onclick="selChip(this,'eq-pcd');togglePCD(this,'eq-def-grupo')">Prefiro não informar</span>
-        </div>
-      </div>
-      <div id="eq-def-grupo" style="display:none;" class="form-group">
-        <label class="form-label">Tipo de deficiência</label>
-        <div class="chips" id="eq-chips-def">
-          <span class="chip" onclick="selChip(this,'eq-def')">Física</span>
-          <span class="chip" onclick="selChip(this,'eq-def')">Auditiva</span>
-          <span class="chip" onclick="selChip(this,'eq-def')">Visual</span>
-          <span class="chip" onclick="selChip(this,'eq-def')">Intelectual</span>
-          <span class="chip" onclick="selChip(this,'eq-def')">Psicossocial</span>
-          <span class="chip" onclick="selChip(this,'eq-def')">Múltipla</span>
-          <span class="chip" onclick="selChip(this,'eq-def')">Outra</span>
-        </div>
-      </div>
-      <button class="btn btn-green" onclick="salvarPerfil()">Salvar perfil</button>
+      <button class="btn btn-primary" onclick="buscarManual()">Buscar</button>
     </div>
+    <div id="manual-resultado"></div>
   </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════════════
-     PAINEL UDP (desktop-first)
-══════════════════════════════════════════════════════════════ -->
-<div id="pg-udp" class="page">
-<div class="udp-layout">
-  <div class="udp-sidebar">
-    <div class="udp-sidebar-logo">
-      <div class="t">UDP Capacitações</div>
-      <div class="s">HC-UFPE · EBSERH</div>
-    </div>
-    <div class="udp-nav-section">Painel</div>
-    <div class="udp-nav-item active" onclick="udpIr('udp-painel',this)">📊 Painel</div>
-    <div class="udp-nav-section">Coordenador</div>
-    <div class="udp-nav-item" onclick="udpIr('udp-acoes',this)">📋 Ações</div>
-    <div class="udp-nav-item" onclick="udpIr('udp-nova',this)">➕ Nova ação</div>
-    <div class="udp-nav-section">Relatórios</div>
-    <div class="udp-nav-item" onclick="udpIr('udp-relatorio',this)">👥 Participantes</div>
-    <div class="udp-nav-item" onclick="udpIr('udp-avaliacoes',this)">⭐ Avaliações</div>
-    <div class="udp-nav-section">Sistema</div>
-    <div class="udp-nav-item" onclick="udpIr('udp-config',this)">⚙️ Configurações</div>
-    <div class="udp-nav-item" onclick="ir('pg-home')" style="margin-top:auto;">← Início</div>
+<!-- ═══════════════════════════════════════
+     COORDENADOR: LISTA DE PRESENTES
+═══════════════════════════════════════ -->
+<div id="pg-coord-presentes" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-coord-painel')">‹</span>
+    <div><div class="hdr-title">Presentes</div><div class="hdr-sub" id="presentes-hdr-sub"></div></div>
   </div>
+  <div class="cnt">
+    <div id="presentes-lista"></div>
+    <div style="margin-top:8px;">
+      <button class="btn btn-outline" onclick="exportarAnexoIVCoord()">📥 Exportar Anexo IV</button>
+    </div>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
 
+<!-- ═══════════════════════════════════════
+     UDP: PAINEL COMPLETO
+═══════════════════════════════════════ -->
+<div id="pg-udp" class="pg">
+<div class="udp-wrap">
+  <div class="udp-side">
+    <div class="udp-logo"><div class="t">UDP Capacitações</div><div class="s">HC-UFPE · EBSERH</div></div>
+    <div class="udp-sec">Painel</div>
+    <div class="udp-nav active" onclick="udpIr('udp-painel',this)">📊 Indicadores</div>
+    <div class="udp-sec">Coordenação</div>
+    <div class="udp-nav" onclick="udpIr('udp-acoes',this)">📋 Ações</div>
+    <div class="udp-nav" onclick="udpIr('udp-nova',this)">➕ Nova ação</div>
+    <div class="udp-sec">Relatórios</div>
+    <div class="udp-nav" onclick="udpIr('udp-relatorio',this)">👥 Participantes</div>
+    <div class="udp-nav" onclick="udpIr('udp-avaliacoes',this)">⭐ Avaliações</div>
+    <div class="udp-sec">Sistema</div>
+    <div class="udp-nav" onclick="udpIr('udp-config',this)">⚙️ Configurações</div>
+    <div class="udp-nav" onclick="ir('pg-home')" style="margin-top:20px;">← Início</div>
+  </div>
   <div class="udp-main">
-    <div class="udp-topbar">
+    <div class="udp-top">
       <div>
-        <div style="font-size:16px;font-weight:700;color:var(--azul);" id="udp-page-title">Painel UDP</div>
-        <div style="font-size:12px;color:var(--txt3);" id="udp-page-sub">Indicadores gerais</div>
+        <div style="font-size:16px;font-weight:700;color:var(--azul);" id="udp-title">Indicadores</div>
+        <div style="font-size:12px;color:var(--txt3);" id="udp-sub">Painel geral</div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <span id="sync-status" style="font-size:11px;color:var(--txt3);">● Não conectado</span>
+        <span id="sync-st" style="font-size:11px;color:var(--txt3);">● Não conectado</span>
         <button class="btn btn-outline btn-sm" onclick="sincronizar()">Sincronizar</button>
       </div>
     </div>
+    <div class="udp-cnt">
 
-    <div class="udp-content">
-
-      <!-- Painel -->
-      <div id="udp-painel" class="udp-screen">
+      <!-- Indicadores -->
+      <div id="udp-painel" class="udp-sc">
         <div class="metrics">
-          <div class="metric"><div class="metric-val" style="color:var(--azul);" id="m-acoes">—</div><div class="metric-label">Ações</div></div>
-          <div class="metric"><div class="metric-val" style="color:var(--verde);" id="m-part">—</div><div class="metric-label">Participações</div></div>
-          <div class="metric"><div class="metric-val" style="color:var(--azul2);" id="m-unicos">—</div><div class="metric-label">CPFs únicos</div></div>
-          <div class="metric"><div class="metric-val" style="color:var(--amber);" id="m-av">—</div><div class="metric-label">Avaliações</div></div>
+          <div class="metric"><div class="metric-val" style="color:var(--azul);" id="m-acoes">—</div><div class="metric-lbl">Ações</div></div>
+          <div class="metric"><div class="metric-val" style="color:var(--verde);" id="m-part">—</div><div class="metric-lbl">Participações</div></div>
+          <div class="metric"><div class="metric-val" style="color:var(--azul2);" id="m-uniq">—</div><div class="metric-lbl">Pessoas únicas</div></div>
+          <div class="metric"><div class="metric-val" style="color:var(--amber);" id="m-av">—</div><div class="metric-lbl">Avaliações</div></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-          <div class="card"><div class="card-title">Raça / cor</div><div id="graf-raca"></div></div>
-          <div class="card"><div class="card-title">Gênero</div><div id="graf-genero"></div></div>
-          <div class="card"><div class="card-title">PCD</div><div id="graf-pcd"></div></div>
-          <div class="card"><div class="card-title">Vínculo</div><div id="graf-vinculo"></div></div>
+          <div class="card"><div class="card-title">Raça / cor</div><div id="g-raca"></div></div>
+          <div class="card"><div class="card-title">Gênero</div><div id="g-genero"></div></div>
+          <div class="card"><div class="card-title">PCD</div><div id="g-pcd"></div></div>
+          <div class="card"><div class="card-title">Vínculo</div><div id="g-vinculo"></div></div>
         </div>
       </div>
 
       <!-- Ações -->
-      <div id="udp-acoes" class="udp-screen" style="display:none;">
+      <div id="udp-acoes" class="udp-sc" style="display:none;">
         <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
           <button class="btn btn-primary btn-sm" onclick="udpIr('udp-nova',null)">+ Nova ação</button>
         </div>
-        <div id="lista-acoes"></div>
+        <div id="udp-lista-acoes"></div>
       </div>
 
       <!-- Nova ação -->
-      <div id="udp-nova" class="udp-screen" style="display:none;">
+      <div id="udp-nova" class="udp-sc" style="display:none;">
         <div class="card" style="max-width:600px;">
-          <div class="info-box">Datas são informativas. Abra e feche o check-in manualmente.</div>
-          <div class="form-group"><label class="form-label">Título *</label><input type="text" id="na-titulo"/></div>
+          <div class="info-box">Datas são informativas. Abra o check-in manualmente quando quiser.</div>
+          <div class="fg"><label class="fl">Título *</label><input type="text" id="na-titulo"/></div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div class="form-group"><label class="form-label">Tipo</label>
+            <div class="fg"><label class="fl">Tipo</label>
               <select id="na-tipo"><option>Treinamento/Turma</option><option>Palestra/Evento</option><option>Curso Online</option><option>Workshop</option><option>Outro</option></select></div>
-            <div class="form-group"><label class="form-label">Modalidade</label>
+            <div class="fg"><label class="fl">Modalidade</label>
               <select id="na-modal"><option>Presencial</option><option>Remoto</option><option>Híbrido</option></select></div>
-            <div class="form-group"><label class="form-label">Data prevista</label><input type="date" id="na-data"/></div>
-            <div class="form-group"><label class="form-label">Carga horária</label><input type="text" id="na-ch" placeholder="Ex: 4h"/></div>
-            <div class="form-group"><label class="form-label">Local</label><input type="text" id="na-local"/></div>
-            <div class="form-group"><label class="form-label">Coordenador</label><input type="text" id="na-coord"/></div>
+            <div class="fg"><label class="fl">Data prevista</label><input type="date" id="na-data"/></div>
+            <div class="fg"><label class="fl">Carga horária</label><input type="text" id="na-ch" placeholder="Ex: 4h"/></div>
+            <div class="fg"><label class="fl">Local</label><input type="text" id="na-local"/></div>
+            <div class="fg"><label class="fl">Coordenador (CPF)</label><input type="tel" id="na-coord-cpf" oninput="formatarCPF(this)" placeholder="CPF do coordenador"/></div>
           </div>
-          <div class="form-group"><label class="form-label">Unidade</label><input type="text" id="na-unidade"/></div>
+          <div class="fg"><label class="fl">Unidade</label><input type="text" id="na-unidade"/></div>
           <div class="btn-row">
             <button class="btn btn-outline" onclick="udpIr('udp-acoes',null)">Cancelar</button>
             <button class="btn btn-primary" onclick="salvarAcao()">Criar ação</button>
@@ -697,603 +569,539 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--azul2);b
         </div>
       </div>
 
-      <!-- Relatório participantes -->
-      <div id="udp-relatorio" class="udp-screen" style="display:none;">
+      <!-- Relatório -->
+      <div id="udp-relatorio" class="udp-sc" style="display:none;">
         <div class="card">
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-end;">
-            <div style="flex:1;min-width:180px;">
-              <label class="form-label">Ação</label>
-              <select id="rel-acao-sel"><option value="">Todas</option></select>
-            </div>
-            <div style="flex:1;min-width:140px;">
-              <label class="form-label">Vínculo</label>
-              <select id="rel-vinculo-sel"><option value="">Todos</option><option>EBSERH</option><option>UFPE/RJU</option><option>Residente</option><option>Externo</option></select>
-            </div>
-            <button class="btn btn-primary btn-sm" onclick="filtrarRelatorio()">Filtrar</button>
+            <div style="flex:1;min-width:180px;"><label class="fl">Ação</label><select id="rel-acao"><option value="">Todas</option></select></div>
+            <div style="flex:1;min-width:140px;"><label class="fl">Vínculo</label>
+              <select id="rel-vinc"><option value="">Todos</option><option>EBSERH</option><option>UFPE/RJU</option><option>Residente</option><option>Externo</option></select></div>
+            <button class="btn btn-primary btn-sm" onclick="filtrarRel()">Filtrar</button>
             <button class="btn btn-outline btn-sm" onclick="exportarExcel()">Excel</button>
             <button class="btn btn-outline btn-sm" onclick="exportarPDF()">PDF</button>
           </div>
-          <div id="lista-relatorio" style="overflow-x:auto;"></div>
+          <div id="rel-tabela" style="overflow-x:auto;"></div>
           <div style="font-size:12px;color:var(--txt3);margin-top:8px;" id="rel-total"></div>
         </div>
       </div>
 
       <!-- Avaliações -->
-      <div id="udp-avaliacoes" class="udp-screen" style="display:none;">
+      <div id="udp-avaliacoes" class="udp-sc" style="display:none;">
         <div class="card">
           <div style="display:flex;gap:10px;margin-bottom:14px;align-items:flex-end;">
-            <div style="flex:1;">
-              <label class="form-label">Filtrar por ação</label>
-              <select id="av-acao-sel"><option value="">Todas</option></select>
-            </div>
-            <button class="btn btn-primary btn-sm" onclick="filtrarAvaliacoes()">Filtrar</button>
+            <div style="flex:1;"><label class="fl">Ação</label><select id="av-acao-sel"><option value="">Todas</option></select></div>
+            <button class="btn btn-primary btn-sm" onclick="filtrarAv()">Filtrar</button>
           </div>
-          <div id="lista-avaliacoes"></div>
+          <div id="av-tabela" style="overflow-x:auto;"></div>
         </div>
       </div>
 
-      <!-- Configurações -->
-      <div id="udp-config" class="udp-screen" style="display:none;">
-        <div class="card" style="max-width:600px;">
+      <!-- Config -->
+      <div id="udp-config" class="udp-sc" style="display:none;">
+        <div class="card" style="max-width:580px;">
           <div class="card-title">Conexão com Google Sheets</div>
-          <div class="form-group">
-            <label class="form-label">ID da planilha</label>
-            <input type="text" id="cfg-id" placeholder="Cole o ID da planilha"/>
-            <div class="form-hint">URL: docs.google.com/spreadsheets/d/<strong>[ID]</strong>/edit</div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Chave de API</label>
-            <input type="text" id="cfg-key" placeholder="AIza..."/>
-          </div>
+          <div class="fg"><label class="fl">ID da planilha</label>
+            <input type="text" id="cfg-id"/>
+            <div class="fh">URL: docs.google.com/spreadsheets/d/<strong>[ID]</strong>/edit</div></div>
+          <div class="fg"><label class="fl">Chave de API</label><input type="text" id="cfg-key" placeholder="AIza..."/></div>
           <div class="btn-row">
             <button class="btn btn-outline" onclick="testarConexao()">Testar</button>
             <button class="btn btn-primary" onclick="salvarConfig()">Salvar</button>
           </div>
           <div id="cfg-msg" style="margin-top:10px;font-size:13px;"></div>
         </div>
+
+        <div class="card" style="max-width:580px;margin-top:16px;">
+          <div class="card-title">Links fixos do sistema</div>
+          <div class="fg">
+            <label class="fl">Link de check-in</label>
+            <input type="text" id="link-ci" readonly onclick="this.select()"/>
+          </div>
+          <div class="fg">
+            <label class="fl">Link de avaliação</label>
+            <input type="text" id="link-av" readonly onclick="this.select()"/>
+          </div>
+          <div class="fh">Estes links são fixos e permanentes. Gere os QR Codes uma vez e use para sempre.</div>
+        </div>
       </div>
 
-    </div><!-- /udp-content -->
-  </div><!-- /udp-main -->
-</div><!-- /udp-layout -->
-</div>
-
-<!-- ══════════════════════════════════════════════════════════════
-     QR CODE MODAL
-══════════════════════════════════════════════════════════════ -->
-<div id="qr-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;">
-  <div style="background:var(--white);border-radius:var(--radius);padding:24px;max-width:340px;width:90%;text-align:center;">
-    <div style="font-size:15px;font-weight:700;color:var(--azul);margin-bottom:4px;" id="qr-titulo"></div>
-    <div style="font-size:12px;color:var(--txt3);margin-bottom:16px;" id="qr-sub"></div>
-    <div id="qr-code" style="margin:0 auto 16px;"></div>
-    <div style="font-size:12px;color:var(--txt3);margin-bottom:16px;" id="qr-link-txt"></div>
-    <button class="btn btn-danger btn-sm" onclick="fecharQR()" style="width:100%;">Fechar</button>
+    </div>
   </div>
+</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-// ── Configuração ──────────────────────────────────────────────────────────
+// ── Estado global ────────────────────────────────────────────────────────
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwyeRGP9t-mNxD8f766IeN5CXL-AFRdcwbFmLSYguaA0-bXQL4xK1uLyvQ8X0FX0rdTLg/exec';
 const BASE_URL   = window.location.href.split('?')[0];
 
 const S = {
-  sheetId: localStorage.getItem('udp_sheet_id') || '',
-  apiKey:  localStorage.getItem('udp_api_key')  || '',
-  acoes: [], participantes: [], perfis: [], avaliacoes: [], servidores: [],
-  // contexto atual
-  acao_ativa_id: '',
-  acao_ativa_tipo: '', // 'checkin' ou 'avaliacao'
-  cpf_atual: '',
-  nome_atual: '',
-  nota_estrelas: 0,
+  sheetId:'', apiKey:'',
+  acoes:[], participantes:[], perfis:[], avaliacoes:[], servidores:[],
+  // sessão atual
+  cpf:'', nome:'', srv:null,
+  eventoSel:null,
+  nota:0,
+  coordCPF:'', coordNome:'',
+  coordAcaoSel:null,
 };
 
 // ── Navegação ─────────────────────────────────────────────────────────────
-function ir(pgId) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  const pg = document.getElementById(pgId);
-  if (pg) { pg.classList.add('active'); window.scrollTo(0,0); }
+function ir(id){ document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active')); const el=document.getElementById(id); if(el){el.classList.add('active');window.scrollTo(0,0);} }
+
+function irCheckin(){
+  const abertos = S.acoes.filter(a=>a[9]==='Aberto');
+  if(!abertos.length){ ir('pg-ci-cpf'); document.getElementById('ci-fechado').style.display='block'; document.getElementById('ci-form').style.display='none'; }
+  else{ ir('pg-ci-cpf'); document.getElementById('ci-fechado').style.display='none'; document.getElementById('ci-form').style.display='block'; }
 }
 
-function irUDP() {
+function irAvaliacao(){
+  const abertos = S.acoes.filter(a=>a[10]==='Aberto'); // coluna K = status avaliação
+  if(!abertos.length){ ir('pg-av-cpf'); document.getElementById('av-fechado').style.display='block'; document.getElementById('av-form-cpf').style.display='none'; }
+  else{ ir('pg-av-cpf'); document.getElementById('av-fechado').style.display='none'; document.getElementById('av-form-cpf').style.display='block'; }
+}
+
+function irUDP(){
   ir('pg-udp');
-  if (S.sheetId && S.apiKey) sincronizar();
   document.getElementById('cfg-id').value = S.sheetId;
   document.getElementById('cfg-key').value = S.apiKey;
+  document.getElementById('link-ci').value = BASE_URL + '?tipo=checkin';
+  document.getElementById('link-av').value = BASE_URL + '?tipo=avaliacao';
+  if(S.sheetId && S.apiKey) sincronizar();
 }
 
-// ── UDP sub-telas ─────────────────────────────────────────────────────────
-function udpIr(telaId, navEl) {
-  document.querySelectorAll('.udp-screen').forEach(s => s.style.display = 'none');
-  const el = document.getElementById(telaId);
-  if (el) el.style.display = 'block';
-  document.querySelectorAll('.udp-nav-item').forEach(n => n.classList.remove('active'));
-  if (navEl) navEl.classList.add('active');
-  const titulos = {
-    'udp-painel':    ['Painel UDP','Indicadores gerais'],
-    'udp-acoes':     ['Ações','Capacitações cadastradas'],
-    'udp-nova':      ['Nova ação','Cadastrar capacitação'],
-    'udp-relatorio': ['Participantes','Lista de presenças'],
-    'udp-avaliacoes':['Avaliações','Pesquisas de reação'],
-    'udp-config':    ['Configurações','Conexão Google Sheets'],
-  };
-  const t = titulos[telaId] || ['',''];
-  document.getElementById('udp-page-title').textContent = t[0];
-  document.getElementById('udp-page-sub').textContent   = t[1];
-  if (telaId === 'udp-acoes') renderAcoes();
-  if (telaId === 'udp-relatorio' || telaId === 'udp-avaliacoes') popularSelects();
+function udpIr(id, navEl){
+  document.querySelectorAll('.udp-sc').forEach(s=>s.style.display='none');
+  const el=document.getElementById(id); if(el) el.style.display='block';
+  document.querySelectorAll('.udp-nav').forEach(n=>n.classList.remove('active'));
+  if(navEl) navEl.classList.add('active');
+  const t={'udp-painel':['Indicadores','Painel geral'],'udp-acoes':['Ações','Capacitações cadastradas'],'udp-nova':['Nova ação',''],'udp-relatorio':['Participantes','Lista de presenças'],'udp-avaliacoes':['Avaliações','Pesquisas de reação'],'udp-config':['Configurações','']};
+  const tt=t[id]||['',''];
+  document.getElementById('udp-title').textContent=tt[0];
+  document.getElementById('udp-sub').textContent=tt[1];
+  if(id==='udp-acoes') renderUDPAcoes();
+  if(id==='udp-relatorio'||id==='udp-avaliacoes') popularSelects();
 }
 
-// ── URL params (QR Code) ──────────────────────────────────────────────────
-function lerParams() {
-  const p = new URLSearchParams(window.location.search);
-  const acao = p.get('acao');
-  const tipo = p.get('tipo');
-  if (acao && tipo) {
-    S.acao_ativa_id   = acao;
-    S.acao_ativa_tipo = tipo;
-    if (tipo === 'checkin') {
-      ir('pg-checkin-cpf');
-      carregarInfoAcao('ci-acao-info');
-    }
-    if (tipo === 'avaliacao') {
-      ir('pg-avaliacao-cpf');
-      carregarInfoAcao('av-acao-info');
-    }
-  }
-}
-
-function carregarInfoAcao(elId) {
-  sincronizarSilencioso(() => {
-    const a = S.acoes.find(x => x[0] === S.acao_ativa_id);
-    const el = document.getElementById(elId);
-    if (a && el) {
-      el.style.display = 'block';
-      el.textContent   = `${a[1]} · ${a[3]||''} · ${a[5]||''}`;
-    }
-  });
-}
-
-// ── Formatar CPF ──────────────────────────────────────────────────────────
-function formatarCPF(el) {
-  let v = el.value.replace(/\D/g,'');
-  if (v.length > 11) v = v.slice(0,11);
-  v = v.replace(/(\d{3})(\d)/,'$1.$2')
-       .replace(/(\d{3})(\d)/,'$1.$2')
-       .replace(/(\d{3})(\d{1,2})$/,'$1-$2');
-  el.value = v;
+// ── Utilitários ───────────────────────────────────────────────────────────
+function formatarCPF(el){
+  let v=el.value.replace(/\D/g,'');
+  if(v.length>11) v=v.slice(0,11);
+  v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+  el.value=v;
 }
 function limparCPF(c){ return (c||'').replace(/\D/g,''); }
 
-function buscarServidor(cpf) {
-  // CPF da base: 11111111-11 (sem pontos, com traço)
-  // Normaliza removendo tudo exceto dígitos para comparar
-  const cpfLimpo = limparCPF(cpf);
-  return S.servidores.find(s => limparCPF(s[0]) === cpfLimpo) || null;
+function buscarServidor(cpf){
+  const cl=limparCPF(cpf);
+  return S.servidores.find(s=>limparCPF(s[0])===cl)||null;
+}
+function ehChefia(srv){ return srv&&srv[7]&&srv[7].toString().trim()!==''?'Sim':'Não'; }
+
+function selChip(el,g){ document.querySelectorAll(`[onclick*="'${g}'"]`).forEach(c=>c.classList.remove('sel')); el.classList.add('sel'); }
+function getChip(g){ const e=document.querySelector(`[onclick*="'${g}'"].sel`); return e?e.textContent.trim():''; }
+
+function selEstrela(n){
+  S.nota=n;
+  document.querySelectorAll('#av-stars .star').forEach((s,i)=>s.classList.toggle('sel',i<n));
 }
 
-function ehChefia(servidor) {
-  // Cargo Comissao/FG (coluna H, índice 7) preenchido = chefia
-  return servidor && servidor[7] && servidor[7].toString().trim() !== '' ? 'Sim' : 'Não';
-}
-
-// ── Chips ─────────────────────────────────────────────────────────────────
-function selChip(el, grupo) {
-  document.querySelectorAll(`[onclick*="'${grupo}'"]`).forEach(c => c.classList.remove('sel'));
-  el.classList.add('sel');
-}
-function getChip(grupo) {
-  const el = document.querySelector(`[onclick*="'${grupo}'"].sel`);
-  return el ? el.textContent.trim() : '';
-}
-function togglePCD(el, grupoId) {
-  document.getElementById(grupoId).style.display = el.textContent.trim() === 'Sim' ? 'block' : 'none';
-}
-function preSelChip(containerId, valor) {
-  if (!valor) return;
-  document.querySelectorAll(`#${containerId} .chip`).forEach(c => {
-    c.classList.toggle('sel', c.textContent.trim() === valor);
-  });
-}
-
-// ── Estrelas ──────────────────────────────────────────────────────────────
-function selecionarEstrela(n) {
-  S.nota_estrelas = n;
-  document.querySelectorAll('#av-stars .star').forEach((s,i) => {
-    s.classList.toggle('sel', i < n);
-  });
+function baixar(conteudo,nome,tipo){
+  const blob=new Blob([conteudo],{type:tipo+';charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=nome; a.click();
 }
 
 // ── CHECK-IN ──────────────────────────────────────────────────────────────
-function buscarCheckin() {
-  const cpf = limparCPF(document.getElementById('ci-cpf').value);
-  if (cpf.length !== 11) { alert('Digite um CPF válido.'); return; }
-  if (!S.acao_ativa_id)  { alert('Acesse esta página pelo QR Code do evento.'); return; }
+function buscarCI(){
+  const cpf=limparCPF(document.getElementById('ci-cpf').value);
+  if(cpf.length!==11){alert('CPF inválido.');return;}
+  S.cpf=cpf; S.eventoSel=null;
 
-  S.cpf_atual = cpf;
+  const srv=buscarServidor(cpf);
+  const part=S.participantes.find(p=>limparCPF(p[3])===cpf);
+  S.srv=srv;
+  S.nome=srv?srv[1]:(part?part[4]:'');
 
-  // Já confirmou presença?
-  const jaPresente = S.participantes.find(p => limparCPF(p[3]) === cpf && p[1] === S.acao_ativa_id);
-  if (jaPresente) {
-    document.getElementById('ci-resultado').innerHTML = `
+  const abertos=S.acoes.filter(a=>a[9]==='Aberto');
+
+  // Mostrar resultado
+  if(srv){
+    document.getElementById('ci-resultado').innerHTML=`
       <div class="found-card">
-        <div style="font-size:16px;font-weight:700;color:var(--verde);">✅ ${jaPresente[4]}</div>
-        <div style="font-size:13px;color:var(--verde);margin-top:4px;">Presença já confirmada às ${jaPresente[11]||''}.</div>
+        <div style="font-size:17px;font-weight:700;color:var(--verde);">${srv[1]}</div>
+        <div style="font-size:13px;color:var(--verde);margin-top:3px;">${srv[4]||''} · ${srv[6]||''}</div>
+        <div style="font-size:12px;color:var(--verde);">${srv[5]||''} · SIAPE ${srv[3]||''}</div>
+        ${ehChefia(srv)==='Sim'?'<div style="margin-top:8px;"><span class="badge badge-roxo">Chefia identificada automaticamente</span></div>':''}
       </div>`;
-    return;
-  }
-
-  // Buscar na base
-  const part = S.participantes.find(p => limparCPF(p[3]) === cpf);
-  const perf = S.perfis.find(p => limparCPF(p[0]) === cpf);
-  const nome = part ? part[4] : (perf ? perf[1] : null);
-
-  if (nome) {
-    S.nome_atual = nome;
-    document.getElementById('ci-resultado').innerHTML = `
+  } else if(S.nome){
+    document.getElementById('ci-resultado').innerHTML=`
       <div class="found-card">
-        <div style="font-size:17px;font-weight:700;color:var(--verde);">${nome}</div>
-        <div style="font-size:13px;color:var(--verde);margin-top:2px;">${part?.[8]||''} · ${part?.[9]||''}</div>
-        <div style="margin-top:10px;">
-          <label style="display:flex;align-items:center;gap:10px;font-size:15px;cursor:pointer;">
-            <input type="checkbox" id="ci-chefia" style="width:22px;height:22px;"/>
-            Sou chefia / gestor desta unidade
-          </label>
-        </div>
-        <button class="btn btn-green" style="margin-top:14px;" onclick="confirmarPresenca('${cpf}','${nome.replace(/'/g,"\\'")}','${part?.[5]||''}','${part?.[6]||'EBSERH'}','${part?.[8]||''}','${part?.[9]||''}')">
-          ✅ Confirmar presença
-        </button>
+        <div style="font-size:17px;font-weight:700;color:var(--verde);">${S.nome}</div>
+        <div style="font-size:13px;color:var(--verde);margin-top:3px;">${part?.[8]||''} · ${part?.[9]||''}</div>
       </div>`;
   } else {
-    document.getElementById('ci-resultado').innerHTML = `
-      <div class="notfound-card">
-        <div style="font-size:15px;font-weight:700;color:var(--amber);">CPF não encontrado na base.</div>
-        <div style="font-size:13px;color:var(--amber);margin-top:4px;">Preencha seus dados para registrar presença.</div>
-        <button class="btn btn-amber" style="margin-top:12px;" onclick="irExternoCI('${cpf}')">Cadastrar</button>
-      </div>`;
+    document.getElementById('ci-resultado').innerHTML='';
+  }
+
+  if(!srv && !S.nome){
+    // Não encontrado — cadastro externo
+    document.getElementById('ext-cpf').value=document.getElementById('ci-cpf').value;
+    // Selecionar evento se só tiver um
+    if(abertos.length===1){ S.eventoSel=abertos[0]; ir('pg-ci-externo'); return; }
+    // Mostrar lista de eventos para escolher antes do cadastro
+    montarListaEventos(abertos,'ci-lista-eventos','checkin-externo');
+    ir('pg-ci-evento'); return;
+  }
+
+  // Encontrado — selecionar evento
+  if(abertos.length===1){
+    S.eventoSel=abertos[0];
+    document.getElementById('ci-confirmar-btn').style.display='block';
+    montarListaEventos(abertos,'ci-lista-eventos','checkin');
+    ir('pg-ci-evento');
+  } else {
+    montarListaEventos(abertos,'ci-lista-eventos','checkin');
+    ir('pg-ci-evento');
   }
 }
 
-function irExternoCI(cpf) {
-  document.getElementById('ext-cpf').value = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
-  ir('pg-checkin-externo');
+function montarListaEventos(lista, containerId, modo){
+  const el=document.getElementById(containerId);
+  if(!lista.length){ el.innerHTML='<div class="warn-box">Nenhum evento aberto no momento.</div>'; return; }
+  el.innerHTML=lista.map(a=>`
+    <div class="ev-card" id="ev-${a[0]}" onclick="selecionarEvento('${a[0]}','${modo}')">
+      <div class="ev-titulo">${a[1]||''}</div>
+      <div class="ev-meta">${a[3]||''} · ${a[5]||''} · ${a[6]||''}</div>
+    </div>`).join('');
+  // Se só um, auto-seleciona
+  if(lista.length===1) selecionarEvento(lista[0][0], modo);
 }
 
-async function confirmarPresencaBase(cpf, nome, email, vinculo, siape, cargo, lotacao, chefia, cor, genero, pcd, tipopcd) {
-  // Confirmar presença com dados completos da base SERVIDORES
-  const agora = new Date().toLocaleString('pt-BR');
-  const idPre = 'PRE' + Date.now();
-  const linha = [idPre, S.acao_ativa_id, '', cpf, nome, email, vinculo, siape, cargo, lotacao, chefia, agora, 'Sistema', ''];
-  S.participantes.push(linha);
-  S.nome_atual = nome;
-  await gravarLinha('PARTICIPANTES', linha, 'APPEND');
-
-  // Salvar/atualizar perfil de equidade automaticamente se tiver dados
-  if (cor || genero || pcd) {
-    const linhaPerfil = [cpf, nome, new Date().toLocaleDateString('pt-BR'), genero, cor, pcd, tipopcd, ''];
-    const idx = S.perfis.findIndex(p => limparCPF(p[0]) === limparCPF(cpf));
-    if (idx >= 0) S.perfis[idx] = linhaPerfil; else S.perfis.push(linhaPerfil);
-    await upsertPerfil(linhaPerfil);
+function selecionarEvento(id, modo){
+  S.eventoSel=S.acoes.find(a=>a[0]===id);
+  document.querySelectorAll('.ev-card').forEach(c=>c.classList.remove('sel'));
+  const el=document.getElementById('ev-'+id); if(el) el.classList.add('sel');
+  if(modo==='checkin'){
+    document.getElementById('ci-confirmar-btn').style.display='block';
+  } else if(modo==='checkin-externo'){
+    ir('pg-ci-externo');
+  } else if(modo==='avaliacao'){
+    document.getElementById('av-ir-btn').style.display='block';
+    document.getElementById('av-hdr-sub').textContent=S.eventoSel?S.eventoSel[1]:'';
   }
-
-  document.getElementById('ci-sucesso-nome').textContent = nome;
-  ir('pg-checkin-sucesso');
 }
 
-async function confirmarPresenca(cpf, nome, email, vinculo, cargo, unidade) {
-  // Para participantes não encontrados na base SERVIDORES mas com histórico
-  const agora = new Date().toLocaleString('pt-BR');
-  const idPre = 'PRE' + Date.now();
-  const linha = [idPre, S.acao_ativa_id, '', cpf, nome, email, vinculo, '', cargo, unidade, 'Não', agora, 'Sistema', ''];
+async function confirmarPresenca(){
+  if(!S.eventoSel){alert('Selecione um evento.');return;}
+  const jaPresente=S.participantes.find(p=>limparCPF(p[3])===S.cpf&&p[1]===S.eventoSel[0]);
+  if(jaPresente){alert('Presença já confirmada neste evento!');ir('pg-ci-sucesso');document.getElementById('ci-suc-nome').textContent=S.nome;document.getElementById('ci-suc-evento').textContent=S.eventoSel[1];return;}
+  const srv=S.srv;
+  const agora=new Date().toLocaleString('pt-BR');
+  const idPre='PRE'+Date.now();
+  const chefia=ehChefia(srv);
+  const linha=[idPre,S.eventoSel[0],S.eventoSel[1]||'',S.cpf,S.nome,srv?srv[2]:'',srv?srv[5]:'',srv?srv[3]:'',srv?srv[4]:'',srv?srv[6]:'',chefia,agora,'Sistema',''];
   S.participantes.push(linha);
-  S.nome_atual = nome;
-  await gravarLinha('PARTICIPANTES', linha, 'APPEND');
-  document.getElementById('ci-sucesso-nome').textContent = nome;
-  ir('pg-checkin-sucesso');
+  // Salvar equidade automaticamente
+  if(srv&&(srv[8]||srv[9]||srv[10])){
+    const lp=[S.cpf,S.nome,new Date().toLocaleDateString('pt-BR'),srv[9]||'',srv[8]||'',srv[10]||'',srv[11]||'',''];
+    const idx=S.perfis.findIndex(p=>limparCPF(p[0])===S.cpf);
+    if(idx>=0) S.perfis[idx]=lp; else S.perfis.push(lp);
+    upsertPerfil(lp);
+  }
+  await gravarLinha('PARTICIPANTES',linha,'APPEND');
+  document.getElementById('ci-suc-nome').textContent=S.nome;
+  document.getElementById('ci-suc-evento').textContent=S.eventoSel[1]||'';
+  ir('pg-ci-sucesso');
 }
 
-async function registrarExterno() {
-  const cpf     = limparCPF(document.getElementById('ext-cpf').value);
-  const nome    = document.getElementById('ext-nome').value.trim().toUpperCase();
-  const email   = document.getElementById('ext-email').value.trim();
-  const vinculo = document.getElementById('ext-vinculo').value;
-  const cargo   = document.getElementById('ext-cargo').value.trim();
-  const unidade = document.getElementById('ext-unidade').value.trim();
-  const chefia  = document.getElementById('ext-chefia').checked ? 'Sim' : 'Não';
-  if (!cpf || !nome || !email) { alert('Preencha CPF, nome e e-mail.'); return; }
-  const agora = new Date().toLocaleString('pt-BR');
-  const idPre = 'PRE' + Date.now();
-  const linha = [idPre, S.acao_ativa_id, '', cpf, nome, email, vinculo, '', cargo, unidade, chefia, agora, 'Manual', ''];
+async function registrarExterno(){
+  const cpf=limparCPF(document.getElementById('ext-cpf').value);
+  const nome=document.getElementById('ext-nome').value.trim().toUpperCase();
+  const email=document.getElementById('ext-email').value.trim();
+  const vinculo=document.getElementById('ext-vinculo').value;
+  const cargo=document.getElementById('ext-cargo').value.trim();
+  const unidade=document.getElementById('ext-unidade').value.trim();
+  if(!cpf||!nome||!email){alert('Preencha CPF, nome e e-mail.');return;}
+  if(!S.eventoSel){alert('Nenhum evento selecionado.');return;}
+  const agora=new Date().toLocaleString('pt-BR');
+  const linha=['PRE'+Date.now(),S.eventoSel[0],S.eventoSel[1]||'',cpf,nome,email,vinculo,'',cargo,unidade,'Não',agora,'Manual',''];
   S.participantes.push(linha);
-  S.nome_atual = nome;
-  await gravarLinha('PARTICIPANTES', linha, 'APPEND');
-  document.getElementById('ci-sucesso-nome').textContent = nome;
-  ir('pg-checkin-sucesso');
-}
-
-async function salvarEquidadeCheckin() {
-  const cpf  = S.cpf_atual;
-  const gen  = getChip('ci-genero');
-  const raca = getChip('ci-raca');
-  const pcd  = getChip('ci-pcd');
-  const def  = getChip('ci-def');
-  if (!gen || !raca || !pcd) { alert('Selecione pelo menos gênero, raça/cor e PCD.'); return; }
-  const linha = [cpf, S.nome_atual, new Date().toLocaleDateString('pt-BR'), gen, raca, pcd, def, ''];
-  await upsertPerfil(linha);
-  ir('pg-checkin-sucesso');
+  await gravarLinha('PARTICIPANTES',linha,'APPEND');
+  document.getElementById('ci-suc-nome').textContent=nome;
+  document.getElementById('ci-suc-evento').textContent=S.eventoSel[1]||'';
+  ir('pg-ci-sucesso');
 }
 
 // ── AVALIAÇÃO ─────────────────────────────────────────────────────────────
-function iniciarAvaliacao() {
-  const cpf = limparCPF(document.getElementById('av-cpf').value);
-  if (cpf.length !== 11) { alert('Digite um CPF válido.'); return; }
-  if (!S.acao_ativa_id)  { alert('Acesse esta página pelo QR Code de avaliação.'); return; }
-  const part = S.participantes.find(p => limparCPF(p[3]) === cpf && p[1] === S.acao_ativa_id);
-  if (!part) { alert('CPF não encontrado nesta capacitação.\nFaça o check-in primeiro.'); return; }
-  S.cpf_atual  = cpf;
-  S.nome_atual = part[4];
-  const acao = S.acoes.find(a => a[0] === S.acao_ativa_id);
-  document.getElementById('av-titulo-header').textContent = acao ? acao[1] : '';
-  ir('pg-avaliacao-form');
+function buscarAV(){
+  const cpf=limparCPF(document.getElementById('av-cpf').value);
+  if(cpf.length!==11){alert('CPF inválido.');return;}
+  S.cpf=cpf;
+  const part=S.participantes.find(p=>limparCPF(p[3])===cpf);
+  const srv=buscarServidor(cpf);
+  S.nome=srv?srv[1]:(part?part[4]:'');
+  const abertos=S.acoes.filter(a=>a[10]==='Aberto');
+  // Filtrar só eventos em que a pessoa participou
+  const participou=abertos.filter(a=>S.participantes.find(p=>limparCPF(p[3])===cpf&&p[1]===a[0]));
+  const lista=participou.length?participou:abertos;
+  montarListaEventos(lista,'av-lista-eventos','avaliacao');
+  ir('pg-av-evento');
 }
 
-async function enviarAvaliacao() {
-  if (!S.nota_estrelas) { alert('Selecione uma nota geral.'); return; }
-  const get = name => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ''; };
-  const linha = [
-    new Date().toLocaleString('pt-BR'),
-    S.cpf_atual, S.acao_ativa_id, '',
-    get('q1'), get('q2'), get('q3'), get('q4'),
-    get('q5'), get('q6'), get('q7'), get('q8'),
-    get('i1'), get('i2'), get('i3'), get('i4'), get('i5'),
-    document.getElementById('av-positivo').value,
-    document.getElementById('av-negativo').value,
-    S.nota_estrelas
+async function enviarAvaliacao(){
+  if(!S.nota){alert('Selecione uma nota geral.');return;}
+  if(!S.eventoSel){alert('Selecione um evento.');return;}
+  const get=n=>{const e=document.querySelector(`input[name="${n}"]:checked`);return e?e.value:'';};
+  const linha=[
+    new Date().toLocaleString('pt-BR'),S.cpf,S.eventoSel[0],S.eventoSel[1]||'',
+    get('q1'),get('q2'),get('q3'),get('q4'),get('q5'),get('q6'),get('q7'),get('q8'),
+    get('i1'),get('i2'),get('i3'),get('i4'),get('i5'),
+    document.getElementById('av-pos').value,
+    document.getElementById('av-neg').value,
+    S.nota
   ];
-  await gravarLinha('AVALIACAO', linha, 'APPEND');
-  ir('pg-avaliacao-sucesso');
+  await gravarLinha('AVALIACAO',linha,'APPEND');
+  ir('pg-av-sucesso');
 }
 
-// ── PERFIL EQUIDADE ───────────────────────────────────────────────────────
-function buscarPerfil() {
-  const cpf = limparCPF(document.getElementById('eq-cpf').value);
-  if (cpf.length !== 11) { alert('CPF inválido.'); return; }
-  S.cpf_atual = cpf;
-  const part = S.participantes.find(p => limparCPF(p[3]) === cpf);
-  const perf = S.perfis.find(p => limparCPF(p[0]) === cpf);
-  const nome = part ? part[4] : (perf ? perf[1] : '');
-  S.nome_atual = nome;
-  document.getElementById('eq-nome-header').textContent = nome || cpf;
-  if (perf) {
-    preSelChip('eq-chips-genero', perf[3]);
-    preSelChip('eq-chips-raca',   perf[4]);
-    preSelChip('eq-chips-pcd',    perf[5]);
-    if (perf[5] === 'Sim') {
-      document.getElementById('eq-def-grupo').style.display = 'block';
-      preSelChip('eq-chips-def', perf[6]);
+// ── COORDENADOR ───────────────────────────────────────────────────────────
+function loginCoord(){
+  const cpf=limparCPF(document.getElementById('coord-cpf').value);
+  if(cpf.length!==11){alert('CPF inválido.');return;}
+  const srv=buscarServidor(cpf);
+  if(!srv||srv[7]===undefined){
+    // Verificar se é coordenador na coluna COORDENADOR (não existe na base atual)
+    // Verificar se tem ações vinculadas ao CPF
+    const acoesDele=S.acoes.filter(a=>limparCPF(a[12]||'')===cpf||limparCPF(a[7]||'')===cpf);
+    if(!acoesDele.length&&!srv){
+      document.getElementById('coord-login-erro').innerHTML='<div class="warn-box">CPF não encontrado como coordenador.</div>';
+      return;
     }
   }
-  ir('pg-equidade-form');
+  S.coordCPF=cpf;
+  S.coordNome=srv?srv[1]:(S.acoes.find(a=>limparCPF(a[7]||'')===cpf)?.[7]||'Coordenador');
+  document.getElementById('coord-hdr-nome').textContent=srv?srv[1]:'Coordenador';
+  renderCoordAcoes();
+  ir('pg-coord-painel');
 }
 
-async function salvarPerfil() {
-  const gen  = getChip('eq-genero');
-  const raca = getChip('eq-raca');
-  const pcd  = getChip('eq-pcd');
-  const def  = getChip('eq-def');
-  if (!gen || !raca || !pcd) { alert('Selecione gênero, raça/cor e PCD.'); return; }
-  const linha = [S.cpf_atual, S.nome_atual, new Date().toLocaleDateString('pt-BR'), gen, raca, pcd, def, ''];
-  const idx = S.perfis.findIndex(p => limparCPF(p[0]) === S.cpf_atual);
-  if (idx >= 0) S.perfis[idx] = linha; else S.perfis.push(linha);
-  await upsertPerfil(linha);
-  alert('Perfil salvo!');
+function sairCoord(){
+  S.coordCPF=''; S.coordNome='';
   ir('pg-home');
 }
 
-// ── API GOOGLE SHEETS ─────────────────────────────────────────────────────
-async function lerAba(aba) {
-  for (const nome of [aba, aba.replace(/'/g,'')]) {
-    try {
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${S.sheetId}/values/${encodeURIComponent(nome)}?key=${S.apiKey}`;
-      const r = await fetch(url);
-      if (r.ok) { const d = await r.json(); return d.values || []; }
-    } catch(e) {}
-  }
-  return [];
-}
+function renderCoordAcoes(){
+  // Ações vinculadas ao CPF do coordenador (campo na coluna 12 = coord CPF)
+  const acoesDele=S.acoes.filter(a=>
+    limparCPF(a[12]||'')===S.coordCPF ||
+    limparCPF(a[7]||'')===S.coordCPF
+  );
+  const abertosCI=acoesDele.filter(a=>a[9]==='Aberto').length;
+  const abertosAV=acoesDele.filter(a=>a[10]==='Aberto').length;
+  document.getElementById('coord-info-abertos').textContent=
+    `${acoesDele.length} ação(ões) vinculada(s) · ${abertosCI} check-in aberto · ${abertosAV} avaliação aberta`;
 
-async function sincronizar() {
-  if (!S.sheetId || !S.apiKey) { alert('Configure a planilha em Configurações.'); udpIr('udp-config',null); return; }
-  document.getElementById('sync-status').textContent = '● Sincronizando...';
-  try {
-    const [a,p,pf,av,sv] = await Promise.all([
-      lerAba('ACOES!A3:L1000'),
-      lerAba('PARTICIPANTES!A3:N5000'),
-      lerAba('PERFIL_EQUIDADE!A4:H5000'),
-      lerAba('AVALIACAO!A4:T5000'),
-      lerAba('SERVIDORES!A2:L5000'),
-    ]);
-    S.acoes         = a.filter(r=>r[0]);
-    S.participantes = p.filter(r=>r[0]);
-    S.perfis        = pf.filter(r=>r[0]);
-    S.avaliacoes    = av.filter(r=>r[0]);
-    S.servidores    = sv.filter(r=>r[0]);
-    document.getElementById('sync-status').innerHTML = '● Sincronizado';
-    document.getElementById('sync-status').style.color = 'var(--verde)';
-    atualizarPainel();
-    popularSelects();
-  } catch(e) {
-    document.getElementById('sync-status').textContent = '● Erro';
-    document.getElementById('sync-status').style.color = '#A32D2D';
-  }
-}
-
-function sincronizarSilencioso(cb) {
-  if (!S.sheetId || !S.apiKey) { if(cb) cb(); return; }
-  Promise.all([
-    lerAba('ACOES!A3:L1000'),
-    lerAba('PARTICIPANTES!A3:N5000'),
-    lerAba('PERFIL_EQUIDADE!A4:H5000'),
-    lerAba('SERVIDORES!A2:L5000'),
-  ]).then(([a,p,pf,sv]) => {
-    S.acoes         = a.filter(r=>r[0]);
-    S.participantes = p.filter(r=>r[0]);
-    S.perfis        = pf.filter(r=>r[0]);
-    S.servidores    = sv.filter(r=>r[0]);
-    if(cb) cb();
-  }).catch(()=>{ if(cb) cb(); });
-}
-
-async function gravarLinha(aba, linha, acao) {
-  try {
-    const r = await fetch(SCRIPT_URL, {
-      method:'POST', body: JSON.stringify({aba, acao: acao||'APPEND', linha})
-    });
-    return await r.json();
-  } catch(e) { console.warn('Erro ao gravar:', e); }
-}
-
-async function upsertPerfil(linha) {
-  try {
-    const r = await fetch(SCRIPT_URL, {
-      method:'POST', body: JSON.stringify({aba:'PERFIL_EQUIDADE', acao:'UPSERT_PERFIL', linha})
-    });
-    return await r.json();
-  } catch(e) { console.warn('Erro perfil:', e); }
-}
-
-// ── PAINEL UDP ────────────────────────────────────────────────────────────
-function atualizarPainel() {
-  document.getElementById('m-acoes').textContent = S.acoes.length;
-  document.getElementById('m-part').textContent  = S.participantes.length;
-  const cpfs = new Set(S.participantes.map(r=>r[3]));
-  document.getElementById('m-unicos').textContent   = cpfs.size;
-  document.getElementById('m-av').textContent       = S.avaliacoes.length;
-  const perfilMap = {};
-  S.perfis.forEach(p => { perfilMap[limparCPF(p[0])] = p; });
-  const gen={}, raca={}, pcd={}, vinc={};
-  S.participantes.forEach(p => {
-    const pf = perfilMap[limparCPF(p[3])];
-    gen[pf?.[3]||'Sem perfil']  = (gen[pf?.[3]||'Sem perfil']||0)+1;
-    raca[pf?.[4]||'Sem perfil'] = (raca[pf?.[4]||'Sem perfil']||0)+1;
-    pcd[pf?.[5]||'Sem perfil']  = (pcd[pf?.[5]||'Sem perfil']||0)+1;
-    vinc[p[6]||'Não informado'] = (vinc[p[6]||'Não informado']||0)+1;
+  // Popular select manual
+  const sel=document.getElementById('manual-evento');
+  sel.innerHTML='<option value="">-- selecione --</option>';
+  acoesDele.forEach(a=>{
+    const o=document.createElement('option');
+    o.value=a[0]; o.textContent=`${a[0]} — ${a[1]}`;
+    sel.appendChild(o);
   });
-  renderGraf('graf-raca',    raca, '#378ADD');
-  renderGraf('graf-genero',  gen,  '#D4537E');
-  renderGraf('graf-pcd',     pcd,  '#1D9E75');
-  renderGraf('graf-vinculo', vinc, '#BA7517');
-}
 
-function renderGraf(id, obj, cor) {
-  const el = document.getElementById(id); if(!el) return;
-  const total = Object.values(obj).reduce((a,b)=>a+b,0)||1;
-  const sorted = Object.entries(obj).sort((a,b)=>b[1]-a[1]);
-  el.innerHTML = sorted.map(([k,v]) => {
-    const pct = Math.round(v/total*100);
-    return `<div class="bar-row">
-      <span class="bar-label">${k}</span>
-      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${cor};color:#fff;">${pct}%</div></div>
-      <span class="bar-count">${v}</span>
+  const el=document.getElementById('coord-lista-acoes');
+  if(!acoesDele.length){el.innerHTML='<div class="info-box">Nenhuma ação vinculada ao seu CPF. Solicite à UDP que vincule suas ações.</div>';return;}
+  el.innerHTML=acoesDele.map(a=>{
+    const stCI=a[9]||'Pendente';
+    const stAV=a[10]||'Pendente';
+    const presentes=S.participantes.filter(p=>p[1]===a[0]).length;
+    return `<div class="card" style="margin-bottom:12px;">
+      <div style="font-size:15px;font-weight:700;margin-bottom:4px;">${a[1]||''}</div>
+      <div style="font-size:13px;color:var(--txt3);margin-bottom:10px;">${a[3]||''} · ${a[5]||''} · ${presentes} presente(s)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
+        <span>Check-in: <span class="badge ${stCI==='Aberto'?'badge-green':'badge-gray'}">${stCI}</span></span>
+        <span>Avaliação: <span class="badge ${stAV==='Aberto'?'badge-amber':'badge-gray'}">${stAV}</span></span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-sm ${stCI==='Aberto'?'btn-danger':'btn-green'}" onclick="toggleStatus('${a[0]}','checkin')">${stCI==='Aberto'?'Fechar check-in':'Abrir check-in'}</button>
+        <button class="btn btn-sm ${stAV==='Aberto'?'btn-danger':'btn-amber'}" onclick="toggleStatus('${a[0]}','avaliacao')">${stAV==='Aberto'?'Fechar avaliação':'Abrir avaliação'}</button>
+        <button class="btn btn-outline btn-sm" onclick="verPresentes('${a[0]}')">Ver presentes</button>
+      </div>
     </div>`;
-  }).join('') || '<p style="font-size:12px;color:var(--txt3);">Sem dados.</p>';
+  }).join('');
 }
 
-// ── AÇÕES ─────────────────────────────────────────────────────────────────
-function renderAcoes() {
-  const el = document.getElementById('lista-acoes');
-  if (!S.acoes.length) { el.innerHTML = '<div class="info-box">Nenhuma ação. Sincronize ou crie uma nova.</div>'; return; }
-  el.innerHTML = S.acoes.map(a => {
-    const status = a[9]||'Pendente';
-    const badge  = status==='Aberto' ? 'badge-green' : status==='Encerrado' ? 'badge-blue' : 'badge-gray';
-    const presentes = S.participantes.filter(p=>p[1]===a[0]).length;
-    return `<div class="acao-item">
-      <div class="acao-titulo">${a[1]||''}</div>
-      <div class="acao-meta">${a[2]||''} · ${a[3]||''} · ${a[5]||''} · ${presentes} presente(s)</div>
-      <div style="margin-bottom:10px;"><span class="badge ${badge}">${status}</span></div>
-      <div class="acao-btns">
-        <button class="btn btn-outline btn-sm" onclick="gerarQR('${a[0]}','checkin')">QR Check-in</button>
-        <button class="btn btn-outline btn-sm" onclick="gerarQR('${a[0]}','avaliacao')">QR Avaliação</button>
+async function toggleStatus(idAcao, tipo){
+  const idx=S.acoes.findIndex(a=>a[0]===idAcao);
+  if(idx<0) return;
+  const col=tipo==='checkin'?9:10;
+  const atual=S.acoes[idx][col]||'Pendente';
+  const novo=atual==='Aberto'?'Encerrado':'Aberto';
+  S.acoes[idx][col]=novo;
+  // Gravar na planilha via Apps Script
+  await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({
+    aba:'ACOES',acao:'UPDATE',colChave:1,chave:idAcao,col:col+1,valor:novo
+  })});
+  renderCoordAcoes();
+}
+
+function verPresentes(idAcao){
+  const acao=S.acoes.find(a=>a[0]===idAcao);
+  S.coordAcaoSel=acao;
+  document.getElementById('presentes-hdr-sub').textContent=acao?acao[1]:'';
+  const lista=S.participantes.filter(p=>p[1]===idAcao);
+  const el=document.getElementById('presentes-lista');
+  if(!lista.length){el.innerHTML='<div class="info-box">Nenhum participante ainda.</div>';return;}
+  el.innerHTML=lista.map(p=>`
+    <div class="part-row">
+      <div>
+        <div class="part-nome">${p[4]||''}</div>
+        <div class="part-meta">${p[8]||''} · ${p[6]||''} ${p[10]==='Sim'?'· <span class="badge badge-roxo">Chefia</span>':''}</div>
+      </div>
+      <div style="font-size:11px;color:var(--txt3);">${p[11]||''}</div>
+    </div>`).join('');
+  ir('pg-coord-presentes');
+}
+
+function buscarManual(){
+  const idAcao=document.getElementById('manual-evento').value;
+  const cpf=limparCPF(document.getElementById('manual-cpf').value);
+  if(!idAcao){alert('Selecione o evento.');return;}
+  if(cpf.length!==11){alert('CPF inválido.');return;}
+  const acao=S.acoes.find(a=>a[0]===idAcao);
+  S.eventoSel=acao;
+  const jaPresente=S.participantes.find(p=>limparCPF(p[3])===cpf&&p[1]===idAcao);
+  if(jaPresente){document.getElementById('manual-resultado').innerHTML='<div class="success-box">✅ '+jaPresente[4]+' — presença já confirmada.</div>';return;}
+  const srv=buscarServidor(cpf);
+  S.cpf=cpf; S.srv=srv; S.nome=srv?srv[1]:'';
+  if(srv){
+    document.getElementById('manual-resultado').innerHTML=`
+      <div class="found-card">
+        <div style="font-size:16px;font-weight:700;color:var(--verde);">${srv[1]}</div>
+        <div style="font-size:13px;color:var(--verde);margin-top:3px;">${srv[4]||''} · ${srv[6]||''}</div>
+        ${ehChefia(srv)==='Sim'?'<div style="margin-top:6px;"><span class="badge badge-roxo">Chefia</span></div>':''}
+        <button class="btn btn-green" style="margin-top:12px;" onclick="confirmarPresenca()">✅ Confirmar presença</button>
+      </div>`;
+  } else {
+    document.getElementById('manual-resultado').innerHTML=`
+      <div class="notfound-card">
+        <div style="font-size:15px;font-weight:700;color:var(--amber);">CPF não encontrado na base.</div>
+        <button class="btn btn-amber" style="margin-top:10px;" onclick="irExternoManual('${cpf}')">Cadastrar externo</button>
+      </div>`;
+  }
+}
+
+function irExternoManual(cpf){
+  document.getElementById('ext-cpf').value=cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
+  ir('pg-ci-externo');
+}
+
+function exportarAnexoIVCoord(){
+  if(!S.coordAcaoSel){return;}
+  exportarAnexoIV(S.coordAcaoSel[0]);
+}
+
+// ── UDP ───────────────────────────────────────────────────────────────────
+function atualizarPainel(){
+  document.getElementById('m-acoes').textContent=S.acoes.length;
+  document.getElementById('m-part').textContent=S.participantes.length;
+  const cpfs=new Set(S.participantes.map(r=>r[3]));
+  document.getElementById('m-uniq').textContent=cpfs.size;
+  document.getElementById('m-av').textContent=S.avaliacoes.length;
+  const pm={};
+  S.perfis.forEach(p=>{pm[limparCPF(p[0])]=p;});
+  const gen={},raca={},pcd={},vinc={};
+  S.participantes.forEach(p=>{
+    const pf=pm[limparCPF(p[3])];
+    gen[pf?.[3]||'Sem perfil']=(gen[pf?.[3]||'Sem perfil']||0)+1;
+    raca[pf?.[4]||'Sem perfil']=(raca[pf?.[4]||'Sem perfil']||0)+1;
+    pcd[pf?.[5]||'Sem perfil']=(pcd[pf?.[5]||'Sem perfil']||0)+1;
+    vinc[p[6]||'Não informado']=(vinc[p[6]||'Não informado']||0)+1;
+  });
+  renderGraf('g-raca',raca,'#378ADD');
+  renderGraf('g-genero',gen,'#D4537E');
+  renderGraf('g-pcd',pcd,'#1D9E75');
+  renderGraf('g-vinculo',vinc,'#BA7517');
+}
+
+function renderGraf(id,obj,cor){
+  const el=document.getElementById(id); if(!el) return;
+  const total=Object.values(obj).reduce((a,b)=>a+b,0)||1;
+  el.innerHTML=Object.entries(obj).sort((a,b)=>b[1]-a[1]).map(([k,v])=>{
+    const pct=Math.round(v/total*100);
+    return `<div class="bar-row"><span class="bar-lbl">${k}</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${cor};color:#fff;">${pct}%</div></div><span class="bar-cnt">${v}</span></div>`;
+  }).join('')||'<p style="font-size:12px;color:var(--txt3);">Sem dados.</p>';
+}
+
+function renderUDPAcoes(){
+  const el=document.getElementById('udp-lista-acoes');
+  if(!S.acoes.length){el.innerHTML='<div class="info-box">Nenhuma ação. Crie uma nova ou sincronize.</div>';return;}
+  el.innerHTML=S.acoes.map(a=>{
+    const stCI=a[9]||'Pendente'; const stAV=a[10]||'Pendente';
+    const pr=S.participantes.filter(p=>p[1]===a[0]).length;
+    return `<div class="card" style="margin-bottom:10px;">
+      <div style="font-size:15px;font-weight:700;">${a[1]||''}</div>
+      <div style="font-size:12px;color:var(--txt3);margin:4px 0 8px;">${a[2]||''} · ${a[3]||''} · ${a[5]||''} · ${pr} presente(s)</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <span class="badge ${stCI==='Aberto'?'badge-green':'badge-gray'}">CI: ${stCI}</span>
+        <span class="badge ${stAV==='Aberto'?'badge-amber':'badge-gray'}">AV: ${stAV}</span>
+        <button class="btn btn-outline btn-sm" onclick="toggleStatus('${a[0]}','checkin')">${stCI==='Aberto'?'Fechar CI':'Abrir CI'}</button>
+        <button class="btn btn-outline btn-sm" onclick="toggleStatus('${a[0]}','avaliacao')">${stAV==='Aberto'?'Fechar AV':'Abrir AV'}</button>
         <button class="btn btn-outline btn-sm" onclick="exportarAnexoIV('${a[0]}')">Anexo IV</button>
       </div>
     </div>`;
   }).join('');
 }
 
-async function salvarAcao() {
-  const titulo = document.getElementById('na-titulo').value.trim();
-  if (!titulo) { alert('Informe o título.'); return; }
-  const id    = 'CAP' + String(S.acoes.length+1).padStart(3,'0');
-  const linha = [id, titulo,
+async function salvarAcao(){
+  const titulo=document.getElementById('na-titulo').value.trim();
+  if(!titulo){alert('Informe o título.');return;}
+  const coordCPF=limparCPF(document.getElementById('na-coord-cpf').value);
+  const coordSrv=buscarServidor(coordCPF);
+  const id='CAP'+String(S.acoes.length+1).padStart(3,'0');
+  const linha=[id,titulo,
     document.getElementById('na-tipo').value,
     document.getElementById('na-modal').value,
     document.getElementById('na-data').value,
     document.getElementById('na-ch').value,
     document.getElementById('na-local').value,
-    document.getElementById('na-coord').value,
+    coordSrv?coordSrv[1]:(document.getElementById('na-coord-cpf').value),
     document.getElementById('na-unidade').value,
-    'Pendente','',''];
+    'Pendente','Pendente','',coordCPF];
   S.acoes.push(linha);
-  await gravarLinha('ACOES', linha, 'APPEND');
+  await gravarLinha('ACOES',linha,'APPEND');
   alert(`Ação ${id} criada!`);
-  udpIr('udp-acoes', null);
-  renderAcoes();
+  udpIr('udp-acoes',null);
+  renderUDPAcoes();
 }
 
-// ── QR CODE ───────────────────────────────────────────────────────────────
-function gerarQR(idAcao, tipo) {
-  const acao = S.acoes.find(a => a[0] === idAcao);
-  const link = `${BASE_URL}?acao=${idAcao}&tipo=${tipo}`;
-  const titulosQR = { checkin: 'QR Code — Check-in', avaliacao: 'QR Code — Avaliação' };
-  document.getElementById('qr-titulo').textContent = titulosQR[tipo];
-  document.getElementById('qr-sub').textContent    = acao ? acao[1] : idAcao;
-  document.getElementById('qr-link-txt').textContent = link;
-  document.getElementById('qr-code').innerHTML = '';
-  new QRCode(document.getElementById('qr-code'), {
-    text: link, width:200, height:200,
-    colorDark:'#003F72', colorLight:'#ffffff',
-    correctLevel: QRCode.CorrectLevel.H
-  });
-  const modal = document.getElementById('qr-modal');
-  modal.style.display = 'flex';
-}
-
-function fecharQR() {
-  document.getElementById('qr-modal').style.display = 'none';
-}
-
-// ── RELATÓRIO ─────────────────────────────────────────────────────────────
-function popularSelects() {
-  ['rel-acao-sel','av-acao-sel'].forEach(id => {
-    const el = document.getElementById(id); if(!el) return;
-    const atual = el.value;
-    el.innerHTML = '<option value="">Todas</option>';
-    S.acoes.forEach(a => {
-      const o = document.createElement('option');
-      o.value = a[0]; o.textContent = `${a[0]} — ${a[1]}`;
-      el.appendChild(o);
-    });
-    el.value = atual;
+function popularSelects(){
+  ['rel-acao','av-acao-sel'].forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    const atual=el.value;
+    el.innerHTML='<option value="">Todas</option>';
+    S.acoes.forEach(a=>{const o=document.createElement('option');o.value=a[0];o.textContent=`${a[0]} — ${a[1]}`;el.appendChild(o);});
+    el.value=atual;
   });
 }
 
-function filtrarRelatorio() {
-  const idAcao  = document.getElementById('rel-acao-sel').value;
-  const vinculo = document.getElementById('rel-vinculo-sel').value;
-  let lista = S.participantes;
-  if (idAcao)  lista = lista.filter(p=>p[1]===idAcao);
-  if (vinculo) lista = lista.filter(p=>p[6]===vinculo);
-  document.getElementById('rel-total').textContent = `${lista.length} registro(s)`;
-  const el = document.getElementById('lista-relatorio');
-  if (!lista.length) { el.innerHTML = '<p style="color:var(--txt3);text-align:center;padding:20px;">Nenhum resultado.</p>'; return; }
-  el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;">
+function filtrarRel(){
+  const idAcao=document.getElementById('rel-acao').value;
+  const vinc=document.getElementById('rel-vinc').value;
+  let lista=S.participantes;
+  if(idAcao) lista=lista.filter(p=>p[1]===idAcao);
+  if(vinc) lista=lista.filter(p=>p[6]===vinc);
+  document.getElementById('rel-total').textContent=`${lista.length} registro(s)`;
+  const el=document.getElementById('rel-tabela');
+  if(!lista.length){el.innerHTML='<p style="text-align:center;color:var(--txt3);padding:20px;">Nenhum resultado.</p>';return;}
+  el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px;">
     <thead><tr style="background:var(--azul);color:#fff;">
-      <th style="padding:8px;">Nome</th><th>CPF</th><th>E-mail</th>
-      <th>Cargo</th><th>Vínculo</th><th>Chefia</th><th>Ação</th><th>Check-in</th>
+      <th style="padding:8px;">Nome</th><th>CPF</th><th>E-mail</th><th>Cargo</th><th>Vínculo</th><th>Chefia</th><th>Ação</th><th>Check-in</th>
     </tr></thead>
-    <tbody>${lista.map((p,i) => `<tr style="background:${i%2?'var(--cinza)':'#fff'};">
+    <tbody>${lista.map((p,i)=>`<tr style="background:${i%2?'var(--cinza)':'#fff'};">
       <td style="padding:8px;font-weight:600;">${p[4]||''}</td>
       <td style="font-size:11px;">${p[3]||''}</td>
       <td style="font-size:11px;">${p[5]||''}</td>
@@ -1305,23 +1113,21 @@ function filtrarRelatorio() {
     </tr>`).join('')}</tbody></table>`;
 }
 
-function filtrarAvaliacoes() {
-  const idAcao = document.getElementById('av-acao-sel').value;
-  let lista = S.avaliacoes;
-  if (idAcao) lista = lista.filter(a=>a[2]===idAcao);
-  const partMap = {};
-  S.participantes.forEach(p => { partMap[limparCPF(p[3])] = p[4]; });
-  const el = document.getElementById('lista-avaliacoes');
-  if (!lista.length) { el.innerHTML = '<p style="color:var(--txt3);text-align:center;padding:20px;">Nenhuma avaliação.</p>'; return; }
-  el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;">
+function filtrarAv(){
+  const idAcao=document.getElementById('av-acao-sel').value;
+  let lista=S.avaliacoes;
+  if(idAcao) lista=lista.filter(a=>a[2]===idAcao);
+  const pm={};S.participantes.forEach(p=>{pm[limparCPF(p[3])]=p[4];});
+  const el=document.getElementById('av-tabela');
+  if(!lista.length){el.innerHTML='<p style="text-align:center;color:var(--txt3);padding:20px;">Nenhuma avaliação.</p>';return;}
+  el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px;">
     <thead><tr style="background:var(--azul);color:#fff;">
-      <th style="padding:8px;">Nome</th><th>Ação</th><th>Nota</th>
-      <th>Positivo</th><th>Melhoria</th>
+      <th style="padding:8px;">Nome</th><th>Ação</th><th>Nota</th><th>Positivo</th><th>Melhoria</th>
     </tr></thead>
-    <tbody>${lista.map((a,i) => {
-      const nome = partMap[limparCPF(a[1])]||'—';
-      const nota = Number(a[19])||0;
-      const cor  = nota>=4?'badge-green':nota>=3?'badge-amber':'badge-gray';
+    <tbody>${lista.map((a,i)=>{
+      const nome=pm[limparCPF(a[1])]||'—';
+      const nota=Number(a[19])||0;
+      const cor=nota>=4?'badge-green':nota>=3?'badge-amber':'badge-gray';
       return `<tr style="background:${i%2?'var(--cinza)':'#fff'};">
         <td style="padding:8px;font-weight:600;">${nome}</td>
         <td style="font-size:11px;">${a[3]||a[2]||''}</td>
@@ -1333,106 +1139,173 @@ function filtrarAvaliacoes() {
 }
 
 // ── EXPORTAR ──────────────────────────────────────────────────────────────
-function exportarExcel() {
-  const idAcao  = document.getElementById('rel-acao-sel').value;
-  const vinculo = document.getElementById('rel-vinculo-sel').value;
-  let lista = S.participantes;
-  if (idAcao)  lista = lista.filter(p=>p[1]===idAcao);
-  if (vinculo) lista = lista.filter(p=>p[6]===vinculo);
-  const acao  = S.acoes.find(a=>a[0]===idAcao);
-  const wb    = XLSX.utils.book_new();
-  const dados = [
+function exportarExcel(){
+  const idAcao=document.getElementById('rel-acao').value;
+  const vinc=document.getElementById('rel-vinc').value;
+  let lista=S.participantes;
+  if(idAcao) lista=lista.filter(p=>p[1]===idAcao);
+  if(vinc) lista=lista.filter(p=>p[6]===vinc);
+  const acao=S.acoes.find(a=>a[0]===idAcao);
+  const wb=XLSX.utils.book_new();
+  const dados=[
     ['LISTA DE PARTICIPANTES — UDP CAPACITAÇÕES · HC-UFPE · EBSERH'],
-    ['Ação:', acao?acao[1]:idAcao||'Todas', '', 'Data:', acao?acao[4]:'', '', 'Total:', lista.length],
+    ['Ação:',acao?acao[1]:idAcao||'Todas','','Data:',acao?acao[4]:'','','Total:',lista.length],
     [],
     ['Nº','Nome completo','CPF','E-mail','Cargo','Vínculo','Unidade','Chefia','Check-in'],
-    ...lista.map((p,i)=>[i+1, p[4]||'', p[3]||'', p[5]||'', p[8]||'', p[6]||'', p[9]||'', p[10]||'', p[11]||''])
+    ...lista.map((p,i)=>[i+1,p[4]||'',p[3]||'',p[5]||'',p[8]||'',p[6]||'',p[9]||'',p[10]||'',p[11]||''])
   ];
-  const ws = XLSX.utils.aoa_to_sheet(dados);
-  // Larguras
-  ws['!cols'] = [{wch:4},{wch:35},{wch:16},{wch:30},{wch:25},{wch:14},{wch:30},{wch:10},{wch:20}];
-  // Mesclar título
-  ws['!merges'] = [{s:{r:0,c:0},e:{r:0,c:8}}];
-  XLSX.utils.book_append_sheet(wb, ws, 'Participantes');
-  XLSX.writeFile(wb, `Participantes_${new Date().toISOString().slice(0,10)}.xlsx`);
+  const ws=XLSX.utils.aoa_to_sheet(dados);
+  ws['!cols']=[{wch:4},{wch:35},{wch:16},{wch:30},{wch:25},{wch:14},{wch:30},{wch:10},{wch:20}];
+  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:8}}];
+  XLSX.utils.book_append_sheet(wb,ws,'Participantes');
+  XLSX.writeFile(wb,`Participantes_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
-function exportarPDF() {
-  const idAcao = document.getElementById('rel-acao-sel').value;
-  const acao   = S.acoes.find(a=>a[0]===idAcao);
-  let lista    = S.participantes;
-  if (idAcao)  lista = lista.filter(p=>p[1]===idAcao);
-  const html = `<html><head><meta charset="UTF-8"/>
-  <style>body{font-family:Arial;font-size:12px;}
-  h2{color:#003F72;} table{width:100%;border-collapse:collapse;}
-  th{background:#003F72;color:#fff;padding:7px;} td{padding:7px;border-bottom:1px solid #eee;}
-  .rodape{margin-top:20px;font-size:10px;color:#888;text-align:center;}
-  </style></head><body>
+function exportarPDF(){
+  const idAcao=document.getElementById('rel-acao').value;
+  const vinc=document.getElementById('rel-vinc').value;
+  let lista=S.participantes;
+  if(idAcao) lista=lista.filter(p=>p[1]===idAcao);
+  if(vinc) lista=lista.filter(p=>p[6]===vinc);
+  const acao=S.acoes.find(a=>a[0]===idAcao);
+  const html=`<html><head><meta charset="UTF-8"/>
+  <style>body{font-family:Arial;font-size:12px;}h2{color:#003F72;}
+  table{width:100%;border-collapse:collapse;}th{background:#003F72;color:#fff;padding:7px;}
+  td{padding:7px;border-bottom:1px solid #eee;}.rodape{margin-top:20px;font-size:10px;color:#888;text-align:center;}</style>
+  </head><body>
   <h2>Lista de Participantes</h2>
   <p><b>Ação:</b> ${acao?acao[1]:idAcao||'Todas'} &nbsp;|&nbsp; <b>Total:</b> ${lista.length}</p>
   <table><thead><tr><th>Nº</th><th>Nome</th><th>CPF</th><th>Cargo</th><th>Vínculo</th><th>Chefia</th><th>Check-in</th></tr></thead>
   <tbody>${lista.map((p,i)=>`<tr><td>${i+1}</td><td>${p[4]||''}</td><td>${p[3]||''}</td><td>${p[8]||''}</td><td>${p[6]||''}</td><td>${p[10]||''}</td><td>${p[11]||''}</td></tr>`).join('')}</tbody></table>
   <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
   </body></html>`;
-  const w = window.open('','_blank');
-  w.document.write(html);
-  w.document.close();
-  w.print();
+  const w=window.open('','_blank'); w.document.write(html); w.document.close(); w.print();
 }
 
-function exportarAnexoIV(idAcao) {
-  const acao  = S.acoes.find(a=>a[0]===idAcao);
-  const lista = S.participantes.filter(p=>p[1]===idAcao);
-  let csv = 'ANEXO IV - RELATÓRIO CONSOLIDADO DE CARGA HORÁRIA - PARTICIPANTES\n';
-  csv += `TÍTULO:,"${acao?.[1]||''}"\nDATA:,"${acao?.[4]||''}"\tLOCAL:,"${acao?.[6]||''}"\nCH:,"${acao?.[5]||''}"\n\n`;
-  csv += 'Nº,NOME COMPLETO,E-MAIL,SIAPE,CARGO,VÍNCULO,LOTAÇÃO,CH,CHEFIA(X),CPF\n';
-  lista.forEach((p,i) => {
-    csv += `${i+1},"${p[4]||''}","${p[5]||''}","${p[7]||''}","${p[8]||''}","${p[6]||''}","${p[9]||''}","${acao?.[5]||''}","${p[10]==='Sim'?'X':''}","${p[3]||''}"\n`;
-  });
-  baixar('\ufeff'+csv, `Anexo_IV_${idAcao}.csv`, 'text/csv');
+function exportarAnexoIV(idAcao){
+  const acao=S.acoes.find(a=>a[0]===idAcao);
+  const lista=S.participantes.filter(p=>p[1]===idAcao);
+  const wb=XLSX.utils.book_new();
+  const dados=[
+    ['ANEXO IV - RELATÓRIO CONSOLIDADO DE CARGA HORÁRIA - PARTICIPANTES'],
+    ['TÍTULO DA AÇÃO:',acao?.[1]||''],
+    ['DATA/PERÍODO:',acao?.[4]||'','','LOCAL:',acao?.[6]||''],
+    ['CARGA HORÁRIA:',acao?.[5]||''],
+    ['Enviar documento sem abreviar os nomes. Não transformar em PDF.'],
+    [],
+    ['Nº','NOME COMPLETO (LETRA MAIÚSCULA)','E-MAIL INSTITUCIONAL','SIAPE/MATRÍCULA','CARGO','VÍNCULO','LOTAÇÃO','CH TOTAL','CHEFIA (X)','CPF'],
+    ...lista.map((p,i)=>[i+1,(p[4]||'').toUpperCase(),p[5]||'',p[7]||'',p[8]||'',p[6]||'',p[9]||'',acao?.[5]||'',p[10]==='Sim'?'X':'',p[3]||''])
+  ];
+  const ws=XLSX.utils.aoa_to_sheet(dados);
+  ws['!cols']=[{wch:4},{wch:38},{wch:30},{wch:16},{wch:28},{wch:14},{wch:30},{wch:10},{wch:10},{wch:16}];
+  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:9}},{s:{r:1,c:1},e:{r:1,c:9}},{s:{r:4,c:0},e:{r:4,c:9}}];
+  XLSX.utils.book_append_sheet(wb,ws,'Anexo IV');
+  XLSX.writeFile(wb,`Anexo_IV_${idAcao}_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
-function baixar(conteudo, nome, tipo) {
-  const blob = new Blob([conteudo], {type: tipo+';charset=utf-8'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = nome;
-  a.click();
+// ── API GOOGLE SHEETS ─────────────────────────────────────────────────────
+async function lerAba(aba){
+  for(const nome of [aba,aba.replace(/'/g,'')]){
+    try{
+      const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${S.sheetId}/values/${encodeURIComponent(nome)}?key=${S.apiKey}`);
+      if(r.ok){const d=await r.json();return d.values||[];}
+    }catch(e){}
+  }
+  return [];
 }
 
-// ── CONFIGURAÇÕES ─────────────────────────────────────────────────────────
-function salvarConfig() {
-  S.sheetId = document.getElementById('cfg-id').value.trim();
-  S.apiKey  = document.getElementById('cfg-key').value.trim();
-  localStorage.setItem('udp_sheet_id', S.sheetId);
-  localStorage.setItem('udp_api_key',  S.apiKey);
-  document.getElementById('cfg-msg').innerHTML = '<span style="color:var(--verde);">✓ Salvo.</span>';
+async function sincronizar(){
+  if(!S.sheetId||!S.apiKey){alert('Configure a planilha em Configurações.');udpIr('udp-config',null);return;}
+  document.getElementById('sync-st').textContent='● Sincronizando...';
+  try{
+    const [a,p,pf,av,sv]=await Promise.all([
+      lerAba('ACOES!A3:M1000'),
+      lerAba('PARTICIPANTES!A3:N5000'),
+      lerAba('PERFIL_EQUIDADE!A4:H5000'),
+      lerAba('AVALIACAO!A4:T5000'),
+      lerAba('SERVIDORES!A2:L5000'),
+    ]);
+    S.acoes=a.filter(r=>r[0]);
+    S.participantes=p.filter(r=>r[0]);
+    S.perfis=pf.filter(r=>r[0]);
+    S.avaliacoes=av.filter(r=>r[0]);
+    S.servidores=sv.filter(r=>r[0]);
+    document.getElementById('sync-st').innerHTML='● Sincronizado';
+    document.getElementById('sync-st').style.color='var(--verde)';
+    atualizarPainel();
+    popularSelects();
+  }catch(e){
+    document.getElementById('sync-st').textContent='● Erro';
+    document.getElementById('sync-st').style.color='#A32D2D';
+    console.error(e);
+  }
 }
 
-async function testarConexao() {
-  document.getElementById('cfg-msg').textContent = 'Testando...';
-  try {
-    const r = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${S.sheetId}?key=${S.apiKey}`);
-    if (r.ok) {
-      document.getElementById('cfg-msg').innerHTML = '<span style="color:var(--verde);">✓ Conexão bem-sucedida!</span>';
-      document.getElementById('sync-status').innerHTML = '● Conectado';
-      document.getElementById('sync-status').style.color = 'var(--verde)';
-    } else {
-      document.getElementById('cfg-msg').innerHTML = '<span style="color:#A32D2D;">✗ Erro: verifique o ID e a chave.</span>';
+async function sincronizarSilencioso(){
+  if(!S.sheetId||!S.apiKey) return;
+  try{
+    const [a,p,pf,sv]=await Promise.all([
+      lerAba('ACOES!A3:M1000'),
+      lerAba('PARTICIPANTES!A3:N5000'),
+      lerAba('PERFIL_EQUIDADE!A4:H5000'),
+      lerAba('SERVIDORES!A2:L5000'),
+    ]);
+    S.acoes=a.filter(r=>r[0]);
+    S.participantes=p.filter(r=>r[0]);
+    S.perfis=pf.filter(r=>r[0]);
+    S.servidores=sv.filter(r=>r[0]);
+  }catch(e){}
+}
+
+async function gravarLinha(aba,linha,acao){
+  try{
+    const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({aba,acao:acao||'APPEND',linha})});
+    return await r.json();
+  }catch(e){console.warn('Erro ao gravar:',e);}
+}
+
+async function upsertPerfil(linha){
+  try{
+    const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({aba:'PERFIL_EQUIDADE',acao:'UPSERT_PERFIL',linha})});
+    return await r.json();
+  }catch(e){console.warn('Erro perfil:',e);}
+}
+
+// ── CONFIG ────────────────────────────────────────────────────────────────
+function salvarConfig(){
+  S.sheetId=document.getElementById('cfg-id').value.trim();
+  S.apiKey=document.getElementById('cfg-key').value.trim();
+  localStorage.setItem('udp_sheet_id',S.sheetId);
+  localStorage.setItem('udp_api_key',S.apiKey);
+  document.getElementById('cfg-msg').innerHTML='<span style="color:var(--verde);">✓ Salvo.</span>';
+}
+
+async function testarConexao(){
+  document.getElementById('cfg-msg').textContent='Testando...';
+  try{
+    const r=await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${S.sheetId}?key=${S.apiKey}`);
+    if(r.ok){
+      document.getElementById('cfg-msg').innerHTML='<span style="color:var(--verde);">✓ Conexão bem-sucedida!</span>';
+      document.getElementById('sync-st').innerHTML='● Conectado';
+      document.getElementById('sync-st').style.color='var(--verde)';
+    }else{
+      document.getElementById('cfg-msg').innerHTML='<span style="color:#A32D2D;">✗ Erro: verifique o ID e a chave.</span>';
     }
-  } catch(e) {
-    document.getElementById('cfg-msg').innerHTML = '<span style="color:#A32D2D;">✗ Sem conexão.</span>';
+  }catch(e){
+    document.getElementById('cfg-msg').innerHTML='<span style="color:#A32D2D;">✗ Sem conexão.</span>';
   }
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
-window.onload = () => {
-  if (S.sheetId) document.getElementById('cfg-id').value = S.sheetId;
-  if (S.apiKey)  document.getElementById('cfg-key').value = S.apiKey;
-  // Carregar dados silenciosamente
-  if (S.sheetId && S.apiKey) sincronizarSilencioso(null);
-  // Verificar QR Code params
-  lerParams();
+window.onload=async()=>{
+  S.sheetId=localStorage.getItem('udp_sheet_id')||'';
+  S.apiKey=localStorage.getItem('udp_api_key')||'';
+  // Verificar params de URL (links fixos)
+  const p=new URLSearchParams(window.location.search);
+  const tipo=p.get('tipo');
+  if(S.sheetId&&S.apiKey) await sincronizarSilencioso();
+  if(tipo==='checkin') irCheckin();
+  else if(tipo==='avaliacao') irAvaliacao();
 };
 </script>
 </body>
