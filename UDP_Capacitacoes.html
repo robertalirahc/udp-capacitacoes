@@ -781,7 +781,7 @@ const BASE_URL   = window.location.href.split('?')[0];
 const S = {
   sheetId: localStorage.getItem('udp_sheet_id') || '',
   apiKey:  localStorage.getItem('udp_api_key')  || '',
-  acoes: [], participantes: [], perfis: [], avaliacoes: [],
+  acoes: [], participantes: [], perfis: [], avaliacoes: [], servidores: [],
   // contexto atual
   acao_ativa_id: '',
   acao_ativa_tipo: '', // 'checkin' ou 'avaliacao'
@@ -867,6 +867,18 @@ function formatarCPF(el) {
 }
 function limparCPF(c){ return (c||'').replace(/\D/g,''); }
 
+function buscarServidor(cpf) {
+  // CPF da base: 11111111-11 (sem pontos, com traço)
+  // Normaliza removendo tudo exceto dígitos para comparar
+  const cpfLimpo = limparCPF(cpf);
+  return S.servidores.find(s => limparCPF(s[0]) === cpfLimpo) || null;
+}
+
+function ehChefia(servidor) {
+  // Cargo Comissao/FG (coluna H, índice 7) preenchido = chefia
+  return servidor && servidor[7] && servidor[7].toString().trim() !== '' ? 'Sim' : 'Não';
+}
+
 // ── Chips ─────────────────────────────────────────────────────────────────
 function selChip(el, grupo) {
   document.querySelectorAll(`[onclick*="'${grupo}'"]`).forEach(c => c.classList.remove('sel'));
@@ -949,22 +961,37 @@ function irExternoCI(cpf) {
   ir('pg-checkin-externo');
 }
 
+async function confirmarPresencaBase(cpf, nome, email, vinculo, siape, cargo, lotacao, chefia, cor, genero, pcd, tipopcd) {
+  // Confirmar presença com dados completos da base SERVIDORES
+  const agora = new Date().toLocaleString('pt-BR');
+  const idPre = 'PRE' + Date.now();
+  const linha = [idPre, S.acao_ativa_id, '', cpf, nome, email, vinculo, siape, cargo, lotacao, chefia, agora, 'Sistema', ''];
+  S.participantes.push(linha);
+  S.nome_atual = nome;
+  await gravarLinha('PARTICIPANTES', linha, 'APPEND');
+
+  // Salvar/atualizar perfil de equidade automaticamente se tiver dados
+  if (cor || genero || pcd) {
+    const linhaPerfil = [cpf, nome, new Date().toLocaleDateString('pt-BR'), genero, cor, pcd, tipopcd, ''];
+    const idx = S.perfis.findIndex(p => limparCPF(p[0]) === limparCPF(cpf));
+    if (idx >= 0) S.perfis[idx] = linhaPerfil; else S.perfis.push(linhaPerfil);
+    await upsertPerfil(linhaPerfil);
+  }
+
+  document.getElementById('ci-sucesso-nome').textContent = nome;
+  ir('pg-checkin-sucesso');
+}
+
 async function confirmarPresenca(cpf, nome, email, vinculo, cargo, unidade) {
-  const chefia = document.getElementById('ci-chefia')?.checked ? 'Sim' : 'Não';
-  const agora  = new Date().toLocaleString('pt-BR');
-  const idPre  = 'PRE' + Date.now();
-  const linha  = [idPre, S.acao_ativa_id, '', cpf, nome, email, vinculo, '', cargo, unidade, chefia, agora, 'Sistema', ''];
+  // Para participantes não encontrados na base SERVIDORES mas com histórico
+  const agora = new Date().toLocaleString('pt-BR');
+  const idPre = 'PRE' + Date.now();
+  const linha = [idPre, S.acao_ativa_id, '', cpf, nome, email, vinculo, '', cargo, unidade, 'Não', agora, 'Sistema', ''];
   S.participantes.push(linha);
   S.nome_atual = nome;
   await gravarLinha('PARTICIPANTES', linha, 'APPEND');
   document.getElementById('ci-sucesso-nome').textContent = nome;
-  // Verificar se já tem perfil de equidade
-  const temPerfil = S.perfis.find(p => limparCPF(p[0]) === cpf);
-  if (!temPerfil) {
-    ir('pg-checkin-equidade');
-  } else {
-    ir('pg-checkin-sucesso');
-  }
+  ir('pg-checkin-sucesso');
 }
 
 async function registrarExterno() {
@@ -1081,16 +1108,18 @@ async function sincronizar() {
   if (!S.sheetId || !S.apiKey) { alert('Configure a planilha em Configurações.'); udpIr('udp-config',null); return; }
   document.getElementById('sync-status').textContent = '● Sincronizando...';
   try {
-    const [a,p,pf,av] = await Promise.all([
+    const [a,p,pf,av,sv] = await Promise.all([
       lerAba('ACOES!A3:L1000'),
       lerAba('PARTICIPANTES!A3:N5000'),
       lerAba('PERFIL_EQUIDADE!A4:H5000'),
       lerAba('AVALIACAO!A4:T5000'),
+      lerAba('SERVIDORES!A2:L5000'),
     ]);
     S.acoes         = a.filter(r=>r[0]);
     S.participantes = p.filter(r=>r[0]);
     S.perfis        = pf.filter(r=>r[0]);
     S.avaliacoes    = av.filter(r=>r[0]);
+    S.servidores    = sv.filter(r=>r[0]);
     document.getElementById('sync-status').innerHTML = '● Sincronizado';
     document.getElementById('sync-status').style.color = 'var(--verde)';
     atualizarPainel();
@@ -1107,10 +1136,12 @@ function sincronizarSilencioso(cb) {
     lerAba('ACOES!A3:L1000'),
     lerAba('PARTICIPANTES!A3:N5000'),
     lerAba('PERFIL_EQUIDADE!A4:H5000'),
-  ]).then(([a,p,pf]) => {
+    lerAba('SERVIDORES!A2:L5000'),
+  ]).then(([a,p,pf,sv]) => {
     S.acoes         = a.filter(r=>r[0]);
     S.participantes = p.filter(r=>r[0]);
     S.perfis        = pf.filter(r=>r[0]);
+    S.servidores    = sv.filter(r=>r[0]);
     if(cb) cb();
   }).catch(()=>{ if(cb) cb(); });
 }
