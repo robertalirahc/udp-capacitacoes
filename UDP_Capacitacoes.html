@@ -662,6 +662,7 @@ hr { border: none; border-top: 1px solid var(--borda); margin: 16px 0; }
 
 <script>
 // ── Estado ──────────────────────────────────────────────────────────────
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwyeRGP9t-mNxD8f766IeN5CXL-AFRdcwbFmLSYguaA0-bXQL4xK1uLyvQ8X0FX0rdTLg/exec';
 const S = {
   sheetId:  localStorage.getItem('udp_sheet_id')  || '',
   apiKey:   localStorage.getItem('udp_api_key')   || '',
@@ -747,11 +748,33 @@ async function lerAba(aba) {
   return [];
 }
 
-async function gravarLinha(aba, linha) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${S.sheetId}/values/${encodeURIComponent(aba)}:append?valueInputOption=USER_ENTERED&key=${S.apiKey}`;
-  // Nota: append via API Key (read-only). Para gravação use OAuth2.
-  // Esta função exibe instrução ao usuário.
-  alert('Para gravar dados, a planilha precisa de acesso OAuth2.\nPor enquanto, os dados foram preparados. Cole manualmente na aba ' + aba + ':\n\n' + linha.join('\t'));
+async function gravarLinha(aba, linha, acao) {
+  try {
+    const payload = {
+      aba:   aba,
+      acao:  acao || 'APPEND',
+      linha: linha
+    };
+    const r = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      body:   JSON.stringify(payload)
+    });
+    const d = await r.json();
+    if (!d.ok) console.warn('Erro ao gravar:', d.erro);
+    return d;
+  } catch(e) {
+    console.warn('Erro ao gravar linha:', e);
+  }
+}
+
+async function upsertPerfil(linha) {
+  try {
+    const payload = { aba: 'PERFIL_EQUIDADE', acao: 'UPSERT_PERFIL', linha: linha };
+    const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
+    return await r.json();
+  } catch(e) {
+    console.warn('Erro ao salvar perfil:', e);
+  }
 }
 
 async function sincronizar() {
@@ -1010,7 +1033,7 @@ function confirmarPresenca(cpf, nome, email, vinculo, cargo, unidade) {
   document.getElementById('ci-resultado').innerHTML =
     `<div class="found-card"><b style="color:var(--verde);">&#10003; Presença confirmada — ${nome}</b></div>`;
 
-  gravarLinha('PARTICIPANTES', linha);
+  gravarLinha('PARTICIPANTES', linha, 'APPEND');
   atualizarPainel();
 }
 
@@ -1040,7 +1063,7 @@ function registrarExterno() {
   const linha  = [idPre, idAcao, '', cpf, nome, email, vinculo, '', cargo, unidade, chefia, agora, 'Manual', 'Cadastrado no evento'];
   S.participantes.push(linha);
 
-  gravarLinha('PARTICIPANTES', linha);
+  gravarLinha('PARTICIPANTES', linha, 'APPEND');
   alert(`Presença de ${nome} registrada com sucesso.`);
   ir('checkin');
   atualizarPresentes(idAcao);
@@ -1111,7 +1134,7 @@ function salvarPerfil() {
   const linha = [cpf, nome, agora, gen, raca, pcd, def, agora];
   if (idx >= 0) S.perfis[idx] = linha; else S.perfis.push(linha);
 
-  gravarLinha('PERFIL_EQUIDADE', linha);
+  upsertPerfil(linha);
   alert('Perfil salvo com sucesso!');
 }
 
@@ -1133,7 +1156,7 @@ function salvarAcao() {
   ];
   S.acoes.push(linha);
   atualizarTabelaAcoes();
-  gravarLinha('ACOES', linha);
+  gravarLinha('ACOES', linha, 'APPEND');
   alert(`Ação ${id} criada: ${titulo}`);
   ir('acoes');
 }
