@@ -658,6 +658,7 @@ hr { border: none; border-top: 1px solid var(--borda); margin: 16px 0; }
 </div><!-- /content -->
 </div><!-- /main -->
 </div><!-- /app -->
+<div style="position:fixed;bottom:0;left:0;right:0;background:#003F72;color:rgba(255,255,255,0.6);font-size:11px;text-align:center;padding:5px;z-index:100;">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
 
 <script>
 // ── Estado ──────────────────────────────────────────────────────────────
@@ -755,10 +756,10 @@ async function sincronizar() {
   document.getElementById('sync-status').textContent = '● Sincronizando...';
   try {
     const [acoes, part, perfis, av] = await Promise.all([
-      lerAba("'ACOES'!A3:L1000"),
-      lerAba("'PARTICIPANTES'!A3:N5000"),
-      lerAba("'PERFIL_EQUIDADE'!A4:H5000"),
-      lerAba("'AVALIACAO'!A4:K5000"),
+      lerAba("'ACOES'!A3:L1000").catch(()=>[]),
+      lerAba("'PARTICIPANTES'!A3:N5000").catch(()=>[]),
+      lerAba("'PERFIL_EQUIDADE'!A4:H5000").catch(()=>[]),
+      lerAba("'AVALIACAO'!A4:K5000").catch(()=>[]),
     ]);
     S.acoes         = acoes.filter(r => r[0]);
     S.participantes = part.filter(r => r[0]);
