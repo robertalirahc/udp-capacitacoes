@@ -2,431 +2,264 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <title>UDP Capacitações — HC · EBSERH</title>
 <style>
-/* ── Tokens ─────────────────────────────────────────────────────────── */
 :root {
-  --azul:    #003F72;
-  --azul2:   #185FA5;
-  --azul-cl: #E6F1FB;
-  --verde:   #0F6E56;
-  --verde-cl:#E1F5EE;
-  --roxo:    #993556;
-  --roxo-cl: #FBEAF0;
-  --amber:   #854F0B;
-  --amber-cl:#FAEEDA;
-  --cinza:   #F1EFE8;
-  --borda:   #D3D1C7;
-  --txt:     #2C2C2A;
-  --txt2:    #5F5E5A;
-  --txt3:    #888780;
-  --bg:      #F8F7F4;
-  --white:   #FFFFFF;
-  --radius:  10px;
-  --radius-sm: 6px;
+  --azul:#003F72; --azul2:#185FA5; --azul-cl:#E6F1FB;
+  --verde:#0F6E56; --verde-cl:#E1F5EE;
+  --roxo:#993556; --roxo-cl:#FBEAF0;
+  --amber:#854F0B; --amber-cl:#FAEEDA;
+  --cinza:#F1EFE8; --borda:#D3D1C7;
+  --txt:#2C2C2A; --txt2:#5F5E5A; --txt3:#888780;
+  --bg:#F8F7F4; --white:#FFFFFF;
+  --radius:12px; --radius-sm:8px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: Arial, sans-serif; background: var(--bg); color: var(--txt); font-size: 14px; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:15px;}
 
-/* ── Layout ──────────────────────────────────────────────────────────── */
-.app { display: flex; min-height: 100vh; }
-.sidebar {
-  width: 220px; background: var(--azul); color: #fff;
-  display: flex; flex-direction: column; flex-shrink: 0;
-  position: fixed; height: 100vh; overflow-y: auto;
+/* ── Páginas ── */
+.page{display:none;min-height:100vh;}
+.page.active{display:block;}
+
+/* ── Header mobile ── */
+.header{background:var(--azul);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50;}
+.header-back{font-size:22px;cursor:pointer;padding:4px 8px;margin-left:-8px;}
+.header-title{font-size:16px;font-weight:700;flex:1;}
+.header-sub{font-size:11px;opacity:.7;}
+
+/* ── Home ── */
+.home-hero{background:var(--azul);padding:32px 20px 24px;color:#fff;text-align:center;}
+.home-hero h1{font-size:22px;font-weight:700;margin-bottom:4px;}
+.home-hero p{font-size:13px;opacity:.75;}
+.home-cards{padding:20px 16px;display:flex;flex-direction:column;gap:12px;}
+.home-card{background:var(--white);border:1px solid var(--borda);border-radius:var(--radius);padding:20px;display:flex;align-items:center;gap:16px;cursor:pointer;transition:all .15s;}
+.home-card:active{background:var(--cinza);}
+.home-card-icon{width:52px;height:52px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;}
+.home-card-title{font-size:16px;font-weight:700;margin-bottom:3px;}
+.home-card-sub{font-size:13px;color:var(--txt3);}
+.home-card-arrow{margin-left:auto;font-size:20px;color:var(--txt3);}
+
+/* ── Cards e conteúdo ── */
+.content{padding:16px;}
+.card{background:var(--white);border:1px solid var(--borda);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
+.card-title{font-size:15px;font-weight:700;color:var(--azul);margin-bottom:12px;}
+.section-title{font-size:13px;font-weight:700;color:var(--txt3);text-transform:uppercase;letter-spacing:.06em;margin:20px 0 10px;}
+
+/* ── Formulários mobile ── */
+.form-group{margin-bottom:16px;}
+.form-label{font-size:13px;font-weight:700;color:var(--txt2);display:block;margin-bottom:6px;}
+.form-hint{font-size:12px;color:var(--txt3);margin-top:4px;}
+input[type=text],input[type=email],input[type=tel],input[type=number],select,textarea{
+  width:100%;padding:13px 14px;border:1.5px solid var(--borda);
+  border-radius:var(--radius-sm);font-size:15px;font-family:Arial;
+  background:var(--white);color:var(--txt);-webkit-appearance:none;
 }
-.sidebar-logo {
-  padding: 20px 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.12);
-}
-.sidebar-logo .logo-title { font-size: 15px; font-weight: 700; line-height: 1.3; }
-.sidebar-logo .logo-sub { font-size: 11px; opacity: 0.6; margin-top: 2px; }
-.sidebar nav { padding: 12px 0; flex: 1; }
-.nav-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 16px; cursor: pointer; font-size: 13px;
-  transition: background .15s; border-left: 3px solid transparent;
-}
-.nav-item:hover { background: rgba(255,255,255,0.08); }
-.nav-item.active { background: rgba(255,255,255,0.15); border-left-color: #fff; font-weight: 700; }
-.nav-item .icon { font-size: 16px; opacity: 0.85; }
-.nav-section { padding: 12px 16px 4px; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; opacity: 0.45; }
-.main { margin-left: 220px; flex: 1; }
-.topbar {
-  background: var(--white); border-bottom: 1px solid var(--borda);
-  padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 10;
-}
-.topbar h1 { font-size: 16px; font-weight: 700; color: var(--azul); }
-.topbar .sub { font-size: 12px; color: var(--txt3); margin-top: 1px; }
-.content { padding: 24px; max-width: 1100px; }
+input[type=tel],input[type=number]{font-size:18px;letter-spacing:.05em;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--azul2);box-shadow:0 0 0 3px rgba(24,95,165,0.12);}
 
-/* ── Telas ───────────────────────────────────────────────────────────── */
-.screen { display: none; }
-.screen.active { display: block; }
+/* ── Botões mobile ── */
+.btn{width:100%;padding:15px;border-radius:var(--radius-sm);font-size:16px;font-weight:700;cursor:pointer;border:none;transition:all .15s;text-align:center;display:block;}
+.btn-primary{background:var(--azul);color:#fff;}
+.btn-primary:active{background:var(--azul2);}
+.btn-green{background:var(--verde);color:#fff;}
+.btn-green:active{background:#0a5040;}
+.btn-outline{background:transparent;color:var(--txt);border:1.5px solid var(--borda);}
+.btn-outline:active{background:var(--cinza);}
+.btn-danger{background:transparent;color:#A32D2D;border:1.5px solid #F09595;}
+.btn-amber{background:var(--amber);color:#fff;}
+.btn-sm{padding:10px 14px;font-size:14px;width:auto;display:inline-block;}
+.btn-row{display:flex;gap:10px;}
+.btn-row .btn{flex:1;}
 
-/* ── Cards ───────────────────────────────────────────────────────────── */
-.card {
-  background: var(--white); border: 1px solid var(--borda);
-  border-radius: var(--radius); padding: 20px; margin-bottom: 16px;
-}
-.card-title { font-size: 14px; font-weight: 700; margin-bottom: 14px; color: var(--azul); }
+/* ── Chips ── */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+.chip{padding:10px 14px;border-radius:20px;font-size:14px;cursor:pointer;border:1.5px solid var(--borda);background:var(--white);color:var(--txt2);transition:all .15s;}
+.chip.sel{background:var(--azul);color:#fff;border-color:var(--azul);}
+.chip:active{background:var(--cinza);}
 
-/* ── Métricas ────────────────────────────────────────────────────────── */
-.metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; margin-bottom: 20px; }
-.metric { background: var(--white); border: 1px solid var(--borda); border-radius: var(--radius); padding: 16px; text-align: center; }
-.metric-val { font-size: 28px; font-weight: 700; }
-.metric-label { font-size: 11px; color: var(--txt3); margin-top: 4px; }
+/* ── Badges ── */
+.badge{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;}
+.badge-green{background:var(--verde-cl);color:var(--verde);}
+.badge-blue{background:var(--azul-cl);color:var(--azul2);}
+.badge-amber{background:var(--amber-cl);color:var(--amber);}
+.badge-gray{background:var(--cinza);color:var(--txt2);}
+.badge-roxo{background:var(--roxo-cl);color:var(--roxo);}
 
-/* ── Tabelas ─────────────────────────────────────────────────────────── */
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { background: var(--azul); color: #fff; padding: 9px 12px; text-align: left; font-weight: 600; font-size: 12px; white-space: nowrap; }
-td { padding: 9px 12px; border-bottom: 1px solid var(--cinza); vertical-align: middle; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: var(--azul-cl); }
+/* ── Info/warn boxes ── */
+.info-box{background:var(--azul-cl);border:1px solid #B5D4F4;border-radius:var(--radius-sm);padding:12px;font-size:13px;color:var(--azul2);margin-bottom:14px;}
+.warn-box{background:var(--amber-cl);border:1px solid #FAC775;border-radius:var(--radius-sm);padding:12px;font-size:13px;color:var(--amber);margin-bottom:14px;}
+.success-box{background:var(--verde-cl);border:1px solid #9FE1CB;border-radius:var(--radius-sm);padding:12px;font-size:13px;color:var(--verde);margin-bottom:14px;}
+.lgpd-box{background:var(--roxo-cl);border:1px solid #F4C0D1;border-radius:var(--radius-sm);padding:12px;font-size:12px;color:var(--roxo);margin-bottom:14px;}
 
-/* ── Badges ──────────────────────────────────────────────────────────── */
-.badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
-.badge-green  { background: var(--verde-cl); color: var(--verde); }
-.badge-blue   { background: var(--azul-cl);  color: var(--azul2); }
-.badge-amber  { background: var(--amber-cl); color: var(--amber); }
-.badge-gray   { background: var(--cinza);    color: var(--txt2); }
-.badge-roxo   { background: var(--roxo-cl);  color: var(--roxo); }
+/* ── Resultado busca CPF ── */
+.found-card{background:var(--verde-cl);border:1.5px solid #9FE1CB;border-radius:var(--radius);padding:16px;margin-top:12px;}
+.notfound-card{background:var(--amber-cl);border:1.5px solid #FAC775;border-radius:var(--radius);padding:16px;margin-top:12px;}
 
-/* ── Botões ──────────────────────────────────────────────────────────── */
-.btn { padding: 8px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid transparent; transition: all .15s; }
-.btn-primary { background: var(--azul); color: #fff; }
-.btn-primary:hover { background: var(--azul2); }
-.btn-outline { background: transparent; color: var(--txt); border-color: var(--borda); }
-.btn-outline:hover { background: var(--cinza); }
-.btn-green  { background: var(--verde); color: #fff; }
-.btn-green:hover { background: #0a5040; }
-.btn-danger { background: transparent; color: #A32D2D; border-color: #F09595; }
-.btn-danger:hover { background: #FCEBEB; }
-.btn-sm { padding: 5px 10px; font-size: 12px; }
+/* ── Lista de ações ── */
+.acao-item{background:var(--white);border:1px solid var(--borda);border-radius:var(--radius);padding:14px;margin-bottom:10px;}
+.acao-titulo{font-size:15px;font-weight:700;margin-bottom:4px;}
+.acao-meta{font-size:12px;color:var(--txt3);margin-bottom:10px;}
+.acao-btns{display:flex;gap:8px;flex-wrap:wrap;}
 
-/* ── Formulários ─────────────────────────────────────────────────────── */
-.form-group { margin-bottom: 14px; }
-.form-label { font-size: 12px; font-weight: 600; color: var(--txt2); display: block; margin-bottom: 5px; }
-input[type=text], input[type=email], input[type=date], select, textarea {
-  width: 100%; padding: 9px 12px; border: 1px solid var(--borda);
-  border-radius: var(--radius-sm); font-size: 14px; font-family: Arial;
-  background: var(--white); color: var(--txt);
-  transition: border-color .15s;
-}
-input:focus, select:focus, textarea:focus {
-  outline: none; border-color: var(--azul2);
-  box-shadow: 0 0 0 3px rgba(24,95,165,0.12);
-}
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+/* ── QR Code ── */
+.qr-container{text-align:center;padding:20px;}
+.qr-box{background:var(--white);border:3px solid var(--azul);border-radius:var(--radius);padding:16px;display:inline-block;margin:12px auto;}
+.qr-titulo{font-size:14px;font-weight:700;color:var(--azul);margin-top:10px;}
+.qr-sub{font-size:12px;color:var(--txt3);}
 
-/* ── Chips equidade ──────────────────────────────────────────────────── */
-.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-.chip {
-  padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer;
-  border: 1px solid var(--borda); background: var(--white); color: var(--txt2);
-  transition: all .15s;
-}
-.chip.sel { background: var(--azul); color: #fff; border-color: var(--azul); }
-.chip:hover:not(.sel) { background: var(--cinza); }
+/* ── Métricas ── */
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.metric{background:var(--white);border:1px solid var(--borda);border-radius:var(--radius);padding:14px;text-align:center;}
+.metric-val{font-size:26px;font-weight:700;}
+.metric-label{font-size:11px;color:var(--txt3);margin-top:3px;}
 
-/* ── Check-in resultado ──────────────────────────────────────────────── */
-.found-card {
-  background: var(--verde-cl); border: 1px solid #9FE1CB;
-  border-radius: var(--radius); padding: 16px; margin-top: 12px;
-}
-.notfound-card {
-  background: var(--amber-cl); border: 1px solid #FAC775;
-  border-radius: var(--radius); padding: 16px; margin-top: 12px;
-}
-.info-box {
-  background: var(--azul-cl); border: 1px solid #B5D4F4;
-  border-radius: var(--radius-sm); padding: 12px; font-size: 12px; color: var(--azul2);
-  margin-bottom: 14px;
-}
-.warn-box {
-  background: var(--amber-cl); border: 1px solid #FAC775;
-  border-radius: var(--radius-sm); padding: 12px; font-size: 12px; color: var(--amber);
+/* ── Barras gráfico ── */
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.bar-label{font-size:12px;color:var(--txt2);width:110px;text-align:right;flex-shrink:0;}
+.bar-track{flex:1;background:var(--cinza);border-radius:4px;height:22px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:12px;font-weight:700;transition:width .6s ease;}
+.bar-count{font-size:12px;color:var(--txt3);width:30px;}
+
+/* ── Avaliação estrelas ── */
+.stars{display:flex;gap:10px;justify-content:center;margin:10px 0;}
+.star{font-size:40px;cursor:pointer;color:#D3D1C7;transition:color .15s;}
+.star.sel{color:#EF9F27;}
+
+/* ── Matriz avaliação ── */
+.matriz{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:8px;}
+.matriz th{background:var(--azul);color:#fff;padding:8px 6px;text-align:center;font-size:12px;}
+.matriz th:first-child{text-align:left;}
+.matriz td{padding:10px 6px;border-bottom:1px solid var(--cinza);text-align:center;vertical-align:middle;}
+.matriz td:first-child{text-align:left;font-size:13px;font-weight:500;}
+.matriz tr:last-child td{border-bottom:none;}
+.matriz input[type=radio]{width:20px;height:20px;cursor:pointer;}
+
+/* ── Tabela participantes ── */
+.part-item{padding:12px 0;border-bottom:1px solid var(--cinza);display:flex;justify-content:space-between;align-items:center;}
+.part-item:last-child{border-bottom:none;}
+.part-nome{font-size:14px;font-weight:700;}
+.part-meta{font-size:12px;color:var(--txt3);}
+
+/* ── Sucesso grande ── */
+.success-big{text-align:center;padding:40px 20px;}
+.success-icon{font-size:72px;margin-bottom:16px;}
+.success-title{font-size:22px;font-weight:700;color:var(--verde);margin-bottom:8px;}
+.success-sub{font-size:15px;color:var(--txt3);}
+
+/* ── Nav UDP desktop ── */
+@media(min-width:768px){
+  .udp-layout{display:flex;min-height:100vh;}
+  .udp-sidebar{width:220px;background:var(--azul);flex-shrink:0;position:fixed;height:100vh;overflow-y:auto;}
+  .udp-sidebar-logo{padding:20px 16px;border-bottom:1px solid rgba(255,255,255,.12);}
+  .udp-sidebar-logo .t{font-size:15px;font-weight:700;color:#fff;}
+  .udp-sidebar-logo .s{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;}
+  .udp-nav-section{padding:12px 16px 4px;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.45);}
+  .udp-nav-item{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;font-size:13px;color:rgba(255,255,255,.85);transition:background .15s;border-left:3px solid transparent;}
+  .udp-nav-item:hover{background:rgba(255,255,255,.08);}
+  .udp-nav-item.active{background:rgba(255,255,255,.15);border-left-color:#fff;font-weight:700;color:#fff;}
+  .udp-main{margin-left:220px;flex:1;}
+  .udp-topbar{background:var(--white);border-bottom:1px solid var(--borda);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+  .udp-content{padding:24px;max-width:1000px;}
+  .metrics{grid-template-columns:repeat(4,1fr);}
 }
 
-/* ── Barras gráfico ──────────────────────────────────────────────────── */
-.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.bar-label { font-size: 12px; color: var(--txt2); width: 130px; text-align: right; flex-shrink: 0; }
-.bar-track { flex: 1; background: var(--cinza); border-radius: 4px; height: 20px; overflow: hidden; }
-.bar-fill { height: 100%; border-radius: 4px; display: flex; align-items: center; padding-left: 8px; font-size: 11px; font-weight: 700; transition: width .6s ease; }
-.bar-count { font-size: 12px; color: var(--txt3); width: 40px; }
-
-/* ── Aviso LGPD ──────────────────────────────────────────────────────── */
-.lgpd-box {
-  background: var(--roxo-cl); border: 1px solid #F4C0D1;
-  border-radius: var(--radius-sm); padding: 12px; font-size: 12px; color: var(--roxo);
-  margin-bottom: 14px;
-}
-
-/* ── Config ──────────────────────────────────────────────────────────── */
-.config-field { background: var(--cinza); border-radius: var(--radius-sm); padding: 14px; margin-bottom: 12px; }
-.config-field label { font-size: 12px; font-weight: 700; color: var(--txt2); display: block; margin-bottom: 6px; }
-.config-field input { background: var(--white); }
-.config-field .hint { font-size: 11px; color: var(--txt3); margin-top: 5px; }
-
-/* ── Divisor ─────────────────────────────────────────────────────────── */
-hr { border: none; border-top: 1px solid var(--borda); margin: 16px 0; }
-
-/* ── Avatar ──────────────────────────────────────────────────────────── */
-.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--azul-cl); color: var(--azul2); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
-
-/* ── Responsivo mobile ───────────────────────────────────────────────── */
-@media (max-width: 700px) {
-  .sidebar { display: none; }
-  .main { margin-left: 0; }
-  .form-row, .form-row-3 { grid-template-columns: 1fr; }
-  .metrics { grid-template-columns: 1fr 1fr; }
-}
+/* ── Rodapé ── */
+.rodape{background:var(--azul);color:rgba(255,255,255,.6);font-size:11px;text-align:center;padding:10px;margin-top:20px;}
 </style>
 </head>
 <body>
 
-<div class="app">
-
-<!-- ── Sidebar ──────────────────────────────────────────────────────── -->
-<div class="sidebar">
-  <div class="sidebar-logo">
-    <div class="logo-title">UDP Capacitações</div>
-    <div class="logo-sub">Hospital das Clínicas · EBSERH</div>
+<!-- ══════════════════════════════════════════════════════════════
+     PÁGINA HOME — escolha de perfil
+══════════════════════════════════════════════════════════════ -->
+<div id="pg-home" class="page active">
+  <div class="home-hero">
+    <h1>UDP Capacitações</h1>
+    <p>Hospital das Clínicas · EBSERH</p>
   </div>
-  <nav>
-    <div class="nav-section">Painel</div>
-    <div class="nav-item active" onclick="ir('udp')">
-      <span class="icon">&#9632;</span> Painel UDP
+  <div class="home-cards">
+    <div class="home-card" onclick="ir('pg-checkin-cpf')">
+      <div class="home-card-icon" style="background:var(--verde-cl);">✅</div>
+      <div>
+        <div class="home-card-title">Confirmar presença</div>
+        <div class="home-card-sub">Check-in no evento</div>
+      </div>
+      <div class="home-card-arrow">›</div>
     </div>
-    <div class="nav-section">Coordenador</div>
-    <div class="nav-item" onclick="ir('acoes')">
-      <span class="icon">&#9632;</span> Ações
+    <div class="home-card" onclick="ir('pg-avaliacao-cpf')">
+      <div class="home-card-icon" style="background:var(--amber-cl);">⭐</div>
+      <div>
+        <div class="home-card-title">Avaliar capacitação</div>
+        <div class="home-card-sub">Pesquisa de reação</div>
+      </div>
+      <div class="home-card-arrow">›</div>
     </div>
-    <div class="nav-item" onclick="ir('nova-acao')">
-      <span class="icon">+</span> Nova ação
+    <div class="home-card" onclick="ir('pg-equidade-cpf')">
+      <div class="home-card-icon" style="background:var(--roxo-cl);">👤</div>
+      <div>
+        <div class="home-card-title">Meu perfil</div>
+        <div class="home-card-sub">Dados de equidade</div>
+      </div>
+      <div class="home-card-arrow">›</div>
     </div>
-    <div class="nav-section">Evento</div>
-    <div class="nav-item" onclick="ir('checkin')">
-      <span class="icon">&#10003;</span> Check-in
+    <div class="home-card" onclick="irUDP()">
+      <div class="home-card-icon" style="background:var(--azul-cl);">📊</div>
+      <div>
+        <div class="home-card-title">Painel UDP</div>
+        <div class="home-card-sub">Coordenador / Gestão</div>
+      </div>
+      <div class="home-card-arrow">›</div>
     </div>
-    <div class="nav-item" onclick="ir('externo')">
-      <span class="icon">&#9632;</span> Cadastro externo
-    </div>
-    <div class="nav-section">Servidor</div>
-    <div class="nav-item" onclick="ir('equidade')">
-      <span class="icon">&#9632;</span> Perfil de equidade
-    </div>
-    <div class="nav-section">Relatórios</div>
-    <div class="nav-item" onclick="ir('relatorio')">
-      <span class="icon">&#9632;</span> Lista de participantes
-    </div>
-    <div class="nav-item" onclick="ir('avaliacao')">
-      <span class="icon">&#9632;</span> Avaliação de reação
-    </div>
-    <div class="nav-section">Sistema</div>
-    <div class="nav-item" onclick="ir('config')">
-      <span class="icon">&#9632;</span> Configurações
-    </div>
-  </nav>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
 </div>
 
-<!-- ── Main ─────────────────────────────────────────────────────────── -->
-<div class="main">
-<div class="topbar">
-  <div>
-    <h1 id="page-title">Painel UDP</h1>
-    <div class="sub" id="page-sub">Indicadores gerais de capacitação e equidade</div>
+<!-- ══════════════════════════════════════════════════════════════
+     CHECK-IN — CPF
+══════════════════════════════════════════════════════════════ -->
+<div id="pg-checkin-cpf" class="page">
+  <div class="header">
+    <span class="header-back" onclick="ir('pg-home')">‹</span>
+    <div><div class="header-title">Check-in</div><div class="header-sub">Confirmar presença</div></div>
   </div>
-  <div style="display:flex;gap:8px;align-items:center;">
-    <span id="sync-status" style="font-size:11px;color:var(--txt3);">&#9679; Não conectado</span>
-    <button class="btn btn-outline btn-sm" onclick="sincronizar()">Sincronizar</button>
-  </div>
-</div>
-<div class="content">
-
-<!-- ══ PAINEL UDP ══════════════════════════════════════════════════════ -->
-<div id="screen-udp" class="screen active">
-  <div class="metrics">
-    <div class="metric">
-      <div class="metric-val" style="color:var(--azul);" id="m-acoes">—</div>
-      <div class="metric-label">Ações cadastradas</div>
-    </div>
-    <div class="metric">
-      <div class="metric-val" style="color:var(--verde);" id="m-participacoes">—</div>
-      <div class="metric-label">Participações</div>
-    </div>
-    <div class="metric">
-      <div class="metric-val" style="color:var(--azul2);" id="m-unicos">—</div>
-      <div class="metric-label">CPFs únicos</div>
-    </div>
-    <div class="metric">
-      <div class="metric-val" style="color:var(--roxo);" id="m-perfis">—</div>
-      <div class="metric-label">Perfis de equidade</div>
-    </div>
-    <div class="metric">
-      <div class="metric-val" style="color:var(--amber);" id="m-avaliacoes">—</div>
-      <div class="metric-label">Avaliações</div>
-    </div>
-  </div>
-
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+  <div class="content">
+    <div id="ci-acao-info" class="info-box" style="display:none;"></div>
     <div class="card">
-      <div class="card-title">Participações por raça / cor</div>
-      <div id="graf-raca"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Participações por gênero</div>
-      <div id="graf-genero"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">PCD</div>
-      <div id="graf-pcd"></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Por vínculo</div>
-      <div id="graf-vinculo"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══ AÇÕES ═══════════════════════════════════════════════════════════ -->
-<div id="screen-acoes" class="screen">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-    <div></div>
-    <button class="btn btn-primary" onclick="ir('nova-acao')">+ Nova ação</button>
-  </div>
-  <div class="card" style="padding:0;">
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th><th>Título</th><th>Tipo</th><th>Modalidade</th>
-            <th>C.H.</th><th>Coordenador</th><th>Status</th><th>Ações</th>
-          </tr>
-        </thead>
-        <tbody id="tbody-acoes">
-          <tr><td colspan="8" style="text-align:center;color:var(--txt3);padding:24px;">
-            Sincronize para carregar as ações.
-          </td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- ══ NOVA AÇÃO ════════════════════════════════════════════════════════ -->
-<div id="screen-nova-acao" class="screen">
-  <div class="card" style="max-width:640px;">
-    <div class="info-box">Datas são apenas informativas. Abra e feche o check-in manualmente a qualquer momento.</div>
-    <div class="form-group">
-      <label class="form-label">Título da ação *</label>
-      <input type="text" id="na-titulo" placeholder="Ex: Atendimento humanizado"/>
-    </div>
-    <div class="form-row">
       <div class="form-group">
-        <label class="form-label">Tipo</label>
-        <select id="na-tipo">
-          <option>Treinamento/Turma</option>
-          <option>Palestra/Evento</option>
-          <option>Curso Online</option>
-          <option>Workshop</option>
-          <option>Outro</option>
-        </select>
+        <label class="form-label">Digite seu CPF</label>
+        <input type="tel" id="ci-cpf" placeholder="000.000.000-00" maxlength="14"
+               oninput="formatarCPF(this)" inputmode="numeric"/>
       </div>
-      <div class="form-group">
-        <label class="form-label">Modalidade</label>
-        <select id="na-modalidade">
-          <option>Presencial</option>
-          <option>Remoto</option>
-          <option>Híbrido</option>
-        </select>
-      </div>
+      <button class="btn btn-primary" onclick="buscarCheckin()">Buscar</button>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Data prevista (informativa)</label>
-        <input type="date" id="na-data"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Carga horária</label>
-        <input type="text" id="na-ch" placeholder="Ex: 4h"/>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label class="form-label">Local</label>
-        <input type="text" id="na-local" placeholder="Ex: Auditório HC"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Unidade do coordenador</label>
-        <input type="text" id="na-unidade" placeholder="Ex: Divisão de GP"/>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Nome do coordenador responsável</label>
-      <input type="text" id="na-coord"/>
-    </div>
-    <hr/>
-    <div style="display:flex;gap:8px;justify-content:flex-end;">
-      <button class="btn btn-outline" onclick="ir('acoes')">Cancelar</button>
-      <button class="btn btn-primary" onclick="salvarAcao()">Criar ação</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ CHECK-IN ═════════════════════════════════════════════════════════ -->
-<div id="screen-checkin" class="screen">
-  <div class="card" style="max-width:640px;">
-    <div class="form-group">
-      <label class="form-label">Selecione a capacitação</label>
-      <select id="ci-acao" onchange="atualizarInfoAcao()">
-        <option value="">-- selecione --</option>
-      </select>
-    </div>
-    <div id="ci-info" style="display:none;" class="info-box"></div>
-
-    <hr/>
-    <label class="form-label">CPF do participante *</label>
-    <div style="display:flex;gap:8px;">
-      <input type="text" id="ci-cpf" placeholder="000.000.000-00"
-             oninput="formatarCPF(this)" maxlength="14"
-             onkeydown="if(event.key==='Enter') buscarCPF()"/>
-      <button class="btn btn-primary" onclick="buscarCPF()">Buscar</button>
-    </div>
-
     <div id="ci-resultado"></div>
   </div>
-
-  <div class="card" style="max-width:640px;">
-    <div class="card-title">Presentes nesta ação</div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Nome</th><th>CPF</th><th>Vínculo</th><th>Chefia</th><th>Horário</th></tr>
-        </thead>
-        <tbody id="tbody-presentes">
-          <tr><td colspan="5" style="text-align:center;color:var(--txt3);">Selecione uma ação acima.</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end;">
-      <button class="btn btn-danger btn-sm" onclick="fecharCheckin()">Fechar check-in</button>
-      <button class="btn btn-outline btn-sm" onclick="exportarAnexoIV()">Exportar Anexo IV</button>
-    </div>
-  </div>
 </div>
 
-<!-- ══ CADASTRO EXTERNO ══════════════════════════════════════════════════ -->
-<div id="screen-externo" class="screen">
-  <div class="card" style="max-width:600px;">
-    <div class="warn-box" style="margin-bottom:14px;">CPF não encontrado na base EBSERH. Preencha os dados para registrar presença e emitir certificado.</div>
-    <div class="form-row">
+<!-- ══════════════════════════════════════════════════════════════
+     CHECK-IN — EXTERNO
+══════════════════════════════════════════════════════════════ -->
+<div id="pg-checkin-externo" class="page">
+  <div class="header">
+    <span class="header-back" onclick="ir('pg-checkin-cpf')">‹</span>
+    <div><div class="header-title">Cadastro</div><div class="header-sub">Participante externo</div></div>
+  </div>
+  <div class="content">
+    <div class="warn-box">CPF não encontrado na base. Preencha seus dados para registrar presença.</div>
+    <div class="card">
       <div class="form-group">
-        <label class="form-label">CPF *</label>
-        <input type="text" id="ext-cpf" readonly style="background:var(--cinza);"/>
+        <label class="form-label">CPF</label>
+        <input type="tel" id="ext-cpf" readonly style="background:var(--cinza);"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nome completo *</label>
+        <input type="text" id="ext-nome" placeholder="Nome como aparecerá no certificado"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">E-mail *</label>
+        <input type="email" id="ext-email" placeholder="email@instituicao.br"/>
+        <div class="form-hint">Necessário para emissão do certificado.</div>
       </div>
       <div class="form-group">
         <label class="form-label">Vínculo *</label>
@@ -437,17 +270,6 @@ hr { border: none; border-top: 1px solid var(--borda); margin: 16px 0; }
           <option>Outro</option>
         </select>
       </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Nome completo *</label>
-      <input type="text" id="ext-nome" placeholder="Nome como aparecerá no certificado"/>
-    </div>
-    <div class="form-group">
-      <label class="form-label">E-mail *</label>
-      <input type="email" id="ext-email" placeholder="email@instituicao.br"/>
-      <div style="font-size:11px;color:var(--txt3);margin-top:4px;">Obrigatório para emissão do certificado na 3EC.</div>
-    </div>
-    <div class="form-row">
       <div class="form-group">
         <label class="form-label">Cargo / função</label>
         <input type="text" id="ext-cargo"/>
@@ -456,493 +278,585 @@ hr { border: none; border-top: 1px solid var(--borda); margin: 16px 0; }
         <label class="form-label">Instituição / unidade</label>
         <input type="text" id="ext-unidade"/>
       </div>
-    </div>
-    <div class="form-group">
-      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--txt2);">
-        <input type="checkbox" id="ext-chefia"/> É chefia ou gestor desta unidade?
-      </label>
-    </div>
-    <hr/>
-    <div style="display:flex;gap:8px;justify-content:flex-end;">
-      <button class="btn btn-outline" onclick="ir('checkin')">Cancelar</button>
+      <div class="form-group">
+        <label style="display:flex;align-items:center;gap:10px;font-size:15px;cursor:pointer;">
+          <input type="checkbox" id="ext-chefia" style="width:22px;height:22px;"/>
+          Sou chefia / gestor desta unidade
+        </label>
+      </div>
       <button class="btn btn-green" onclick="registrarExterno()">Registrar presença</button>
     </div>
   </div>
 </div>
 
-<!-- ══ PERFIL EQUIDADE ═══════════════════════════════════════════════════ -->
-<div id="screen-equidade" class="screen">
-  <div class="card" style="max-width:600px;">
-    <div class="lgpd-box">
-      Dados sensíveis — LGPD Art. 11. Preenchido uma vez, vale para todas as capacitações. Acesso restrito à UDP. Não aparece em listas de presença. Responder é voluntário.
-    </div>
-    <div class="form-group">
-      <label class="form-label">CPF para identificação *</label>
-      <div style="display:flex;gap:8px;">
-        <input type="text" id="eq-cpf" placeholder="000.000.000-00"
-               oninput="formatarCPF(this)" maxlength="14"/>
-        <button class="btn btn-primary" onclick="buscarPerfil()">Buscar</button>
-      </div>
-    </div>
-    <div id="eq-nome-encontrado" style="display:none;margin-bottom:14px;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <div class="avatar" id="eq-avatar">?</div>
-        <div>
-          <div style="font-weight:700;font-size:14px;" id="eq-nome-txt"></div>
-          <div style="font-size:12px;color:var(--txt3);" id="eq-cargo-txt"></div>
+<!-- ══════════════════════════════════════════════════════════════
+     CHECK-IN — EQUIDADE (aparece após confirmar presença)
+══════════════════════════════════════════════════════════════ -->
+<div id="pg-checkin-equidade" class="page">
+  <div class="header">
+    <span class="header-back" onclick="ir('pg-checkin-sucesso')">‹</span>
+    <div><div class="header-title">Meu perfil</div><div class="header-sub">Opcional · Confidencial</div></div>
+  </div>
+  <div class="content">
+    <div class="lgpd-box">Dados confidenciais. Acesso restrito à UDP. Não aparecem em listas. Responder é voluntário.</div>
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">Gênero</label>
+        <div class="chips" id="ci-chips-genero">
+          <span class="chip" onclick="selChip(this,'ci-genero')">Mulher cis</span>
+          <span class="chip" onclick="selChip(this,'ci-genero')">Homem cis</span>
+          <span class="chip" onclick="selChip(this,'ci-genero')">Mulher trans</span>
+          <span class="chip" onclick="selChip(this,'ci-genero')">Homem trans</span>
+          <span class="chip" onclick="selChip(this,'ci-genero')">Não-binário</span>
+          <span class="chip" onclick="selChip(this,'ci-genero')">Outro</span>
+          <span class="chip" onclick="selChip(this,'ci-genero')">Prefiro não informar</span>
         </div>
       </div>
-    </div>
-    <hr/>
-    <div class="form-group">
-      <label class="form-label">Gênero</label>
-      <div class="chips" id="chips-genero">
-        <span class="chip" onclick="selChip(this,'genero')">Mulher cis</span>
-        <span class="chip" onclick="selChip(this,'genero')">Homem cis</span>
-        <span class="chip" onclick="selChip(this,'genero')">Mulher trans</span>
-        <span class="chip" onclick="selChip(this,'genero')">Homem trans</span>
-        <span class="chip" onclick="selChip(this,'genero')">Não-binário</span>
-        <span class="chip" onclick="selChip(this,'genero')">Outro</span>
-        <span class="chip" onclick="selChip(this,'genero')">Prefiro não informar</span>
+      <div class="form-group">
+        <label class="form-label">Raça / cor (IBGE)</label>
+        <div class="chips" id="ci-chips-raca">
+          <span class="chip" onclick="selChip(this,'ci-raca')">Branca</span>
+          <span class="chip" onclick="selChip(this,'ci-raca')">Preta</span>
+          <span class="chip" onclick="selChip(this,'ci-raca')">Parda</span>
+          <span class="chip" onclick="selChip(this,'ci-raca')">Amarela</span>
+          <span class="chip" onclick="selChip(this,'ci-raca')">Indígena</span>
+          <span class="chip" onclick="selChip(this,'ci-raca')">Prefiro não informar</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pessoa com Deficiência (PCD)?</label>
+        <div class="chips" id="ci-chips-pcd">
+          <span class="chip" onclick="selChip(this,'ci-pcd');togglePCD(this,'ci-def-grupo')">Sim</span>
+          <span class="chip" onclick="selChip(this,'ci-pcd');togglePCD(this,'ci-def-grupo')">Não</span>
+          <span class="chip" onclick="selChip(this,'ci-pcd');togglePCD(this,'ci-def-grupo')">Prefiro não informar</span>
+        </div>
+      </div>
+      <div id="ci-def-grupo" style="display:none;" class="form-group">
+        <label class="form-label">Tipo de deficiência</label>
+        <div class="chips" id="ci-chips-def">
+          <span class="chip" onclick="selChip(this,'ci-def')">Física</span>
+          <span class="chip" onclick="selChip(this,'ci-def')">Auditiva</span>
+          <span class="chip" onclick="selChip(this,'ci-def')">Visual</span>
+          <span class="chip" onclick="selChip(this,'ci-def')">Intelectual</span>
+          <span class="chip" onclick="selChip(this,'ci-def')">Psicossocial</span>
+          <span class="chip" onclick="selChip(this,'ci-def')">Múltipla</span>
+          <span class="chip" onclick="selChip(this,'ci-def')">Outra</span>
+        </div>
+      </div>
+      <div class="btn-row" style="margin-top:8px;">
+        <button class="btn btn-outline" onclick="ir('pg-checkin-sucesso')">Pular</button>
+        <button class="btn btn-green" onclick="salvarEquidadeCheckin()">Salvar</button>
       </div>
     </div>
-    <div class="form-group">
-      <label class="form-label">Raça / cor (categorias IBGE)</label>
-      <div class="chips" id="chips-raca">
-        <span class="chip" onclick="selChip(this,'raca')">Branca</span>
-        <span class="chip" onclick="selChip(this,'raca')">Preta</span>
-        <span class="chip" onclick="selChip(this,'raca')">Parda</span>
-        <span class="chip" onclick="selChip(this,'raca')">Amarela</span>
-        <span class="chip" onclick="selChip(this,'raca')">Indígena</span>
-        <span class="chip" onclick="selChip(this,'raca')">Prefiro não informar</span>
-      </div>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Pessoa com Deficiência (PCD)?</label>
-      <div class="chips" id="chips-pcd">
-        <span class="chip" onclick="selChip(this,'pcd');togglePCD(this)">Sim</span>
-        <span class="chip" onclick="selChip(this,'pcd');togglePCD(this)">Não</span>
-        <span class="chip" onclick="selChip(this,'pcd');togglePCD(this)">Prefiro não informar</span>
-      </div>
-    </div>
-    <div class="form-group" id="grupo-deficiencia" style="display:none;">
-      <label class="form-label">Tipo de deficiência (para acessibilidade nos eventos)</label>
-      <div class="chips" id="chips-def">
-        <span class="chip" onclick="selChip(this,'def')">Física</span>
-        <span class="chip" onclick="selChip(this,'def')">Auditiva</span>
-        <span class="chip" onclick="selChip(this,'def')">Visual</span>
-        <span class="chip" onclick="selChip(this,'def')">Intelectual</span>
-        <span class="chip" onclick="selChip(this,'def')">Psicossocial</span>
-        <span class="chip" onclick="selChip(this,'def')">Múltipla</span>
-        <span class="chip" onclick="selChip(this,'def')">Outra</span>
-      </div>
-    </div>
-    <hr/>
-    <button class="btn btn-green" style="width:100%;" onclick="salvarPerfil()">Salvar perfil</button>
   </div>
 </div>
 
-<!-- ══ RELATÓRIO ════════════════════════════════════════════════════════ -->
-<div id="screen-relatorio" class="screen">
-  <div class="card">
-    <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px;">
-      <div style="flex:1;min-width:200px;">
-        <label class="form-label">Filtrar por ação</label>
-        <select id="rel-acao">
-          <option value="">Todas as ações</option>
-        </select>
-      </div>
-      <div style="flex:1;min-width:160px;">
-        <label class="form-label">Filtrar por vínculo</label>
-        <select id="rel-vinculo">
-          <option value="">Todos</option>
-          <option>EBSERH</option><option>UFPE/RJU</option>
-          <option>Residente</option><option>Externo</option>
-        </select>
-      </div>
-      <button class="btn btn-primary" onclick="filtrarRelatorio()">Aplicar filtro</button>
-      <button class="btn btn-outline" onclick="exportarCSV()">Exportar CSV</button>
+<!-- ══════════════════════════════════════════════════════════════
+     CHECK-IN — SUCESSO
+══════════════════════════════════════════════════════════════ -->
+<div id="pg-checkin-sucesso" class="page">
+  <div class="content" style="padding-top:40px;">
+    <div class="success-big">
+      <div class="success-icon">✅</div>
+      <div class="success-title">Presença confirmada!</div>
+      <div class="success-sub" id="ci-sucesso-nome"></div>
     </div>
-    <div class="table-wrap">
-      <table>
+    <button class="btn btn-outline" onclick="ir('pg-home')" style="margin-top:20px;">Voltar ao início</button>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     AVALIAÇÃO — CPF
+══════════════════════════════════════════════════════════════ -->
+<div id="pg-avaliacao-cpf" class="page">
+  <div class="header">
+    <span class="header-back" onclick="ir('pg-home')">‹</span>
+    <div><div class="header-title">Avaliação</div><div class="header-sub">Pesquisa de reação</div></div>
+  </div>
+  <div class="content">
+    <div id="av-acao-info" class="info-box" style="display:none;"></div>
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">Digite seu CPF</label>
+        <input type="tel" id="av-cpf" placeholder="000.000.000-00" maxlength="14"
+               oninput="formatarCPF(this)" inputmode="numeric"/>
+      </div>
+      <button class="btn btn-amber" onclick="iniciarAvaliacao()">Iniciar avaliação</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     AVALIAÇÃO — FORMULÁRIO
+══════════════════════════════════════════════════════════════ -->
+<div id="pg-avaliacao-form" class="page">
+  <div class="header">
+    <span class="header-back" onclick="ir('pg-avaliacao-cpf')">‹</span>
+    <div><div class="header-title">Avaliação</div><div class="header-sub" id="av-titulo-header"></div></div>
+  </div>
+  <div class="content">
+    <!-- Seção 1: Avaliação da capacitação -->
+    <div class="section-title">1. Avaliação da capacitação</div>
+    <div class="card" style="overflow-x:auto;">
+      <table class="matriz">
         <thead>
           <tr>
-            <th>Nome</th><th>CPF</th><th>E-mail</th><th>Cargo</th>
-            <th>Vínculo</th><th>Unidade</th><th>Chefia</th>
-            <th>Ação</th><th>Check-in</th>
+            <th style="width:45%;">Item</th>
+            <th>SIM</th><th>PARCIAL</th><th>NÃO</th><th>N/A</th>
           </tr>
         </thead>
-        <tbody id="tbody-relatorio">
-          <tr><td colspan="9" style="text-align:center;color:var(--txt3);padding:24px;">
-            Sincronize e aplique filtros para ver os dados.
-          </td></tr>
+        <tbody>
+          <tr><td>O evento atingiu seu objetivo?</td>
+            <td><input type="radio" name="q1" value="SIM"/></td>
+            <td><input type="radio" name="q1" value="PARCIAL"/></td>
+            <td><input type="radio" name="q1" value="NÃO"/></td>
+            <td><input type="radio" name="q1" value="N/A"/></td></tr>
+          <tr><td>A carga horária foi bem distribuída?</td>
+            <td><input type="radio" name="q2" value="SIM"/></td>
+            <td><input type="radio" name="q2" value="PARCIAL"/></td>
+            <td><input type="radio" name="q2" value="NÃO"/></td>
+            <td><input type="radio" name="q2" value="N/A"/></td></tr>
+          <tr><td>O programa estabelecido foi desenvolvido?</td>
+            <td><input type="radio" name="q3" value="SIM"/></td>
+            <td><input type="radio" name="q3" value="PARCIAL"/></td>
+            <td><input type="radio" name="q3" value="NÃO"/></td>
+            <td><input type="radio" name="q3" value="N/A"/></td></tr>
+          <tr><td>A abordagem prática foi suficiente?</td>
+            <td><input type="radio" name="q4" value="SIM"/></td>
+            <td><input type="radio" name="q4" value="PARCIAL"/></td>
+            <td><input type="radio" name="q4" value="NÃO"/></td>
+            <td><input type="radio" name="q4" value="N/A"/></td></tr>
+          <tr><td>As instalações e recursos foram adequados?</td>
+            <td><input type="radio" name="q5" value="SIM"/></td>
+            <td><input type="radio" name="q5" value="PARCIAL"/></td>
+            <td><input type="radio" name="q5" value="NÃO"/></td>
+            <td><input type="radio" name="q5" value="N/A"/></td></tr>
+          <tr><td>O material didático foi satisfatório?</td>
+            <td><input type="radio" name="q6" value="SIM"/></td>
+            <td><input type="radio" name="q6" value="PARCIAL"/></td>
+            <td><input type="radio" name="q6" value="NÃO"/></td>
+            <td><input type="radio" name="q6" value="N/A"/></td></tr>
+          <tr><td>Seu aproveitamento foi bom?</td>
+            <td><input type="radio" name="q7" value="SIM"/></td>
+            <td><input type="radio" name="q7" value="PARCIAL"/></td>
+            <td><input type="radio" name="q7" value="NÃO"/></td>
+            <td><input type="radio" name="q7" value="N/A"/></td></tr>
+          <tr><td>Poderá aplicar os conhecimentos na prática?</td>
+            <td><input type="radio" name="q8" value="SIM"/></td>
+            <td><input type="radio" name="q8" value="PARCIAL"/></td>
+            <td><input type="radio" name="q8" value="NÃO"/></td>
+            <td><input type="radio" name="q8" value="N/A"/></td></tr>
         </tbody>
       </table>
     </div>
-    <div style="font-size:12px;color:var(--txt3);margin-top:10px;" id="rel-total"></div>
-  </div>
-</div>
 
-<!-- ══ AVALIAÇÃO ════════════════════════════════════════════════════════ -->
-<div id="screen-avaliacao" class="screen">
-  <div class="card">
-    <div class="info-box" style="margin-bottom:16px;">
-      Os dados desta aba vêm do Forms Office. Exporte as respostas como Excel e cole na aba AVALIACAO da planilha mestre. O sistema cruza automaticamente por CPF.
-    </div>
-    <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;margin-bottom:16px;">
-      <div style="flex:1;min-width:200px;">
-        <label class="form-label">Filtrar por ação</label>
-        <select id="av-acao"><option value="">Todas</option></select>
-      </div>
-      <button class="btn btn-primary" onclick="filtrarAvaliacao()">Aplicar</button>
-    </div>
-    <div class="table-wrap">
-      <table>
+    <!-- Seção 2: Avaliação do instrutor -->
+    <div class="section-title">2. Avaliação do instrutor</div>
+    <div class="card" style="overflow-x:auto;">
+      <table class="matriz">
         <thead>
           <tr>
-            <th>Nome</th><th>CPF</th><th>Ação</th>
-            <th>Nota geral</th><th>Recomendaria</th><th>Ponto positivo</th><th>Melhoria</th>
+            <th style="width:45%;">Item</th>
+            <th>Fraco</th><th>Regular</th><th>Bom</th><th>Ótimo</th>
           </tr>
         </thead>
-        <tbody id="tbody-avaliacao">
-          <tr><td colspan="7" style="text-align:center;color:var(--txt3);padding:24px;">
-            Sincronize para carregar as avaliações.
-          </td></tr>
+        <tbody>
+          <tr><td>Clareza e objetividade</td>
+            <td><input type="radio" name="i1" value="Fraco"/></td>
+            <td><input type="radio" name="i1" value="Regular"/></td>
+            <td><input type="radio" name="i1" value="Bom"/></td>
+            <td><input type="radio" name="i1" value="Ótimo"/></td></tr>
+          <tr><td>Métodos e técnicas de ensino</td>
+            <td><input type="radio" name="i2" value="Fraco"/></td>
+            <td><input type="radio" name="i2" value="Regular"/></td>
+            <td><input type="radio" name="i2" value="Bom"/></td>
+            <td><input type="radio" name="i2" value="Ótimo"/></td></tr>
+          <tr><td>Conhecimento da temática</td>
+            <td><input type="radio" name="i3" value="Fraco"/></td>
+            <td><input type="radio" name="i3" value="Regular"/></td>
+            <td><input type="radio" name="i3" value="Bom"/></td>
+            <td><input type="radio" name="i3" value="Ótimo"/></td></tr>
+          <tr><td>Uso de recursos didáticos</td>
+            <td><input type="radio" name="i4" value="Fraco"/></td>
+            <td><input type="radio" name="i4" value="Regular"/></td>
+            <td><input type="radio" name="i4" value="Bom"/></td>
+            <td><input type="radio" name="i4" value="Ótimo"/></td></tr>
+          <tr><td>Relacionamento com o grupo</td>
+            <td><input type="radio" name="i5" value="Fraco"/></td>
+            <td><input type="radio" name="i5" value="Regular"/></td>
+            <td><input type="radio" name="i5" value="Bom"/></td>
+            <td><input type="radio" name="i5" value="Ótimo"/></td></tr>
         </tbody>
       </table>
     </div>
+
+    <!-- Seção 3: Comentários e nota -->
+    <div class="section-title">3. Comentários</div>
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">Ponto positivo (opcional)</label>
+        <textarea id="av-positivo" rows="3" placeholder="O que foi bom nesta capacitação?"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Ponto de melhoria (opcional)</label>
+        <textarea id="av-negativo" rows="3" placeholder="O que poderia melhorar?"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label" style="text-align:center;display:block;">Nota geral *</label>
+        <div class="stars" id="av-stars">
+          <span class="star" onclick="selecionarEstrela(1)">★</span>
+          <span class="star" onclick="selecionarEstrela(2)">★</span>
+          <span class="star" onclick="selecionarEstrela(3)">★</span>
+          <span class="star" onclick="selecionarEstrela(4)">★</span>
+          <span class="star" onclick="selecionarEstrela(5)">★</span>
+        </div>
+        <div style="text-align:center;font-size:13px;color:var(--txt3);">1 estrela = Péssimo · 5 estrelas = Ótimo</div>
+      </div>
+      <button class="btn btn-amber" onclick="enviarAvaliacao()">Enviar avaliação</button>
+    </div>
   </div>
 </div>
 
-<!-- ══ CONFIGURAÇÕES ════════════════════════════════════════════════════ -->
-<div id="screen-config" class="screen">
-  <div class="card" style="max-width:600px;">
-    <div class="card-title">Conexão com Google Sheets</div>
-    <div class="info-box" style="margin-bottom:16px;">
-      Para conectar o sistema à planilha, você precisa de uma chave de API do Google e do ID da sua planilha. Veja o guia de configuração abaixo.
+<!-- ══════════════════════════════════════════════════════════════
+     AVALIAÇÃO — SUCESSO
+══════════════════════════════════════════════════════════════ -->
+<div id="pg-avaliacao-sucesso" class="page">
+  <div class="content" style="padding-top:40px;">
+    <div class="success-big">
+      <div class="success-icon">⭐</div>
+      <div class="success-title">Avaliação enviada!</div>
+      <div class="success-sub">Obrigada pela sua participação.</div>
     </div>
+    <button class="btn btn-outline" onclick="ir('pg-home')" style="margin-top:20px;">Voltar ao início</button>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
 
-    <div class="config-field">
-      <label>ID da planilha Google Sheets</label>
-      <input type="text" id="cfg-sheet-id" placeholder="Cole aqui o ID da planilha"/>
-      <div class="hint">O ID está na URL da planilha: docs.google.com/spreadsheets/d/<strong>[ID AQUI]</strong>/edit</div>
+<!-- ══════════════════════════════════════════════════════════════
+     EQUIDADE — CPF
+══════════════════════════════════════════════════════════════ -->
+<div id="pg-equidade-cpf" class="page">
+  <div class="header">
+    <span class="header-back" onclick="ir('pg-home')">‹</span>
+    <div><div class="header-title">Meu perfil</div><div class="header-sub">Dados de equidade</div></div>
+  </div>
+  <div class="content">
+    <div class="lgpd-box">Dados confidenciais — LGPD Art. 11. Acesso restrito à UDP. Responder é voluntário.</div>
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">Digite seu CPF</label>
+        <input type="tel" id="eq-cpf" placeholder="000.000.000-00" maxlength="14"
+               oninput="formatarCPF(this)" inputmode="numeric"/>
+      </div>
+      <button class="btn btn-primary" onclick="buscarPerfil()">Continuar</button>
     </div>
-
-    <div class="config-field">
-      <label>Chave de API do Google</label>
-      <input type="text" id="cfg-api-key" placeholder="AIza..."/>
-      <div class="hint">Google Cloud Console → APIs → Credentials → API Key. Habilite a Google Sheets API.</div>
-    </div>
-
-    <div class="config-field" style="background:var(--verde-cl);border:1px solid #9FE1CB;">
-      <label style="color:var(--verde);">Guia rápido de configuração</label>
-      <ol style="font-size:12px;color:var(--txt2);padding-left:16px;line-height:1.8;">
-        <li>Acesse <strong>console.cloud.google.com</strong></li>
-        <li>Crie um projeto (ou use um existente)</li>
-        <li>Vá em APIs e serviços → Biblioteca → busque <strong>Google Sheets API</strong> → Ativar</li>
-        <li>Vá em Credenciais → Criar credencial → Chave de API</li>
-        <li>Copie a chave e cole no campo acima</li>
-        <li>Na planilha, clique em Compartilhar → qualquer pessoa com o link pode visualizar</li>
-        <li>Copie o ID da planilha da URL e cole acima</li>
-      </ol>
-    </div>
-
-    <div style="display:flex;gap:8px;margin-top:4px;">
-      <button class="btn btn-primary" onclick="salvarConfig()">Salvar configuração</button>
-      <button class="btn btn-outline" onclick="testarConexao()">Testar conexão</button>
-    </div>
-    <div id="cfg-msg" style="margin-top:10px;font-size:13px;"></div>
   </div>
 </div>
 
-</div><!-- /content -->
-</div><!-- /main -->
-</div><!-- /app -->
-<div style="position:fixed;bottom:0;left:0;right:0;background:#003F72;color:rgba(255,255,255,0.6);font-size:11px;text-align:center;padding:5px;z-index:100;">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+<!-- ══════════════════════════════════════════════════════════════
+     EQUIDADE — FORMULÁRIO
+══════════════════════════════════════════════════════════════ -->
+<div id="pg-equidade-form" class="page">
+  <div class="header">
+    <span class="header-back" onclick="ir('pg-equidade-cpf')">‹</span>
+    <div><div class="header-title">Meu perfil</div><div class="header-sub" id="eq-nome-header"></div></div>
+  </div>
+  <div class="content">
+    <div class="lgpd-box">Preenchido uma vez, vale para todas as capacitações. Acesso restrito à UDP.</div>
+    <div class="card">
+      <div class="form-group">
+        <label class="form-label">Gênero</label>
+        <div class="chips" id="eq-chips-genero">
+          <span class="chip" onclick="selChip(this,'eq-genero')">Mulher cis</span>
+          <span class="chip" onclick="selChip(this,'eq-genero')">Homem cis</span>
+          <span class="chip" onclick="selChip(this,'eq-genero')">Mulher trans</span>
+          <span class="chip" onclick="selChip(this,'eq-genero')">Homem trans</span>
+          <span class="chip" onclick="selChip(this,'eq-genero')">Não-binário</span>
+          <span class="chip" onclick="selChip(this,'eq-genero')">Outro</span>
+          <span class="chip" onclick="selChip(this,'eq-genero')">Prefiro não informar</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Raça / cor (IBGE)</label>
+        <div class="chips" id="eq-chips-raca">
+          <span class="chip" onclick="selChip(this,'eq-raca')">Branca</span>
+          <span class="chip" onclick="selChip(this,'eq-raca')">Preta</span>
+          <span class="chip" onclick="selChip(this,'eq-raca')">Parda</span>
+          <span class="chip" onclick="selChip(this,'eq-raca')">Amarela</span>
+          <span class="chip" onclick="selChip(this,'eq-raca')">Indígena</span>
+          <span class="chip" onclick="selChip(this,'eq-raca')">Prefiro não informar</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pessoa com Deficiência (PCD)?</label>
+        <div class="chips" id="eq-chips-pcd">
+          <span class="chip" onclick="selChip(this,'eq-pcd');togglePCD(this,'eq-def-grupo')">Sim</span>
+          <span class="chip" onclick="selChip(this,'eq-pcd');togglePCD(this,'eq-def-grupo')">Não</span>
+          <span class="chip" onclick="selChip(this,'eq-pcd');togglePCD(this,'eq-def-grupo')">Prefiro não informar</span>
+        </div>
+      </div>
+      <div id="eq-def-grupo" style="display:none;" class="form-group">
+        <label class="form-label">Tipo de deficiência</label>
+        <div class="chips" id="eq-chips-def">
+          <span class="chip" onclick="selChip(this,'eq-def')">Física</span>
+          <span class="chip" onclick="selChip(this,'eq-def')">Auditiva</span>
+          <span class="chip" onclick="selChip(this,'eq-def')">Visual</span>
+          <span class="chip" onclick="selChip(this,'eq-def')">Intelectual</span>
+          <span class="chip" onclick="selChip(this,'eq-def')">Psicossocial</span>
+          <span class="chip" onclick="selChip(this,'eq-def')">Múltipla</span>
+          <span class="chip" onclick="selChip(this,'eq-def')">Outra</span>
+        </div>
+      </div>
+      <button class="btn btn-green" onclick="salvarPerfil()">Salvar perfil</button>
+    </div>
+  </div>
+</div>
 
+<!-- ══════════════════════════════════════════════════════════════
+     PAINEL UDP (desktop-first)
+══════════════════════════════════════════════════════════════ -->
+<div id="pg-udp" class="page">
+<div class="udp-layout">
+  <div class="udp-sidebar">
+    <div class="udp-sidebar-logo">
+      <div class="t">UDP Capacitações</div>
+      <div class="s">HC-UFPE · EBSERH</div>
+    </div>
+    <div class="udp-nav-section">Painel</div>
+    <div class="udp-nav-item active" onclick="udpIr('udp-painel',this)">📊 Painel</div>
+    <div class="udp-nav-section">Coordenador</div>
+    <div class="udp-nav-item" onclick="udpIr('udp-acoes',this)">📋 Ações</div>
+    <div class="udp-nav-item" onclick="udpIr('udp-nova',this)">➕ Nova ação</div>
+    <div class="udp-nav-section">Relatórios</div>
+    <div class="udp-nav-item" onclick="udpIr('udp-relatorio',this)">👥 Participantes</div>
+    <div class="udp-nav-item" onclick="udpIr('udp-avaliacoes',this)">⭐ Avaliações</div>
+    <div class="udp-nav-section">Sistema</div>
+    <div class="udp-nav-item" onclick="udpIr('udp-config',this)">⚙️ Configurações</div>
+    <div class="udp-nav-item" onclick="ir('pg-home')" style="margin-top:auto;">← Início</div>
+  </div>
+
+  <div class="udp-main">
+    <div class="udp-topbar">
+      <div>
+        <div style="font-size:16px;font-weight:700;color:var(--azul);" id="udp-page-title">Painel UDP</div>
+        <div style="font-size:12px;color:var(--txt3);" id="udp-page-sub">Indicadores gerais</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span id="sync-status" style="font-size:11px;color:var(--txt3);">● Não conectado</span>
+        <button class="btn btn-outline btn-sm" onclick="sincronizar()">Sincronizar</button>
+      </div>
+    </div>
+
+    <div class="udp-content">
+
+      <!-- Painel -->
+      <div id="udp-painel" class="udp-screen">
+        <div class="metrics">
+          <div class="metric"><div class="metric-val" style="color:var(--azul);" id="m-acoes">—</div><div class="metric-label">Ações</div></div>
+          <div class="metric"><div class="metric-val" style="color:var(--verde);" id="m-part">—</div><div class="metric-label">Participações</div></div>
+          <div class="metric"><div class="metric-val" style="color:var(--azul2);" id="m-unicos">—</div><div class="metric-label">CPFs únicos</div></div>
+          <div class="metric"><div class="metric-val" style="color:var(--amber);" id="m-av">—</div><div class="metric-label">Avaliações</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div class="card"><div class="card-title">Raça / cor</div><div id="graf-raca"></div></div>
+          <div class="card"><div class="card-title">Gênero</div><div id="graf-genero"></div></div>
+          <div class="card"><div class="card-title">PCD</div><div id="graf-pcd"></div></div>
+          <div class="card"><div class="card-title">Vínculo</div><div id="graf-vinculo"></div></div>
+        </div>
+      </div>
+
+      <!-- Ações -->
+      <div id="udp-acoes" class="udp-screen" style="display:none;">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+          <button class="btn btn-primary btn-sm" onclick="udpIr('udp-nova',null)">+ Nova ação</button>
+        </div>
+        <div id="lista-acoes"></div>
+      </div>
+
+      <!-- Nova ação -->
+      <div id="udp-nova" class="udp-screen" style="display:none;">
+        <div class="card" style="max-width:600px;">
+          <div class="info-box">Datas são informativas. Abra e feche o check-in manualmente.</div>
+          <div class="form-group"><label class="form-label">Título *</label><input type="text" id="na-titulo"/></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="form-group"><label class="form-label">Tipo</label>
+              <select id="na-tipo"><option>Treinamento/Turma</option><option>Palestra/Evento</option><option>Curso Online</option><option>Workshop</option><option>Outro</option></select></div>
+            <div class="form-group"><label class="form-label">Modalidade</label>
+              <select id="na-modal"><option>Presencial</option><option>Remoto</option><option>Híbrido</option></select></div>
+            <div class="form-group"><label class="form-label">Data prevista</label><input type="date" id="na-data"/></div>
+            <div class="form-group"><label class="form-label">Carga horária</label><input type="text" id="na-ch" placeholder="Ex: 4h"/></div>
+            <div class="form-group"><label class="form-label">Local</label><input type="text" id="na-local"/></div>
+            <div class="form-group"><label class="form-label">Coordenador</label><input type="text" id="na-coord"/></div>
+          </div>
+          <div class="form-group"><label class="form-label">Unidade</label><input type="text" id="na-unidade"/></div>
+          <div class="btn-row">
+            <button class="btn btn-outline" onclick="udpIr('udp-acoes',null)">Cancelar</button>
+            <button class="btn btn-primary" onclick="salvarAcao()">Criar ação</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Relatório participantes -->
+      <div id="udp-relatorio" class="udp-screen" style="display:none;">
+        <div class="card">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-end;">
+            <div style="flex:1;min-width:180px;">
+              <label class="form-label">Ação</label>
+              <select id="rel-acao-sel"><option value="">Todas</option></select>
+            </div>
+            <div style="flex:1;min-width:140px;">
+              <label class="form-label">Vínculo</label>
+              <select id="rel-vinculo-sel"><option value="">Todos</option><option>EBSERH</option><option>UFPE/RJU</option><option>Residente</option><option>Externo</option></select>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="filtrarRelatorio()">Filtrar</button>
+            <button class="btn btn-outline btn-sm" onclick="exportarExcel()">Excel</button>
+            <button class="btn btn-outline btn-sm" onclick="exportarPDF()">PDF</button>
+          </div>
+          <div id="lista-relatorio" style="overflow-x:auto;"></div>
+          <div style="font-size:12px;color:var(--txt3);margin-top:8px;" id="rel-total"></div>
+        </div>
+      </div>
+
+      <!-- Avaliações -->
+      <div id="udp-avaliacoes" class="udp-screen" style="display:none;">
+        <div class="card">
+          <div style="display:flex;gap:10px;margin-bottom:14px;align-items:flex-end;">
+            <div style="flex:1;">
+              <label class="form-label">Filtrar por ação</label>
+              <select id="av-acao-sel"><option value="">Todas</option></select>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="filtrarAvaliacoes()">Filtrar</button>
+          </div>
+          <div id="lista-avaliacoes"></div>
+        </div>
+      </div>
+
+      <!-- Configurações -->
+      <div id="udp-config" class="udp-screen" style="display:none;">
+        <div class="card" style="max-width:600px;">
+          <div class="card-title">Conexão com Google Sheets</div>
+          <div class="form-group">
+            <label class="form-label">ID da planilha</label>
+            <input type="text" id="cfg-id" placeholder="Cole o ID da planilha"/>
+            <div class="form-hint">URL: docs.google.com/spreadsheets/d/<strong>[ID]</strong>/edit</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Chave de API</label>
+            <input type="text" id="cfg-key" placeholder="AIza..."/>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-outline" onclick="testarConexao()">Testar</button>
+            <button class="btn btn-primary" onclick="salvarConfig()">Salvar</button>
+          </div>
+          <div id="cfg-msg" style="margin-top:10px;font-size:13px;"></div>
+        </div>
+      </div>
+
+    </div><!-- /udp-content -->
+  </div><!-- /udp-main -->
+</div><!-- /udp-layout -->
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     QR CODE MODAL
+══════════════════════════════════════════════════════════════ -->
+<div id="qr-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;">
+  <div style="background:var(--white);border-radius:var(--radius);padding:24px;max-width:340px;width:90%;text-align:center;">
+    <div style="font-size:15px;font-weight:700;color:var(--azul);margin-bottom:4px;" id="qr-titulo"></div>
+    <div style="font-size:12px;color:var(--txt3);margin-bottom:16px;" id="qr-sub"></div>
+    <div id="qr-code" style="margin:0 auto 16px;"></div>
+    <div style="font-size:12px;color:var(--txt3);margin-bottom:16px;" id="qr-link-txt"></div>
+    <button class="btn btn-danger btn-sm" onclick="fecharQR()" style="width:100%;">Fechar</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
-// ── Estado ──────────────────────────────────────────────────────────────
+// ── Configuração ──────────────────────────────────────────────────────────
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwyeRGP9t-mNxD8f766IeN5CXL-AFRdcwbFmLSYguaA0-bXQL4xK1uLyvQ8X0FX0rdTLg/exec';
+const BASE_URL   = window.location.href.split('?')[0];
+
 const S = {
-  sheetId:  localStorage.getItem('udp_sheet_id')  || '',
-  apiKey:   localStorage.getItem('udp_api_key')   || '',
-  acoes:        [],
-  participantes:[],
-  perfis:       [],
-  avaliacoes:   [],
-  acao_ativa:   '',
+  sheetId: localStorage.getItem('udp_sheet_id') || '',
+  apiKey:  localStorage.getItem('udp_api_key')  || '',
+  acoes: [], participantes: [], perfis: [], avaliacoes: [],
+  // contexto atual
+  acao_ativa_id: '',
+  acao_ativa_tipo: '', // 'checkin' ou 'avaliacao'
+  cpf_atual: '',
+  nome_atual: '',
+  nota_estrelas: 0,
 };
 
-// ── Navegação ────────────────────────────────────────────────────────────
-const titulos = {
-  'udp':       ['Painel UDP',             'Indicadores gerais de capacitação e equidade'],
-  'acoes':     ['Ações',                  'Capacitações cadastradas'],
-  'nova-acao': ['Nova ação',              'Cadastro de nova capacitação'],
-  'checkin':   ['Check-in',               'Confirmação de presença'],
-  'externo':   ['Cadastro externo',       'Participante não encontrado na base EBSERH'],
-  'equidade':  ['Perfil de equidade',     'Dados sensíveis — acesso restrito UDP'],
-  'relatorio': ['Lista de participantes', 'Relatório de presenças'],
-  'avaliacao': ['Avaliação de reação',    'Respostas cruzadas por CPF'],
-  'config':    ['Configurações',          'Conexão com Google Sheets'],
-};
-
-function ir(tela) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  const el = document.getElementById('screen-' + tela);
-  if (el) el.classList.add('active');
-  const t = titulos[tela] || [tela, ''];
-  document.getElementById('page-title').textContent = t[0];
-  document.getElementById('page-sub').textContent   = t[1];
-  document.querySelectorAll('.nav-item').forEach(n => {
-    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + tela + "'"))
-      n.classList.add('active');
-  });
-  // Preencher selects ao navegar
-  if (tela === 'checkin' || tela === 'relatorio' || tela === 'avaliacao') popularSelects();
+// ── Navegação ─────────────────────────────────────────────────────────────
+function ir(pgId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const pg = document.getElementById(pgId);
+  if (pg) { pg.classList.add('active'); window.scrollTo(0,0); }
 }
 
-// ── Config ───────────────────────────────────────────────────────────────
-function salvarConfig() {
-  S.sheetId = document.getElementById('cfg-sheet-id').value.trim();
-  S.apiKey  = document.getElementById('cfg-api-key').value.trim();
-  localStorage.setItem('udp_sheet_id', S.sheetId);
-  localStorage.setItem('udp_api_key',  S.apiKey);
-  document.getElementById('cfg-msg').innerHTML =
-    '<span style="color:var(--verde);">&#10003; Configuração salva.</span>';
+function irUDP() {
+  ir('pg-udp');
+  if (S.sheetId && S.apiKey) sincronizar();
+  document.getElementById('cfg-id').value = S.sheetId;
+  document.getElementById('cfg-key').value = S.apiKey;
 }
 
-async function testarConexao() {
-  document.getElementById('cfg-msg').textContent = 'Testando...';
-  try {
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${S.sheetId}?key=${S.apiKey}`;
-    const r = await fetch(url);
-    if (r.ok) {
-      document.getElementById('cfg-msg').innerHTML =
-        '<span style="color:var(--verde);">&#10003; Conexão bem-sucedida!</span>';
-      document.getElementById('sync-status').textContent = '● Conectado';
-      document.getElementById('sync-status').style.color = 'var(--verde)';
-    } else {
-      document.getElementById('cfg-msg').innerHTML =
-        '<span style="color:#A32D2D;">&#10007; Erro: verifique o ID e a chave.</span>';
-    }
-  } catch(e) {
-    document.getElementById('cfg-msg').innerHTML =
-      '<span style="color:#A32D2D;">&#10007; Sem conexão.</span>';
-  }
-}
-
-// ── Google Sheets API ────────────────────────────────────────────────────
-async function lerAba(aba) {
-  // Tenta sem aspas primeiro, depois com aspas simples em volta do nome
-  const nomeLimpo = aba.replace(/^'|'(?=!)/g, '');
-  const tentativas = [nomeLimpo, "'" + nomeLimpo.replace('!', "'!").replace(/^''+/,"'")];
-  for (const nome of [aba, aba.replace(/'/g,'')]) {
-    try {
-      const url = `https://sheets.googleapis.com/v4/spreadsheets/${S.sheetId}/values/${encodeURIComponent(nome)}?key=${S.apiKey}`;
-      const r = await fetch(url);
-      if (r.ok) { const d = await r.json(); return d.values || []; }
-    } catch(e) {}
-  }
-  console.warn('Não foi possível ler: ' + aba);
-  return [];
-}
-
-async function gravarLinha(aba, linha, acao) {
-  try {
-    const payload = {
-      aba:   aba,
-      acao:  acao || 'APPEND',
-      linha: linha
-    };
-    const r = await fetch(SCRIPT_URL, {
-      method: 'POST',
-      body:   JSON.stringify(payload)
-    });
-    const d = await r.json();
-    if (!d.ok) console.warn('Erro ao gravar:', d.erro);
-    return d;
-  } catch(e) {
-    console.warn('Erro ao gravar linha:', e);
-  }
-}
-
-async function upsertPerfil(linha) {
-  try {
-    const payload = { aba: 'PERFIL_EQUIDADE', acao: 'UPSERT_PERFIL', linha: linha };
-    const r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) });
-    return await r.json();
-  } catch(e) {
-    console.warn('Erro ao salvar perfil:', e);
-  }
-}
-
-async function sincronizar() {
-  if (!S.sheetId || !S.apiKey) {
-    alert('Configure o ID da planilha e a chave de API em Configurações.');
-    ir('config');
-    return;
-  }
-  document.getElementById('sync-status').textContent = '● Sincronizando...';
-  try {
-    const [acoes, part, perfis, av] = await Promise.all([
-      lerAba('ACOES!A3:L1000').catch(()=>[]),
-      lerAba('PARTICIPANTES!A3:N5000').catch(()=>[]),
-      lerAba('PERFIL_EQUIDADE!A4:H5000').catch(()=>[]),
-      lerAba('AVALIACAO!A4:K5000').catch(()=>[]),
-    ]);
-    S.acoes         = acoes.filter(r => r[0]);
-    S.participantes = part.filter(r => r[0]);
-    S.perfis        = perfis.filter(r => r[0]);
-    S.avaliacoes    = av.filter(r => r[0]);
-
-    document.getElementById('sync-status').innerHTML = '&#9679; Sincronizado';
-    document.getElementById('sync-status').style.color = 'var(--verde)';
-
-    atualizarPainel();
-    atualizarTabelaAcoes();
-    popularSelects();
-  } catch(e) {
-    document.getElementById('sync-status').textContent = '● Erro na sincronização';
-    document.getElementById('sync-status').style.color = '#A32D2D';
-    alert('Erro ao sincronizar: ' + e.message + '\n\nVerifique as configurações.');
-  }
-}
-
-// ── Painel UDP ───────────────────────────────────────────────────────────
-function atualizarPainel() {
-  document.getElementById('m-acoes').textContent         = S.acoes.length;
-  document.getElementById('m-participacoes').textContent = S.participantes.length;
-  const cpfs = new Set(S.participantes.map(r => r[3]));
-  document.getElementById('m-unicos').textContent    = cpfs.size;
-  document.getElementById('m-perfis').textContent    = S.perfis.length;
-  document.getElementById('m-avaliacoes').textContent = S.avaliacoes.length;
-
-  // Cruzar participantes com perfis
-  const perfilMap = {};
-  S.perfis.forEach(p => { perfilMap[limparCPF(p[0])] = p; });
-
-  const generos = {}, racas = {}, pcds = {}, vinculos = {};
-  S.participantes.forEach(p => {
-    const cpf = limparCPF(p[3]);
-    const perf = perfilMap[cpf];
-    const gen  = perf ? (perf[3] || 'Não informado') : 'Sem perfil';
-    const raca = perf ? (perf[4] || 'Não informado') : 'Sem perfil';
-    const pcd  = perf ? (perf[5] || 'Não informado') : 'Sem perfil';
-    const vinc = p[6] || 'Não informado';
-    generos[gen]   = (generos[gen]   || 0) + 1;
-    racas[raca]    = (racas[raca]    || 0) + 1;
-    pcds[pcd]      = (pcds[pcd]      || 0) + 1;
-    vinculos[vinc] = (vinculos[vinc] || 0) + 1;
-  });
-
-  const cores = {
-    raca:    '#378ADD', genero: '#D4537E',
-    pcd:     '#1D9E75', vinculo:'#BA7517'
+// ── UDP sub-telas ─────────────────────────────────────────────────────────
+function udpIr(telaId, navEl) {
+  document.querySelectorAll('.udp-screen').forEach(s => s.style.display = 'none');
+  const el = document.getElementById(telaId);
+  if (el) el.style.display = 'block';
+  document.querySelectorAll('.udp-nav-item').forEach(n => n.classList.remove('active'));
+  if (navEl) navEl.classList.add('active');
+  const titulos = {
+    'udp-painel':    ['Painel UDP','Indicadores gerais'],
+    'udp-acoes':     ['Ações','Capacitações cadastradas'],
+    'udp-nova':      ['Nova ação','Cadastrar capacitação'],
+    'udp-relatorio': ['Participantes','Lista de presenças'],
+    'udp-avaliacoes':['Avaliações','Pesquisas de reação'],
+    'udp-config':    ['Configurações','Conexão Google Sheets'],
   };
-  renderGraf('graf-raca',    racas,    cores.raca);
-  renderGraf('graf-genero',  generos,  cores.genero);
-  renderGraf('graf-pcd',     pcds,     cores.pcd);
-  renderGraf('graf-vinculo', vinculos, cores.vinculo);
+  const t = titulos[telaId] || ['',''];
+  document.getElementById('udp-page-title').textContent = t[0];
+  document.getElementById('udp-page-sub').textContent   = t[1];
+  if (telaId === 'udp-acoes') renderAcoes();
+  if (telaId === 'udp-relatorio' || telaId === 'udp-avaliacoes') popularSelects();
 }
 
-function renderGraf(id, obj, cor) {
-  const el = document.getElementById(id);
-  const total = Object.values(obj).reduce((a,b)=>a+b,0) || 1;
-  const sorted = Object.entries(obj).sort((a,b)=>b[1]-a[1]);
-  el.innerHTML = sorted.map(([k,v]) => {
-    const pct = Math.round(v/total*100);
-    return `<div class="bar-row">
-      <span class="bar-label">${k}</span>
-      <div class="bar-track">
-        <div class="bar-fill" style="width:${pct}%;background:${cor};color:#fff;">${pct}%</div>
-      </div>
-      <span class="bar-count">${v}</span>
-    </div>`;
-  }).join('') || '<p style="font-size:12px;color:var(--txt3);">Sem dados.</p>';
-}
-
-// ── Tabela de ações ──────────────────────────────────────────────────────
-function atualizarTabelaAcoes() {
-  const tb = document.getElementById('tbody-acoes');
-  if (!S.acoes.length) {
-    tb.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--txt3);padding:24px;">Nenhuma ação encontrada.</td></tr>';
-    return;
+// ── URL params (QR Code) ──────────────────────────────────────────────────
+function lerParams() {
+  const p = new URLSearchParams(window.location.search);
+  const acao = p.get('acao');
+  const tipo = p.get('tipo');
+  if (acao && tipo) {
+    S.acao_ativa_id   = acao;
+    S.acao_ativa_tipo = tipo;
+    if (tipo === 'checkin') {
+      ir('pg-checkin-cpf');
+      carregarInfoAcao('ci-acao-info');
+    }
+    if (tipo === 'avaliacao') {
+      ir('pg-avaliacao-cpf');
+      carregarInfoAcao('av-acao-info');
+    }
   }
-  tb.innerHTML = S.acoes.map(a => {
-    const status = a[9] || 'Pendente';
-    const badge = status === 'Aberto'    ? 'badge-green' :
-                  status === 'Encerrado' ? 'badge-blue'  : 'badge-gray';
-    return `<tr>
-      <td><code style="font-size:11px;">${a[0]||''}</code></td>
-      <td style="font-weight:600;">${a[1]||''}</td>
-      <td>${a[2]||''}</td>
-      <td>${a[3]||''}</td>
-      <td>${a[5]||''}</td>
-      <td>${a[7]||''}</td>
-      <td><span class="badge ${badge}">${status}</span></td>
-      <td><button class="btn btn-outline btn-sm" onclick="abrirCheckin('${a[0]}')">Check-in</button></td>
-    </tr>`;
-  }).join('');
 }
 
-function abrirCheckin(id) {
-  S.acao_ativa = id;
-  ir('checkin');
-  setTimeout(() => {
-    const sel = document.getElementById('ci-acao');
-    if (sel) { sel.value = id; atualizarInfoAcao(); }
-  }, 100);
-}
-
-// ── Selects ──────────────────────────────────────────────────────────────
-function popularSelects() {
-  ['ci-acao','rel-acao','av-acao'].forEach(id => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const atual = el.value;
-    el.innerHTML = '<option value="">-- selecione --</option>';
-    S.acoes.forEach(a => {
-      const opt = document.createElement('option');
-      opt.value = a[0]; opt.textContent = `${a[0]} — ${a[1]}`;
-      el.appendChild(opt);
-    });
-    el.value = atual;
+function carregarInfoAcao(elId) {
+  sincronizarSilencioso(() => {
+    const a = S.acoes.find(x => x[0] === S.acao_ativa_id);
+    const el = document.getElementById(elId);
+    if (a && el) {
+      el.style.display = 'block';
+      el.textContent   = `${a[1]} · ${a[3]||''} · ${a[5]||''}`;
+    }
   });
 }
 
-function atualizarInfoAcao() {
-  const id = document.getElementById('ci-acao').value;
-  const acao = S.acoes.find(a => a[0] === id);
-  const info = document.getElementById('ci-info');
-  if (acao) {
-    info.style.display = 'block';
-    info.textContent = `${acao[1]} · ${acao[3]||''} · ${acao[5]||''} · Status: ${acao[9]||''}`;
-    atualizarPresentes(id);
-  } else {
-    info.style.display = 'none';
-  }
-}
-
-function atualizarPresentes(idAcao) {
-  const tb = document.getElementById('tbody-presentes');
-  const lista = S.participantes.filter(p => p[1] === idAcao);
-  if (!lista.length) {
-    tb.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--txt3);">Nenhum presente ainda.</td></tr>';
-    return;
-  }
-  tb.innerHTML = lista.map(p =>
-    `<tr>
-      <td style="font-weight:600;">${p[4]||''}</td>
-      <td><code style="font-size:11px;">${p[3]||''}</code></td>
-      <td>${p[6]||''}</td>
-      <td>${p[10] === 'Sim' ? '<span class="badge badge-roxo">Chefia</span>' : ''}</td>
-      <td style="font-size:11px;color:var(--txt3);">${p[11]||''}</td>
-    </tr>`
-  ).join('');
-}
-
-// ── Check-in ─────────────────────────────────────────────────────────────
+// ── Formatar CPF ──────────────────────────────────────────────────────────
 function formatarCPF(el) {
   let v = el.value.replace(/\D/g,'');
   if (v.length > 11) v = v.slice(0,11);
@@ -951,101 +865,109 @@ function formatarCPF(el) {
        .replace(/(\d{3})(\d{1,2})$/,'$1-$2');
   el.value = v;
 }
+function limparCPF(c){ return (c||'').replace(/\D/g,''); }
 
-function limparCPF(cpf) { return (cpf||'').replace(/\D/g,''); }
+// ── Chips ─────────────────────────────────────────────────────────────────
+function selChip(el, grupo) {
+  document.querySelectorAll(`[onclick*="'${grupo}'"]`).forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function getChip(grupo) {
+  const el = document.querySelector(`[onclick*="'${grupo}'"].sel`);
+  return el ? el.textContent.trim() : '';
+}
+function togglePCD(el, grupoId) {
+  document.getElementById(grupoId).style.display = el.textContent.trim() === 'Sim' ? 'block' : 'none';
+}
+function preSelChip(containerId, valor) {
+  if (!valor) return;
+  document.querySelectorAll(`#${containerId} .chip`).forEach(c => {
+    c.classList.toggle('sel', c.textContent.trim() === valor);
+  });
+}
 
-function buscarCPF() {
+// ── Estrelas ──────────────────────────────────────────────────────────────
+function selecionarEstrela(n) {
+  S.nota_estrelas = n;
+  document.querySelectorAll('#av-stars .star').forEach((s,i) => {
+    s.classList.toggle('sel', i < n);
+  });
+}
+
+// ── CHECK-IN ──────────────────────────────────────────────────────────────
+function buscarCheckin() {
   const cpf = limparCPF(document.getElementById('ci-cpf').value);
-  if (cpf.length !== 11) { alert('Digite um CPF válido com 11 dígitos.'); return; }
-  const idAcao = document.getElementById('ci-acao').value;
-  if (!idAcao) { alert('Selecione uma ação primeiro.'); return; }
+  if (cpf.length !== 11) { alert('Digite um CPF válido.'); return; }
+  if (!S.acao_ativa_id)  { alert('Acesse esta página pelo QR Code do evento.'); return; }
 
-  // Verificar se já está na lista de participantes
-  const jaPresente = S.participantes.find(p =>
-    limparCPF(p[3]) === cpf && p[1] === idAcao
-  );
+  S.cpf_atual = cpf;
+
+  // Já confirmou presença?
+  const jaPresente = S.participantes.find(p => limparCPF(p[3]) === cpf && p[1] === S.acao_ativa_id);
   if (jaPresente) {
     document.getElementById('ci-resultado').innerHTML = `
       <div class="found-card">
-        <b style="color:var(--verde);">&#10003; ${jaPresente[4]}</b>
-        <div style="font-size:12px;color:var(--verde);margin-top:4px;">Presença já confirmada às ${jaPresente[11]||''}.</div>
+        <div style="font-size:16px;font-weight:700;color:var(--verde);">✅ ${jaPresente[4]}</div>
+        <div style="font-size:13px;color:var(--verde);margin-top:4px;">Presença já confirmada às ${jaPresente[11]||''}.</div>
       </div>`;
     return;
   }
 
-  // Verificar na planilha de participantes (dados já carregados)
-  const perfil = S.perfis.find(p => limparCPF(p[0]) === cpf);
-  // Simular busca na base EBSERH via dados carregados
-  const participanteAnterior = S.participantes.find(p => limparCPF(p[3]) === cpf);
-  const nome = participanteAnterior ? participanteAnterior[4] : (perfil ? perfil[1] : null);
+  // Buscar na base
+  const part = S.participantes.find(p => limparCPF(p[3]) === cpf);
+  const perf = S.perfis.find(p => limparCPF(p[0]) === cpf);
+  const nome = part ? part[4] : (perf ? perf[1] : null);
 
   if (nome) {
-    const cargo    = participanteAnterior ? participanteAnterior[8] : '';
-    const unidade  = participanteAnterior ? participanteAnterior[9] : '';
-    const vinculo  = participanteAnterior ? participanteAnterior[6] : 'EBSERH';
-    const email    = participanteAnterior ? participanteAnterior[5] : '';
+    S.nome_atual = nome;
     document.getElementById('ci-resultado').innerHTML = `
       <div class="found-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
-          <div>
-            <b style="color:var(--verde);font-size:15px;">${nome}</b>
-            <div style="font-size:12px;color:var(--verde);margin-top:3px;">${cargo} · ${unidade}</div>
-            <div style="font-size:12px;color:var(--verde);">${email}</div>
-            <div style="margin-top:8px;">
-              <label style="font-size:12px;color:var(--verde);display:flex;align-items:center;gap:6px;cursor:pointer;">
-                <input type="checkbox" id="ci-chefia"/> Confirmar como chefia
-              </label>
-            </div>
-          </div>
-          <button class="btn btn-green" onclick="confirmarPresenca('${cpf}','${nome.replace(/'/g,"\\'")}','${email}','${vinculo}','${cargo}','${unidade}')">
-            &#10003; Confirmar presença
-          </button>
+        <div style="font-size:17px;font-weight:700;color:var(--verde);">${nome}</div>
+        <div style="font-size:13px;color:var(--verde);margin-top:2px;">${part?.[8]||''} · ${part?.[9]||''}</div>
+        <div style="margin-top:10px;">
+          <label style="display:flex;align-items:center;gap:10px;font-size:15px;cursor:pointer;">
+            <input type="checkbox" id="ci-chefia" style="width:22px;height:22px;"/>
+            Sou chefia / gestor desta unidade
+          </label>
         </div>
+        <button class="btn btn-green" style="margin-top:14px;" onclick="confirmarPresenca('${cpf}','${nome.replace(/'/g,"\\'")}','${part?.[5]||''}','${part?.[6]||'EBSERH'}','${part?.[8]||''}','${part?.[9]||''}')">
+          ✅ Confirmar presença
+        </button>
       </div>`;
   } else {
-    // Não encontrado
     document.getElementById('ci-resultado').innerHTML = `
       <div class="notfound-card">
-        <b style="color:var(--amber);">CPF não encontrado na base.</b>
-        <div style="font-size:12px;color:var(--amber);margin-top:4px;">Este participante não está na base EBSERH.</div>
-        <button class="btn btn-outline btn-sm" style="margin-top:10px;border-color:var(--amber);color:var(--amber);"
-          onclick="irExterno('${cpf}')">Cadastrar como externo</button>
+        <div style="font-size:15px;font-weight:700;color:var(--amber);">CPF não encontrado na base.</div>
+        <div style="font-size:13px;color:var(--amber);margin-top:4px;">Preencha seus dados para registrar presença.</div>
+        <button class="btn btn-amber" style="margin-top:12px;" onclick="irExternoCI('${cpf}')">Cadastrar</button>
       </div>`;
   }
 }
 
-function irExterno(cpf) {
+function irExternoCI(cpf) {
   document.getElementById('ext-cpf').value = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
-  ir('externo');
+  ir('pg-checkin-externo');
 }
 
-function confirmarPresenca(cpf, nome, email, vinculo, cargo, unidade) {
-  const idAcao = document.getElementById('ci-acao').value;
-  const chefia = document.getElementById('ci-chefia') ?
-    (document.getElementById('ci-chefia').checked ? 'Sim' : 'Não') : 'Não';
+async function confirmarPresenca(cpf, nome, email, vinculo, cargo, unidade) {
+  const chefia = document.getElementById('ci-chefia')?.checked ? 'Sim' : 'Não';
   const agora  = new Date().toLocaleString('pt-BR');
   const idPre  = 'PRE' + Date.now();
-
-  const linha = [idPre, idAcao, '', cpf, nome, email, vinculo, '', cargo, unidade, chefia, agora, 'Sistema', ''];
+  const linha  = [idPre, S.acao_ativa_id, '', cpf, nome, email, vinculo, '', cargo, unidade, chefia, agora, 'Sistema', ''];
   S.participantes.push(linha);
-  atualizarPresentes(idAcao);
-  document.getElementById('ci-cpf').value = '';
-  document.getElementById('ci-resultado').innerHTML =
-    `<div class="found-card"><b style="color:var(--verde);">&#10003; Presença confirmada — ${nome}</b></div>`;
-
-  gravarLinha('PARTICIPANTES', linha, 'APPEND');
-  atualizarPainel();
-}
-
-function fecharCheckin() {
-  if (confirm('Fechar o check-in desta ação? Novas presenças não poderão ser registradas.')) {
-    const idAcao = document.getElementById('ci-acao').value;
-    alert(`Check-in da ação ${idAcao} encerrado.\nAtualize o status para "Encerrado" na aba ACOES da planilha.`);
+  S.nome_atual = nome;
+  await gravarLinha('PARTICIPANTES', linha, 'APPEND');
+  document.getElementById('ci-sucesso-nome').textContent = nome;
+  // Verificar se já tem perfil de equidade
+  const temPerfil = S.perfis.find(p => limparCPF(p[0]) === cpf);
+  if (!temPerfil) {
+    ir('pg-checkin-equidade');
+  } else {
+    ir('pg-checkin-sucesso');
   }
 }
 
-// ── Externo ──────────────────────────────────────────────────────────────
-function registrarExterno() {
+async function registrarExterno() {
   const cpf     = limparCPF(document.getElementById('ext-cpf').value);
   const nome    = document.getElementById('ext-nome').value.trim().toUpperCase();
   const email   = document.getElementById('ext-email').value.trim();
@@ -1053,221 +975,433 @@ function registrarExterno() {
   const cargo   = document.getElementById('ext-cargo').value.trim();
   const unidade = document.getElementById('ext-unidade').value.trim();
   const chefia  = document.getElementById('ext-chefia').checked ? 'Sim' : 'Não';
-
-  if (!cpf || !nome || !email) {
-    alert('Preencha CPF, nome completo e e-mail.'); return;
-  }
-  const idAcao = S.acao_ativa || document.getElementById('ci-acao')?.value || '';
-  const agora  = new Date().toLocaleString('pt-BR');
-  const idPre  = 'PRE' + Date.now();
-  const linha  = [idPre, idAcao, '', cpf, nome, email, vinculo, '', cargo, unidade, chefia, agora, 'Manual', 'Cadastrado no evento'];
+  if (!cpf || !nome || !email) { alert('Preencha CPF, nome e e-mail.'); return; }
+  const agora = new Date().toLocaleString('pt-BR');
+  const idPre = 'PRE' + Date.now();
+  const linha = [idPre, S.acao_ativa_id, '', cpf, nome, email, vinculo, '', cargo, unidade, chefia, agora, 'Manual', ''];
   S.participantes.push(linha);
-
-  gravarLinha('PARTICIPANTES', linha, 'APPEND');
-  alert(`Presença de ${nome} registrada com sucesso.`);
-  ir('checkin');
-  atualizarPresentes(idAcao);
+  S.nome_atual = nome;
+  await gravarLinha('PARTICIPANTES', linha, 'APPEND');
+  document.getElementById('ci-sucesso-nome').textContent = nome;
+  ir('pg-checkin-sucesso');
 }
 
-// ── Equidade ─────────────────────────────────────────────────────────────
-function selChip(el, grupo) {
-  document.querySelectorAll(`#chips-${grupo} .chip`).forEach(c => c.classList.remove('sel'));
-  el.classList.add('sel');
+async function salvarEquidadeCheckin() {
+  const cpf  = S.cpf_atual;
+  const gen  = getChip('ci-genero');
+  const raca = getChip('ci-raca');
+  const pcd  = getChip('ci-pcd');
+  const def  = getChip('ci-def');
+  if (!gen || !raca || !pcd) { alert('Selecione pelo menos gênero, raça/cor e PCD.'); return; }
+  const linha = [cpf, S.nome_atual, new Date().toLocaleDateString('pt-BR'), gen, raca, pcd, def, ''];
+  await upsertPerfil(linha);
+  ir('pg-checkin-sucesso');
 }
 
-function togglePCD(el) {
-  document.getElementById('grupo-deficiencia').style.display =
-    el.textContent === 'Sim' ? 'block' : 'none';
+// ── AVALIAÇÃO ─────────────────────────────────────────────────────────────
+function iniciarAvaliacao() {
+  const cpf = limparCPF(document.getElementById('av-cpf').value);
+  if (cpf.length !== 11) { alert('Digite um CPF válido.'); return; }
+  if (!S.acao_ativa_id)  { alert('Acesse esta página pelo QR Code de avaliação.'); return; }
+  const part = S.participantes.find(p => limparCPF(p[3]) === cpf && p[1] === S.acao_ativa_id);
+  if (!part) { alert('CPF não encontrado nesta capacitação.\nFaça o check-in primeiro.'); return; }
+  S.cpf_atual  = cpf;
+  S.nome_atual = part[4];
+  const acao = S.acoes.find(a => a[0] === S.acao_ativa_id);
+  document.getElementById('av-titulo-header').textContent = acao ? acao[1] : '';
+  ir('pg-avaliacao-form');
 }
 
+async function enviarAvaliacao() {
+  if (!S.nota_estrelas) { alert('Selecione uma nota geral.'); return; }
+  const get = name => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : ''; };
+  const linha = [
+    new Date().toLocaleString('pt-BR'),
+    S.cpf_atual, S.acao_ativa_id, '',
+    get('q1'), get('q2'), get('q3'), get('q4'),
+    get('q5'), get('q6'), get('q7'), get('q8'),
+    get('i1'), get('i2'), get('i3'), get('i4'), get('i5'),
+    document.getElementById('av-positivo').value,
+    document.getElementById('av-negativo').value,
+    S.nota_estrelas
+  ];
+  await gravarLinha('AVALIACAO', linha, 'APPEND');
+  ir('pg-avaliacao-sucesso');
+}
+
+// ── PERFIL EQUIDADE ───────────────────────────────────────────────────────
 function buscarPerfil() {
   const cpf = limparCPF(document.getElementById('eq-cpf').value);
   if (cpf.length !== 11) { alert('CPF inválido.'); return; }
-  const perfil = S.perfis.find(p => limparCPF(p[0]) === cpf);
-  const part   = S.participantes.find(p => limparCPF(p[3]) === cpf);
-  const nome   = perfil ? perfil[1] : (part ? part[4] : '');
-
-  if (nome) {
-    document.getElementById('eq-nome-encontrado').style.display = 'flex';
-    document.getElementById('eq-nome-txt').textContent  = nome;
-    document.getElementById('eq-cargo-txt').textContent = part ? (part[8]||'') : '';
-    const ini = nome.split(' ');
-    document.getElementById('eq-avatar').textContent =
-      (ini[0]?.[0]||'') + (ini[ini.length-1]?.[0]||'');
-    // Pré-selecionar valores existentes
-    if (perfil) {
-      preSelChip('chips-genero', perfil[3]);
-      preSelChip('chips-raca',   perfil[4]);
-      preSelChip('chips-pcd',    perfil[5]);
-      if (perfil[5] === 'Sim') {
-        document.getElementById('grupo-deficiencia').style.display = 'block';
-        preSelChip('chips-def', perfil[6]);
-      }
+  S.cpf_atual = cpf;
+  const part = S.participantes.find(p => limparCPF(p[3]) === cpf);
+  const perf = S.perfis.find(p => limparCPF(p[0]) === cpf);
+  const nome = part ? part[4] : (perf ? perf[1] : '');
+  S.nome_atual = nome;
+  document.getElementById('eq-nome-header').textContent = nome || cpf;
+  if (perf) {
+    preSelChip('eq-chips-genero', perf[3]);
+    preSelChip('eq-chips-raca',   perf[4]);
+    preSelChip('eq-chips-pcd',    perf[5]);
+    if (perf[5] === 'Sim') {
+      document.getElementById('eq-def-grupo').style.display = 'block';
+      preSelChip('eq-chips-def', perf[6]);
     }
-  } else {
-    document.getElementById('eq-nome-encontrado').style.display = 'none';
+  }
+  ir('pg-equidade-form');
+}
+
+async function salvarPerfil() {
+  const gen  = getChip('eq-genero');
+  const raca = getChip('eq-raca');
+  const pcd  = getChip('eq-pcd');
+  const def  = getChip('eq-def');
+  if (!gen || !raca || !pcd) { alert('Selecione gênero, raça/cor e PCD.'); return; }
+  const linha = [S.cpf_atual, S.nome_atual, new Date().toLocaleDateString('pt-BR'), gen, raca, pcd, def, ''];
+  const idx = S.perfis.findIndex(p => limparCPF(p[0]) === S.cpf_atual);
+  if (idx >= 0) S.perfis[idx] = linha; else S.perfis.push(linha);
+  await upsertPerfil(linha);
+  alert('Perfil salvo!');
+  ir('pg-home');
+}
+
+// ── API GOOGLE SHEETS ─────────────────────────────────────────────────────
+async function lerAba(aba) {
+  for (const nome of [aba, aba.replace(/'/g,'')]) {
+    try {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${S.sheetId}/values/${encodeURIComponent(nome)}?key=${S.apiKey}`;
+      const r = await fetch(url);
+      if (r.ok) { const d = await r.json(); return d.values || []; }
+    } catch(e) {}
+  }
+  return [];
+}
+
+async function sincronizar() {
+  if (!S.sheetId || !S.apiKey) { alert('Configure a planilha em Configurações.'); udpIr('udp-config',null); return; }
+  document.getElementById('sync-status').textContent = '● Sincronizando...';
+  try {
+    const [a,p,pf,av] = await Promise.all([
+      lerAba('ACOES!A3:L1000'),
+      lerAba('PARTICIPANTES!A3:N5000'),
+      lerAba('PERFIL_EQUIDADE!A4:H5000'),
+      lerAba('AVALIACAO!A4:T5000'),
+    ]);
+    S.acoes         = a.filter(r=>r[0]);
+    S.participantes = p.filter(r=>r[0]);
+    S.perfis        = pf.filter(r=>r[0]);
+    S.avaliacoes    = av.filter(r=>r[0]);
+    document.getElementById('sync-status').innerHTML = '● Sincronizado';
+    document.getElementById('sync-status').style.color = 'var(--verde)';
+    atualizarPainel();
+    popularSelects();
+  } catch(e) {
+    document.getElementById('sync-status').textContent = '● Erro';
+    document.getElementById('sync-status').style.color = '#A32D2D';
   }
 }
 
-function preSelChip(containerId, valor) {
-  if (!valor) return;
-  document.querySelectorAll(`#${containerId} .chip`).forEach(c => {
-    c.classList.toggle('sel', c.textContent === valor);
+function sincronizarSilencioso(cb) {
+  if (!S.sheetId || !S.apiKey) { if(cb) cb(); return; }
+  Promise.all([
+    lerAba('ACOES!A3:L1000'),
+    lerAba('PARTICIPANTES!A3:N5000'),
+    lerAba('PERFIL_EQUIDADE!A4:H5000'),
+  ]).then(([a,p,pf]) => {
+    S.acoes         = a.filter(r=>r[0]);
+    S.participantes = p.filter(r=>r[0]);
+    S.perfis        = pf.filter(r=>r[0]);
+    if(cb) cb();
+  }).catch(()=>{ if(cb) cb(); });
+}
+
+async function gravarLinha(aba, linha, acao) {
+  try {
+    const r = await fetch(SCRIPT_URL, {
+      method:'POST', body: JSON.stringify({aba, acao: acao||'APPEND', linha})
+    });
+    return await r.json();
+  } catch(e) { console.warn('Erro ao gravar:', e); }
+}
+
+async function upsertPerfil(linha) {
+  try {
+    const r = await fetch(SCRIPT_URL, {
+      method:'POST', body: JSON.stringify({aba:'PERFIL_EQUIDADE', acao:'UPSERT_PERFIL', linha})
+    });
+    return await r.json();
+  } catch(e) { console.warn('Erro perfil:', e); }
+}
+
+// ── PAINEL UDP ────────────────────────────────────────────────────────────
+function atualizarPainel() {
+  document.getElementById('m-acoes').textContent = S.acoes.length;
+  document.getElementById('m-part').textContent  = S.participantes.length;
+  const cpfs = new Set(S.participantes.map(r=>r[3]));
+  document.getElementById('m-unicos').textContent   = cpfs.size;
+  document.getElementById('m-av').textContent       = S.avaliacoes.length;
+  const perfilMap = {};
+  S.perfis.forEach(p => { perfilMap[limparCPF(p[0])] = p; });
+  const gen={}, raca={}, pcd={}, vinc={};
+  S.participantes.forEach(p => {
+    const pf = perfilMap[limparCPF(p[3])];
+    gen[pf?.[3]||'Sem perfil']  = (gen[pf?.[3]||'Sem perfil']||0)+1;
+    raca[pf?.[4]||'Sem perfil'] = (raca[pf?.[4]||'Sem perfil']||0)+1;
+    pcd[pf?.[5]||'Sem perfil']  = (pcd[pf?.[5]||'Sem perfil']||0)+1;
+    vinc[p[6]||'Não informado'] = (vinc[p[6]||'Não informado']||0)+1;
   });
+  renderGraf('graf-raca',    raca, '#378ADD');
+  renderGraf('graf-genero',  gen,  '#D4537E');
+  renderGraf('graf-pcd',     pcd,  '#1D9E75');
+  renderGraf('graf-vinculo', vinc, '#BA7517');
 }
 
-function salvarPerfil() {
-  const cpf  = limparCPF(document.getElementById('eq-cpf').value);
-  if (cpf.length !== 11) { alert('CPF inválido.'); return; }
-  const get  = id => document.querySelector(`#${id} .chip.sel`)?.textContent || '';
-  const gen  = get('chips-genero');
-  const raca = get('chips-raca');
-  const pcd  = get('chips-pcd');
-  const def  = get('chips-def');
-  const nome = document.getElementById('eq-nome-txt').textContent || '';
-  const agora= new Date().toLocaleDateString('pt-BR');
-
-  if (!gen || !raca || !pcd) { alert('Selecione gênero, raça/cor e PCD.'); return; }
-
-  // Atualizar memória
-  const idx = S.perfis.findIndex(p => limparCPF(p[0]) === cpf);
-  const linha = [cpf, nome, agora, gen, raca, pcd, def, agora];
-  if (idx >= 0) S.perfis[idx] = linha; else S.perfis.push(linha);
-
-  upsertPerfil(linha);
-  alert('Perfil salvo com sucesso!');
+function renderGraf(id, obj, cor) {
+  const el = document.getElementById(id); if(!el) return;
+  const total = Object.values(obj).reduce((a,b)=>a+b,0)||1;
+  const sorted = Object.entries(obj).sort((a,b)=>b[1]-a[1]);
+  el.innerHTML = sorted.map(([k,v]) => {
+    const pct = Math.round(v/total*100);
+    return `<div class="bar-row">
+      <span class="bar-label">${k}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${cor};color:#fff;">${pct}%</div></div>
+      <span class="bar-count">${v}</span>
+    </div>`;
+  }).join('') || '<p style="font-size:12px;color:var(--txt3);">Sem dados.</p>';
 }
 
-// ── Nova ação ─────────────────────────────────────────────────────────────
-function salvarAcao() {
+// ── AÇÕES ─────────────────────────────────────────────────────────────────
+function renderAcoes() {
+  const el = document.getElementById('lista-acoes');
+  if (!S.acoes.length) { el.innerHTML = '<div class="info-box">Nenhuma ação. Sincronize ou crie uma nova.</div>'; return; }
+  el.innerHTML = S.acoes.map(a => {
+    const status = a[9]||'Pendente';
+    const badge  = status==='Aberto' ? 'badge-green' : status==='Encerrado' ? 'badge-blue' : 'badge-gray';
+    const presentes = S.participantes.filter(p=>p[1]===a[0]).length;
+    return `<div class="acao-item">
+      <div class="acao-titulo">${a[1]||''}</div>
+      <div class="acao-meta">${a[2]||''} · ${a[3]||''} · ${a[5]||''} · ${presentes} presente(s)</div>
+      <div style="margin-bottom:10px;"><span class="badge ${badge}">${status}</span></div>
+      <div class="acao-btns">
+        <button class="btn btn-outline btn-sm" onclick="gerarQR('${a[0]}','checkin')">QR Check-in</button>
+        <button class="btn btn-outline btn-sm" onclick="gerarQR('${a[0]}','avaliacao')">QR Avaliação</button>
+        <button class="btn btn-outline btn-sm" onclick="exportarAnexoIV('${a[0]}')">Anexo IV</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function salvarAcao() {
   const titulo = document.getElementById('na-titulo').value.trim();
-  if (!titulo) { alert('Informe o título da ação.'); return; }
-  const id     = 'CAP' + String(S.acoes.length + 1).padStart(3,'0');
-  const linha  = [
-    id, titulo,
+  if (!titulo) { alert('Informe o título.'); return; }
+  const id    = 'CAP' + String(S.acoes.length+1).padStart(3,'0');
+  const linha = [id, titulo,
     document.getElementById('na-tipo').value,
-    document.getElementById('na-modalidade').value,
+    document.getElementById('na-modal').value,
     document.getElementById('na-data').value,
     document.getElementById('na-ch').value,
     document.getElementById('na-local').value,
     document.getElementById('na-coord').value,
     document.getElementById('na-unidade').value,
-    'Pendente', '', ''
-  ];
+    'Pendente','',''];
   S.acoes.push(linha);
-  atualizarTabelaAcoes();
-  gravarLinha('ACOES', linha, 'APPEND');
-  alert(`Ação ${id} criada: ${titulo}`);
-  ir('acoes');
+  await gravarLinha('ACOES', linha, 'APPEND');
+  alert(`Ação ${id} criada!`);
+  udpIr('udp-acoes', null);
+  renderAcoes();
 }
 
-// ── Relatório ─────────────────────────────────────────────────────────────
+// ── QR CODE ───────────────────────────────────────────────────────────────
+function gerarQR(idAcao, tipo) {
+  const acao = S.acoes.find(a => a[0] === idAcao);
+  const link = `${BASE_URL}?acao=${idAcao}&tipo=${tipo}`;
+  const titulosQR = { checkin: 'QR Code — Check-in', avaliacao: 'QR Code — Avaliação' };
+  document.getElementById('qr-titulo').textContent = titulosQR[tipo];
+  document.getElementById('qr-sub').textContent    = acao ? acao[1] : idAcao;
+  document.getElementById('qr-link-txt').textContent = link;
+  document.getElementById('qr-code').innerHTML = '';
+  new QRCode(document.getElementById('qr-code'), {
+    text: link, width:200, height:200,
+    colorDark:'#003F72', colorLight:'#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+  const modal = document.getElementById('qr-modal');
+  modal.style.display = 'flex';
+}
+
+function fecharQR() {
+  document.getElementById('qr-modal').style.display = 'none';
+}
+
+// ── RELATÓRIO ─────────────────────────────────────────────────────────────
+function popularSelects() {
+  ['rel-acao-sel','av-acao-sel'].forEach(id => {
+    const el = document.getElementById(id); if(!el) return;
+    const atual = el.value;
+    el.innerHTML = '<option value="">Todas</option>';
+    S.acoes.forEach(a => {
+      const o = document.createElement('option');
+      o.value = a[0]; o.textContent = `${a[0]} — ${a[1]}`;
+      el.appendChild(o);
+    });
+    el.value = atual;
+  });
+}
+
 function filtrarRelatorio() {
-  const idAcao  = document.getElementById('rel-acao').value;
-  const vinculo = document.getElementById('rel-vinculo').value;
+  const idAcao  = document.getElementById('rel-acao-sel').value;
+  const vinculo = document.getElementById('rel-vinculo-sel').value;
   let lista = S.participantes;
-  if (idAcao)  lista = lista.filter(p => p[1] === idAcao);
-  if (vinculo) lista = lista.filter(p => p[6] === vinculo);
-
-  const tb = document.getElementById('tbody-relatorio');
-  document.getElementById('rel-total').textContent = `${lista.length} registro(s) encontrado(s).`;
-
-  if (!lista.length) {
-    tb.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--txt3);padding:24px;">Nenhum resultado.</td></tr>';
-    return;
-  }
-  tb.innerHTML = lista.map(p =>
-    `<tr>
-      <td style="font-weight:600;">${p[4]||''}</td>
-      <td><code style="font-size:11px;">${p[3]||''}</code></td>
-      <td style="font-size:12px;">${p[5]||''}</td>
+  if (idAcao)  lista = lista.filter(p=>p[1]===idAcao);
+  if (vinculo) lista = lista.filter(p=>p[6]===vinculo);
+  document.getElementById('rel-total').textContent = `${lista.length} registro(s)`;
+  const el = document.getElementById('lista-relatorio');
+  if (!lista.length) { el.innerHTML = '<p style="color:var(--txt3);text-align:center;padding:20px;">Nenhum resultado.</p>'; return; }
+  el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead><tr style="background:var(--azul);color:#fff;">
+      <th style="padding:8px;">Nome</th><th>CPF</th><th>E-mail</th>
+      <th>Cargo</th><th>Vínculo</th><th>Chefia</th><th>Ação</th><th>Check-in</th>
+    </tr></thead>
+    <tbody>${lista.map((p,i) => `<tr style="background:${i%2?'var(--cinza)':'#fff'};">
+      <td style="padding:8px;font-weight:600;">${p[4]||''}</td>
+      <td style="font-size:11px;">${p[3]||''}</td>
+      <td style="font-size:11px;">${p[5]||''}</td>
       <td>${p[8]||''}</td>
       <td><span class="badge badge-gray">${p[6]||''}</span></td>
-      <td style="font-size:12px;">${p[9]||''}</td>
       <td>${p[10]==='Sim'?'<span class="badge badge-roxo">Sim</span>':''}</td>
-      <td style="font-size:12px;">${p[2]||p[1]||''}</td>
-      <td style="font-size:11px;color:var(--txt3);">${p[11]||''}</td>
-    </tr>`
-  ).join('');
+      <td style="font-size:11px;">${p[2]||p[1]||''}</td>
+      <td style="font-size:11px;">${p[11]||''}</td>
+    </tr>`).join('')}</tbody></table>`;
 }
 
-function exportarCSV() {
-  const idAcao  = document.getElementById('rel-acao').value;
-  const vinculo = document.getElementById('rel-vinculo').value;
-  let lista = S.participantes;
-  if (idAcao)  lista = lista.filter(p => p[1] === idAcao);
-  if (vinculo) lista = lista.filter(p => p[6] === vinculo);
-
-  const header = ['ID_PRESENCA','ID_ACAO','TITULO_ACAO','CPF','NOME','EMAIL','VINCULO','SIAPE','CARGO','UNIDADE','CHEFIA','CHECKIN','REGISTRADO_POR','OBS'];
-  const csv = [header, ...lista].map(r => r.map(c => `"${(c||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `udp_participantes_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-}
-
-// ── Avaliação ─────────────────────────────────────────────────────────────
-function filtrarAvaliacao() {
-  const idAcao = document.getElementById('av-acao').value;
+function filtrarAvaliacoes() {
+  const idAcao = document.getElementById('av-acao-sel').value;
   let lista = S.avaliacoes;
-  if (idAcao) lista = lista.filter(a => a[2] === idAcao);
-
-  // Cruzar com participantes para pegar nome
+  if (idAcao) lista = lista.filter(a=>a[2]===idAcao);
   const partMap = {};
   S.participantes.forEach(p => { partMap[limparCPF(p[3])] = p[4]; });
-
-  const tb = document.getElementById('tbody-avaliacao');
-  if (!lista.length) {
-    tb.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--txt3);padding:24px;">Nenhuma avaliação encontrada.</td></tr>';
-    return;
-  }
-  tb.innerHTML = lista.map(a => {
-    const nome = partMap[limparCPF(a[1])] || '—';
-    const nota = Number(a[7]) || 0;
-    const cor  = nota >= 4 ? 'badge-green' : nota >= 3 ? 'badge-amber' : 'badge-gray';
-    return `<tr>
-      <td style="font-weight:600;">${nome}</td>
-      <td><code style="font-size:11px;">${a[1]||''}</code></td>
-      <td style="font-size:12px;">${a[3]||a[2]||''}</td>
-      <td><span class="badge ${cor}">${nota}/5</span></td>
-      <td>${a[8]||''}</td>
-      <td style="font-size:12px;">${a[9]||''}</td>
-      <td style="font-size:12px;">${a[10]||''}</td>
-    </tr>`;
-  }).join('');
+  const el = document.getElementById('lista-avaliacoes');
+  if (!lista.length) { el.innerHTML = '<p style="color:var(--txt3);text-align:center;padding:20px;">Nenhuma avaliação.</p>'; return; }
+  el.innerHTML = `<table style="width:100%;border-collapse:collapse;font-size:13px;">
+    <thead><tr style="background:var(--azul);color:#fff;">
+      <th style="padding:8px;">Nome</th><th>Ação</th><th>Nota</th>
+      <th>Positivo</th><th>Melhoria</th>
+    </tr></thead>
+    <tbody>${lista.map((a,i) => {
+      const nome = partMap[limparCPF(a[1])]||'—';
+      const nota = Number(a[19])||0;
+      const cor  = nota>=4?'badge-green':nota>=3?'badge-amber':'badge-gray';
+      return `<tr style="background:${i%2?'var(--cinza)':'#fff'};">
+        <td style="padding:8px;font-weight:600;">${nome}</td>
+        <td style="font-size:11px;">${a[3]||a[2]||''}</td>
+        <td><span class="badge ${cor}">${nota}★</span></td>
+        <td style="font-size:12px;">${a[17]||''}</td>
+        <td style="font-size:12px;">${a[18]||''}</td>
+      </tr>`;
+    }).join('')}</tbody></table>`;
 }
 
-// ── Anexo IV ──────────────────────────────────────────────────────────────
-function exportarAnexoIV() {
-  const idAcao = document.getElementById('ci-acao').value;
-  if (!idAcao) { alert('Selecione uma ação.'); return; }
-  const acao   = S.acoes.find(a => a[0] === idAcao);
-  const lista  = S.participantes.filter(p => p[1] === idAcao);
+// ── EXPORTAR ──────────────────────────────────────────────────────────────
+function exportarExcel() {
+  const idAcao  = document.getElementById('rel-acao-sel').value;
+  const vinculo = document.getElementById('rel-vinculo-sel').value;
+  let lista = S.participantes;
+  if (idAcao)  lista = lista.filter(p=>p[1]===idAcao);
+  if (vinculo) lista = lista.filter(p=>p[6]===vinculo);
+  const acao  = S.acoes.find(a=>a[0]===idAcao);
+  const wb    = XLSX.utils.book_new();
+  const dados = [
+    ['LISTA DE PARTICIPANTES — UDP CAPACITAÇÕES · HC-UFPE · EBSERH'],
+    ['Ação:', acao?acao[1]:idAcao||'Todas', '', 'Data:', acao?acao[4]:'', '', 'Total:', lista.length],
+    [],
+    ['Nº','Nome completo','CPF','E-mail','Cargo','Vínculo','Unidade','Chefia','Check-in'],
+    ...lista.map((p,i)=>[i+1, p[4]||'', p[3]||'', p[5]||'', p[8]||'', p[6]||'', p[9]||'', p[10]||'', p[11]||''])
+  ];
+  const ws = XLSX.utils.aoa_to_sheet(dados);
+  // Larguras
+  ws['!cols'] = [{wch:4},{wch:35},{wch:16},{wch:30},{wch:25},{wch:14},{wch:30},{wch:10},{wch:20}];
+  // Mesclar título
+  ws['!merges'] = [{s:{r:0,c:0},e:{r:0,c:8}}];
+  XLSX.utils.book_append_sheet(wb, ws, 'Participantes');
+  XLSX.writeFile(wb, `Participantes_${new Date().toISOString().slice(0,10)}.xlsx`);
+}
 
-  let csv  = 'ANEXO IV - RELATÓRIO CONSOLIDADO DE CARGA HORÁRIA - PARTICIPANTES\n';
-  csv += `TÍTULO DA AÇÃO:,"${acao?.[1]||''}"\n`;
-  csv += `DATA/PERÍODO:,"${acao?.[4]||''}"\tLOCAL:,"${acao?.[6]||''}"\n`;
-  csv += `CARGA HORÁRIA:,"${acao?.[5]||''}"\n\n`;
-  csv += 'Nº,NOME COMPLETO (LETRA MAIÚSCULA),E-MAIL INSTITUCIONAL,SIAPE,CARGO,VÍNCULO,LOTAÇÃO,CH TOTAL,CHEFIA (X),CPF\n';
+function exportarPDF() {
+  const idAcao = document.getElementById('rel-acao-sel').value;
+  const acao   = S.acoes.find(a=>a[0]===idAcao);
+  let lista    = S.participantes;
+  if (idAcao)  lista = lista.filter(p=>p[1]===idAcao);
+  const html = `<html><head><meta charset="UTF-8"/>
+  <style>body{font-family:Arial;font-size:12px;}
+  h2{color:#003F72;} table{width:100%;border-collapse:collapse;}
+  th{background:#003F72;color:#fff;padding:7px;} td{padding:7px;border-bottom:1px solid #eee;}
+  .rodape{margin-top:20px;font-size:10px;color:#888;text-align:center;}
+  </style></head><body>
+  <h2>Lista de Participantes</h2>
+  <p><b>Ação:</b> ${acao?acao[1]:idAcao||'Todas'} &nbsp;|&nbsp; <b>Total:</b> ${lista.length}</p>
+  <table><thead><tr><th>Nº</th><th>Nome</th><th>CPF</th><th>Cargo</th><th>Vínculo</th><th>Chefia</th><th>Check-in</th></tr></thead>
+  <tbody>${lista.map((p,i)=>`<tr><td>${i+1}</td><td>${p[4]||''}</td><td>${p[3]||''}</td><td>${p[8]||''}</td><td>${p[6]||''}</td><td>${p[10]||''}</td><td>${p[11]||''}</td></tr>`).join('')}</tbody></table>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+  </body></html>`;
+  const w = window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+  w.print();
+}
 
-  lista.forEach((p, i) => {
-    const chefia = p[10] === 'Sim' ? 'X' : '';
-    csv += `${i+1},"${p[4]||''}","${p[5]||''}","${p[7]||''}","${p[8]||''}","${p[6]||''}","${p[9]||''}","${acao?.[5]||''}","${chefia}","${p[3]||''}"\n`;
+function exportarAnexoIV(idAcao) {
+  const acao  = S.acoes.find(a=>a[0]===idAcao);
+  const lista = S.participantes.filter(p=>p[1]===idAcao);
+  let csv = 'ANEXO IV - RELATÓRIO CONSOLIDADO DE CARGA HORÁRIA - PARTICIPANTES\n';
+  csv += `TÍTULO:,"${acao?.[1]||''}"\nDATA:,"${acao?.[4]||''}"\tLOCAL:,"${acao?.[6]||''}"\nCH:,"${acao?.[5]||''}"\n\n`;
+  csv += 'Nº,NOME COMPLETO,E-MAIL,SIAPE,CARGO,VÍNCULO,LOTAÇÃO,CH,CHEFIA(X),CPF\n';
+  lista.forEach((p,i) => {
+    csv += `${i+1},"${p[4]||''}","${p[5]||''}","${p[7]||''}","${p[8]||''}","${p[6]||''}","${p[9]||''}","${acao?.[5]||''}","${p[10]==='Sim'?'X':''}","${p[3]||''}"\n`;
   });
+  baixar('\ufeff'+csv, `Anexo_IV_${idAcao}.csv`, 'text/csv');
+}
 
-  const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
+function baixar(conteudo, nome, tipo) {
+  const blob = new Blob([conteudo], {type: tipo+';charset=utf-8'});
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `Anexo_IV_${idAcao}_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = nome;
   a.click();
 }
 
-// ── Init ──────────────────────────────────────────────────────────────────
+// ── CONFIGURAÇÕES ─────────────────────────────────────────────────────────
+function salvarConfig() {
+  S.sheetId = document.getElementById('cfg-id').value.trim();
+  S.apiKey  = document.getElementById('cfg-key').value.trim();
+  localStorage.setItem('udp_sheet_id', S.sheetId);
+  localStorage.setItem('udp_api_key',  S.apiKey);
+  document.getElementById('cfg-msg').innerHTML = '<span style="color:var(--verde);">✓ Salvo.</span>';
+}
+
+async function testarConexao() {
+  document.getElementById('cfg-msg').textContent = 'Testando...';
+  try {
+    const r = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${S.sheetId}?key=${S.apiKey}`);
+    if (r.ok) {
+      document.getElementById('cfg-msg').innerHTML = '<span style="color:var(--verde);">✓ Conexão bem-sucedida!</span>';
+      document.getElementById('sync-status').innerHTML = '● Conectado';
+      document.getElementById('sync-status').style.color = 'var(--verde)';
+    } else {
+      document.getElementById('cfg-msg').innerHTML = '<span style="color:#A32D2D;">✗ Erro: verifique o ID e a chave.</span>';
+    }
+  } catch(e) {
+    document.getElementById('cfg-msg').innerHTML = '<span style="color:#A32D2D;">✗ Sem conexão.</span>';
+  }
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
 window.onload = () => {
-  if (S.sheetId) document.getElementById('cfg-sheet-id').value = S.sheetId;
-  if (S.apiKey)  document.getElementById('cfg-api-key').value  = S.apiKey;
-  if (S.sheetId && S.apiKey) sincronizar();
+  if (S.sheetId) document.getElementById('cfg-id').value = S.sheetId;
+  if (S.apiKey)  document.getElementById('cfg-key').value = S.apiKey;
+  // Carregar dados silenciosamente
+  if (S.sheetId && S.apiKey) sincronizarSilencioso(null);
+  // Verificar QR Code params
+  lerParams();
 };
 </script>
 </body>
