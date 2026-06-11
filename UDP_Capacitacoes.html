@@ -755,10 +755,10 @@ async function sincronizar() {
   document.getElementById('sync-status').textContent = '● Sincronizando...';
   try {
     const [acoes, part, perfis, av] = await Promise.all([
-      lerAba('ACOES!A3:L1000'),
-      lerAba('PARTICIPANTES!A3:N5000'),
-      lerAba('PERFIL_EQUIDADE!A4:H5000'),
-      lerAba('AVALIACAO!A4:K5000'),
+      lerAba("'ACOES'!A3:L1000"),
+      lerAba("'PARTICIPANTES'!A3:N5000"),
+      lerAba("'PERFIL_EQUIDADE'!A4:H5000"),
+      lerAba("'AVALIACAO'!A4:K5000"),
     ]);
     S.acoes         = acoes.filter(r => r[0]);
     S.participantes = part.filter(r => r[0]);
