@@ -733,11 +733,18 @@ async function testarConexao() {
 
 // ── Google Sheets API ────────────────────────────────────────────────────
 async function lerAba(aba) {
-  const url = `https://sheets.googleapis.com/v4/spreadsheets/${S.sheetId}/values/${encodeURIComponent(aba)}?key=${S.apiKey}`;
-  const r = await fetch(url);
-  if (!r.ok) throw new Error('Erro ao ler ' + aba);
-  const d = await r.json();
-  return d.values || [];
+  // Tenta sem aspas primeiro, depois com aspas simples em volta do nome
+  const nomeLimpo = aba.replace(/^'|'(?=!)/g, '');
+  const tentativas = [nomeLimpo, "'" + nomeLimpo.replace('!', "'!").replace(/^''+/,"'")];
+  for (const nome of [aba, aba.replace(/'/g,'')]) {
+    try {
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${S.sheetId}/values/${encodeURIComponent(nome)}?key=${S.apiKey}`;
+      const r = await fetch(url);
+      if (r.ok) { const d = await r.json(); return d.values || []; }
+    } catch(e) {}
+  }
+  console.warn('Não foi possível ler: ' + aba);
+  return [];
 }
 
 async function gravarLinha(aba, linha) {
@@ -756,10 +763,10 @@ async function sincronizar() {
   document.getElementById('sync-status').textContent = '● Sincronizando...';
   try {
     const [acoes, part, perfis, av] = await Promise.all([
-      lerAba("'ACOES'!A3:L1000").catch(()=>[]),
-      lerAba("'PARTICIPANTES'!A3:N5000").catch(()=>[]),
-      lerAba("'PERFIL_EQUIDADE'!A4:H5000").catch(()=>[]),
-      lerAba("'AVALIACAO'!A4:K5000").catch(()=>[]),
+      lerAba('ACOES!A3:L1000').catch(()=>[]),
+      lerAba('PARTICIPANTES!A3:N5000').catch(()=>[]),
+      lerAba('PERFIL_EQUIDADE!A4:H5000').catch(()=>[]),
+      lerAba('AVALIACAO!A4:K5000').catch(()=>[]),
     ]);
     S.acoes         = acoes.filter(r => r[0]);
     S.participantes = part.filter(r => r[0]);
