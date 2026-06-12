@@ -563,6 +563,59 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
 </div>
 
 <!-- ═══════════════════════════════════════
+     COORDENADOR: EDITAR AÇÃO
+═══════════════════════════════════════ -->
+<div id="pg-coord-editar" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-coord-painel')">‹</span>
+    <div><div class="hdr-title">Editar ação</div><div class="hdr-sub" id="coord-ed-sub"></div></div>
+  </div>
+  <div class="cnt">
+    <div class="info-box">Você pode atualizar os dados da sua ação. Datas são informativas.</div>
+    <input type="hidden" id="coord-ed-id"/>
+    <div class="card">
+      <div class="fg"><label class="fl">Título *</label><input type="text" id="coord-ed-titulo"/></div>
+      <div class="fg"><label class="fl">Número do processo SEI</label>
+        <input type="text" id="coord-ed-sei" placeholder="Ex: 23480.012345/2025-01"/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="fg"><label class="fl">Tipo</label>
+          <select id="coord-ed-tipo">
+            <option>Treinamento/Turma</option><option>Palestra/Evento</option>
+            <option>Curso Online</option><option>Workshop</option><option>Outro</option>
+          </select></div>
+        <div class="fg"><label class="fl">Modalidade</label>
+          <select id="coord-ed-modal">
+            <option>Presencial</option><option>Remoto</option><option>Híbrido</option>
+          </select></div>
+        <div class="fg"><label class="fl">Data prevista</label>
+          <input type="date" id="coord-ed-data"/></div>
+        <div class="fg"><label class="fl">Carga horária</label>
+          <input type="text" id="coord-ed-ch" placeholder="Ex: 4h"/></div>
+        <div class="fg"><label class="fl">Local</label>
+          <input type="text" id="coord-ed-local"/></div>
+        <div class="fg"><label class="fl">Data de realização</label>
+          <input type="text" id="coord-ed-data-real" placeholder="DD/MM/AAAA"/>
+          <div class="fh">Data em que o evento acontecerá de fato.</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="fg"><label class="fl">Período de inscrição</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+            <div><input type="date" id="coord-ed-inscricao-inicio"/><div class="fh">Início</div></div>
+            <div><input type="date" id="coord-ed-inscricao-fim"/><div class="fh">Fim — deixe em branco se não houver.</div></div>
+          </div></div>
+        <div class="fg"><label class="fl">Vagas (opcional)</label>
+          <input type="number" id="coord-ed-vagas" placeholder="Ex: 30"/></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="ir('pg-coord-painel')">Cancelar</button>
+        <button class="btn btn-primary" id="coord-ed-salvar-btn" onclick="salvarEdicaoCoord()">Salvar alterações</button>
+      </div>
+    </div>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
+
+<!-- ═══════════════════════════════════════
      COORDENADOR: LISTA DE PRESENTES
 ═══════════════════════════════════════ -->
 <div id="pg-coord-presentes" class="pg">
@@ -655,14 +708,20 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
             <input type="text" id="na-sei" placeholder="Ex: 23480.012345/2025-01"/>
             <div class="fh">Aparecerá em destaque na ação e no Anexo IV.</div>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div class="fg"><label class="fl">Prazo de inscrição</label>
-              <input type="date" id="na-prazo-inscricao"/>
-              <div class="fh">Deixe em branco se não houver inscrição prévia.</div>
+          <div class="fg"><label class="fl">Período de inscrição</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+              <div>
+                <input type="date" id="na-inscricao-inicio"/>
+                <div class="fh">Início</div>
+              </div>
+              <div>
+                <input type="date" id="na-inscricao-fim"/>
+                <div class="fh">Fim — deixe em branco se não houver inscrição.</div>
+              </div>
             </div>
-            <div class="fg"><label class="fl">Vagas (opcional)</label>
-              <input type="number" id="na-vagas" placeholder="Ex: 30"/>
-            </div>
+          </div>
+          <div class="fg"><label class="fl">Vagas (opcional)</label>
+            <input type="number" id="na-vagas" placeholder="Ex: 30"/>
           </div>
           <div class="btn-row">
             <button class="btn btn-outline" onclick="udpIr('udp-acoes',null)">Cancelar</button>
@@ -699,8 +758,11 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
             <input type="text" id="ed-sei" placeholder="Ex: 23480.012345/2025-01"/>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-            <div class="fg"><label class="fl">Prazo de inscrição</label>
-              <input type="date" id="ed-prazo-inscricao"/>
+            <div class="fg"><label class="fl">Período de inscrição</label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div><input type="date" id="ed-inscricao-inicio"/><div class="fh">Início</div></div>
+                <div><input type="date" id="ed-inscricao-fim"/><div class="fh">Fim</div></div>
+              </div>
             </div>
             <div class="fg"><label class="fl">Vagas (opcional)</label>
               <input type="number" id="ed-vagas" placeholder="Ex: 30"/>
@@ -828,8 +890,8 @@ function ir(id){ document.querySelectorAll('.pg').forEach(p=>p.classList.remove(
 function irInscricao(){
   const hoje = new Date().toISOString().slice(0,10);
   const abertos = S.acoes.filter(a=>{
-    if(!a[15]) return false; // sem prazo = sem inscrição
-    return a[15] >= hoje; // dentro do prazo
+    if(!a[15]||!a[16]) return false; // sem período = sem inscrição
+    return a[15] <= hoje && a[16] >= hoje; // dentro do intervalo
   });
   if(!abertos.length){
     ir('pg-inscricao');
@@ -870,7 +932,7 @@ function buscarInscricao(){
 
   // Eventos com inscrição aberta
   const hoje=new Date().toISOString().slice(0,10);
-  const abertos=S.acoes.filter(a=>a[15]&&a[15]>=hoje);
+  const abertos=S.acoes.filter(a=>a[15]&&a[16]&&a[15]<=hoje&&a[16]>=hoje);
   montarListaEventosInscricao(abertos);
   ir('pg-insc-evento');
 }
@@ -894,7 +956,7 @@ function montarListaEventosInscricao(lista){
     return '<div class="ev-card'+clsSel2+'" id="evinsc-'+a[0]+'" onclick="'+onclickStr2+'" style="'+styleStr2+'">'
       +seiHtml2
       +'<div class="ev-titulo">'+(a[1]||'')+'</div>'
-      +'<div class="ev-meta">'+(a[3]||'')+' · '+(a[5]||'')+' · Inscrições até '+a[15]+'</div>'
+      +'<div class="ev-meta">'+(a[3]||'')+' · '+(a[5]||'')+' · Inscrições de '+a[15]+' até '+a[16]+'</div>'
       +vagasHtml2+inscHtml2+cheioHtml2
       +'</div>';
   }).join('');
@@ -1183,6 +1245,90 @@ function sairCoord(){
   ir('pg-home');
 }
 
+function editarAcaoCoord(idAcao){
+  const a=S.acoes.find(x=>x[0]===idAcao);
+  if(!a) return;
+  document.getElementById('coord-ed-id').value           = a[0];
+  document.getElementById('coord-ed-sub').textContent    = a[1]||'';
+  document.getElementById('coord-ed-titulo').value       = a[1]||'';
+  document.getElementById('coord-ed-sei').value          = a[14]||'';
+  document.getElementById('coord-ed-tipo').value         = a[2]||'Treinamento/Turma';
+  document.getElementById('coord-ed-modal').value        = a[3]||'Presencial';
+  document.getElementById('coord-ed-data').value         = a[4]||'';
+  document.getElementById('coord-ed-ch').value           = a[5]||'';
+  document.getElementById('coord-ed-local').value        = a[6]||'';
+  document.getElementById('coord-ed-data-real').value    = a[13]||'';
+  document.getElementById('coord-ed-inscricao-inicio').value = a[15]||'';
+  document.getElementById('coord-ed-inscricao-fim').value   = a[16]||'';
+  document.getElementById('coord-ed-vagas').value           = a[17]||'';
+  // Resetar botão
+  const btn=document.getElementById('coord-ed-salvar-btn');
+  if(btn){ btn.textContent='Salvar alterações'; btn.style.background=''; btn.disabled=false; }
+  ir('pg-coord-editar');
+}
+
+async function salvarEdicaoCoord(){
+  const id    = document.getElementById('coord-ed-id').value;
+  const titulo = document.getElementById('coord-ed-titulo').value.trim();
+  if(!titulo){ alert('Informe o título.'); return; }
+
+  const idx = S.acoes.findIndex(a=>a[0]===id);
+  if(idx<0){ alert('Ação não encontrada.'); return; }
+
+  // Atualizar memória
+  S.acoes[idx][1]  = titulo;
+  S.acoes[idx][2]  = document.getElementById('coord-ed-tipo').value;
+  S.acoes[idx][3]  = document.getElementById('coord-ed-modal').value;
+  S.acoes[idx][4]  = document.getElementById('coord-ed-data').value;
+  S.acoes[idx][5]  = document.getElementById('coord-ed-ch').value;
+  S.acoes[idx][6]  = document.getElementById('coord-ed-local').value;
+  S.acoes[idx][13] = document.getElementById('coord-ed-data-real').value;
+  S.acoes[idx][14] = document.getElementById('coord-ed-sei').value;
+  S.acoes[idx][15] = document.getElementById('coord-ed-periodo-inscricao').value;
+  S.acoes[idx][16] = document.getElementById('coord-ed-vagas').value||'';
+
+  // Gravar na planilha
+  const campos = [
+    {col:2,  val:S.acoes[idx][1]},
+    {col:3,  val:S.acoes[idx][2]},
+    {col:4,  val:S.acoes[idx][3]},
+    {col:5,  val:S.acoes[idx][4]},
+    {col:6,  val:S.acoes[idx][5]},
+    {col:7,  val:S.acoes[idx][6]},
+    {col:14, val:S.acoes[idx][13]},
+    {col:15, val:S.acoes[idx][14]},
+    {col:16, val:document.getElementById('coord-ed-inscricao-inicio').value},
+    {col:17, val:document.getElementById('coord-ed-inscricao-fim').value},
+    {col:18, val:document.getElementById('coord-ed-vagas').value||''},
+  ];
+  S.acoes[idx][15] = document.getElementById('coord-ed-inscricao-inicio').value;
+  S.acoes[idx][16] = document.getElementById('coord-ed-inscricao-fim').value;
+  S.acoes[idx][17] = document.getElementById('coord-ed-vagas').value||'';
+  for(const c of campos){
+    await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({
+      aba:'ACOES',acao:'UPDATE',colChave:1,chave:id,col:c.col,valor:c.val
+    })});
+  }
+
+  // Feedback visual
+  const btn=document.getElementById('coord-ed-salvar-btn');
+  if(btn){
+    btn.textContent='✓ Salvo!';
+    btn.style.background='var(--verde)';
+    btn.disabled=true;
+    setTimeout(()=>{
+      btn.textContent='Salvar alterações';
+      btn.style.background='';
+      btn.disabled=false;
+      ir('pg-coord-painel');
+      renderCoordAcoes();
+    }, 1500);
+  } else {
+    ir('pg-coord-painel');
+    renderCoordAcoes();
+  }
+}
+
 function renderCoordAcoes(){
   // Ações vinculadas ao CPF do coordenador (campo na coluna 12 = coord CPF)
   const acoesDele=S.acoes.filter(a=>limparCPF(a[12]||'')===limparCPF(S.coordCPF));
@@ -1220,7 +1366,7 @@ function renderCoordAcoes(){
     return `<div class="card" style="margin-bottom:12px;">
       ${a[14]?'<div style="font-size:11px;font-weight:700;color:var(--azul2);background:var(--azul-cl);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">SEI: '+a[14]+'</div>':''}
       <div style="font-size:15px;font-weight:700;margin-bottom:4px;">${a[1]||''}</div>
-      <div style="font-size:13px;color:var(--txt3);margin-bottom:10px;">${a[3]||''} · ${a[5]||''} · ${presentes} presente(s)${a[13]?' · 📅 '+a[13]:''}${a[15]?' · Inscrições até '+a[15]:''}</div>
+      <div style="font-size:13px;color:var(--txt3);margin-bottom:10px;">${a[3]||''} · ${a[5]||''} · ${presentes} presente(s)${a[13]?' · 📅 '+a[13]:''}${a[15]&&a[16]?' · Inscrições: '+a[15]+' a '+a[16]:''}</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
         <span>Check-in: <span class="badge ${stCI==='Aberto'?'badge-green':'badge-gray'}">${stCI}</span></span>
         <span>Avaliação: <span class="badge ${stAV==='Aberto'?'badge-amber':'badge-gray'}">${stAV}</span></span>
@@ -1230,6 +1376,7 @@ function renderCoordAcoes(){
         <button class="btn btn-sm ${stAV==='Aberto'?'btn-danger':'btn-amber'}" onclick="toggleStatus('${a[0]}','avaliacao')">${stAV==='Aberto'?'Fechar avaliação':'Abrir avaliação'}</button>
         ${a[15]?('<button class="btn btn-outline btn-sm" onclick="verInscritos(&quot;'+a[0]+'&quot;)">📋 Inscritos ('+S.participantes.filter(function(p){return p[1]===a[0]&&p[13]==='Inscrito';}).length+')</button>'):''}
         <button class="btn btn-outline btn-sm" onclick="verPresentes('${a[0]}')">Ver presentes</button>
+        <button class="btn btn-outline btn-sm" onclick="editarAcaoCoord('${a[0]}')">✏️ Editar</button>
       </div>
     </div>`;
   }).join('');
@@ -1377,7 +1524,7 @@ function renderUDPAcoes(){
     return `<div class="card" style="margin-bottom:10px;">
       ${a[14]?'<div style="font-size:11px;font-weight:700;color:var(--azul2);background:var(--azul-cl);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">SEI: '+a[14]+'</div>':''}
       <div style="font-size:15px;font-weight:700;">${a[1]||''}</div>
-      <div style="font-size:12px;color:var(--txt3);margin:4px 0 8px;">${a[2]||''} · ${a[3]||''} · ${a[5]||''} · ${pr} presente(s)${a[15]?' · Inscrições até '+a[15]:''}${a[16]?' · '+a[16]+' vagas':''}</div>
+      <div style="font-size:12px;color:var(--txt3);margin:4px 0 8px;">${a[2]||''} · ${a[3]||''} · ${a[5]||''} · ${pr} presente(s)${a[15]&&a[16]?' · Inscrições: '+a[15]+' a '+a[16]:''}${a[17]?' · '+a[17]+' vagas':''}</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;">
         <span class="badge ${stCI==='Aberto'?'badge-green':'badge-gray'}">CI: ${stCI}</span>
         <span class="badge ${stAV==='Aberto'?'badge-amber':'badge-gray'}">AV: ${stAV}</span>
@@ -1407,10 +1554,11 @@ async function salvarAcao(){
     document.getElementById('na-unidade').value,
     'Pendente', 'Pendente', '',
     coordCPF,
-    '', // col N = data realização
-    document.getElementById('na-sei').value,           // col O = SEI
-    document.getElementById('na-prazo-inscricao').value, // col P = prazo inscrição
-    document.getElementById('na-vagas').value||'',      // col Q = vagas
+    '',                                                  // col N = data realização
+    document.getElementById('na-sei').value,             // col O = SEI
+    document.getElementById('na-inscricao-inicio').value,// col P = início inscrição
+    document.getElementById('na-inscricao-fim').value,   // col Q = fim inscrição
+    document.getElementById('na-vagas').value||'',       // col R = vagas
   ];
   S.acoes.push(linha);
   await gravarLinha('ACOES',linha,'APPEND');
@@ -1432,7 +1580,7 @@ function editarAcao(idAcao){
   document.getElementById('ed-unidade').value    = a[8]||'';
   document.getElementById('ed-data-real').value    = a[13]||'';
   document.getElementById('ed-sei').value           = a[14]||'';
-  document.getElementById('ed-prazo-inscricao').value = a[15]||'';
+  document.getElementById('ed-periodo-inscricao').value = a[15]||'';
   document.getElementById('ed-vagas').value          = a[16]||'';
   // CPF do coordenador (coluna 12)
   const coordCPF = a[12]||'';
@@ -1485,12 +1633,14 @@ async function salvarEdicao(){
     {col:13, val:coordCPF},
     {col:14, val:dataReal},
     {col:15, val:document.getElementById('ed-sei').value},
-    {col:16, val:document.getElementById('ed-prazo-inscricao').value},
-    {col:17, val:document.getElementById('ed-vagas').value||''},
+    {col:16, val:document.getElementById('ed-inscricao-inicio').value},
+    {col:17, val:document.getElementById('ed-inscricao-fim').value},
+    {col:18, val:document.getElementById('ed-vagas').value||''},
   ];
   S.acoes[idx][14] = document.getElementById('ed-sei').value;
-  S.acoes[idx][15] = document.getElementById('ed-prazo-inscricao').value;
-  S.acoes[idx][16] = document.getElementById('ed-vagas').value||'';
+  S.acoes[idx][15] = document.getElementById('ed-inscricao-inicio').value;
+  S.acoes[idx][16] = document.getElementById('ed-inscricao-fim').value;
+  S.acoes[idx][17] = document.getElementById('ed-vagas').value||'';
   console.log('Gravando CPF coordenador:', coordCPF, 'na coluna 13 da ação', id);
   for(const c of campos){
     await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({
