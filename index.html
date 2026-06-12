@@ -1223,7 +1223,7 @@ function renderCoordAcoes(){
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn btn-sm ${stCI==='Aberto'?'btn-danger':'btn-green'}" onclick="toggleStatus('${a[0]}','checkin')">${stCI==='Aberto'?'Fechar check-in':'Abrir check-in'}</button>
         <button class="btn btn-sm ${stAV==='Aberto'?'btn-danger':'btn-amber'}" onclick="toggleStatus('${a[0]}','avaliacao')">${stAV==='Aberto'?'Fechar avaliação':'Abrir avaliação'}</button>
-        ${a[15]?`<button class="btn btn-outline btn-sm" onclick="verInscritos('${a[0]}')">📋 Inscritos (${S.participantes.filter(p=>p[1]==='${a[0]}'&&p[13]==='Inscrito').length})</button>`:''}
+        ${a[15]?(function(){const _id=a[0];const _cnt=S.participantes.filter(p=>p[1]===_id&&p[13]==='Inscrito').length;return '<button class="btn btn-outline btn-sm" onclick="verInscritos(''+_id+'')">📋 Inscritos ('+_cnt+')</button>';})():''}
         <button class="btn btn-outline btn-sm" onclick="verPresentes('${a[0]}')">Ver presentes</button>
       </div>
     </div>`;
@@ -1642,7 +1642,7 @@ function renderRelatorioAvaliacoes(lista, comIdentificacao){
 function renderMatrizIndices(lista, perguntas, colInicio, opcoes){
   const cores={'SIM':'#1D9E75','Ótimo':'#1D9E75','Bom':'#378ADD','PARCIAL':'#EF9F27','Regular':'#EF9F27','NÃO':'#E24B4A','Fraco':'#E24B4A','N/A':'#888780'};
   let html='<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:4px;">';
-  html+=`<thead><tr style="background:var(--azul);color:#fff;"><th style="padding:6px;text-align:left;">Pergunta</th>${opcoes.map(o=>`<th style="padding:6px;text-align:center;">${o}</th>`).join('')}</tr></thead><tbody>`;
+  html+='<thead><tr style="background:var(--azul);color:#fff;"><th style="padding:6px;text-align:left;">Pergunta</th>'+opcoes.map(o=>'<th style="padding:6px;text-align:center;">'+o+'</th>').join('')+'</tr></thead><tbody>';
   perguntas.forEach((q,qi)=>{
     const col=colInicio+qi;
     const total=lista.filter(a=>a[col]).length||1;
