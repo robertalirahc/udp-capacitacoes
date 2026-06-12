@@ -507,9 +507,62 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
     <div class="info-box" id="coord-info-abertos"></div>
     <div id="coord-lista-acoes"></div>
     <div style="margin-top:8px;display:flex;flex-direction:column;gap:10px;">
-      <button class="btn btn-outline" onclick="ir('pg-coord-checkin-manual')">👤 Confirmar presença manualmente</button>
+      <button class="btn btn-outline" onclick="ir('pg-coord-checkin-manual')">👤 Check-in por CPF</button>
+      <button class="btn btn-green" onclick="ir('pg-coord-lista-presenca')">📋 Lista de presença</button>
       <button class="btn btn-outline" onclick="ir('pg-coord-avaliacoes')">⭐ Ver avaliações das minhas ações</button>
     </div>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     COORDENADOR: LISTA DE PRESENÇA
+═══════════════════════════════════════ -->
+<div id="pg-coord-lista-presenca" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-coord-painel')">‹</span>
+    <div><div class="hdr-title">Lista de presença</div><div class="hdr-sub">Marcar presentes visualmente</div></div>
+  </div>
+  <div class="cnt">
+
+    <!-- Seleção de ação -->
+    <div class="card">
+      <div class="fg">
+        <label class="fl">Selecione a ação</label>
+        <select id="lp-acao-sel" onchange="carregarListaPresenca()">
+          <option value="">-- selecione --</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Busca e adição manual -->
+    <div id="lp-busca-area" style="display:none;">
+      <div class="card">
+        <div class="card-title">Adicionar participante</div>
+        <div class="fg">
+          <label class="fl">CPF</label>
+          <div style="display:flex;gap:8px;">
+            <input type="tel" id="lp-cpf" placeholder="00000000000" maxlength="14"
+                   oninput="formatarCPF(this)" inputmode="numeric"/>
+            <button class="btn btn-primary btn-sm" onclick="buscarLPCPF()">Buscar</button>
+          </div>
+        </div>
+        <div id="lp-busca-resultado"></div>
+      </div>
+
+      <!-- Lista de presença -->
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <div class="card-title" style="margin:0;">Participantes</div>
+          <div id="lp-contador" style="font-size:13px;color:var(--txt3);"></div>
+        </div>
+        <div id="lp-lista"></div>
+        <div style="margin-top:14px;">
+          <button class="btn btn-outline" onclick="exportarAnexoIVCoord()">📥 Exportar Anexo IV</button>
+        </div>
+      </div>
+    </div>
+
   </div>
   <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
 </div>
@@ -616,6 +669,49 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
     </div>
   </div>
   <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     LISTA DE PRESENÇA: CADASTRO EXTERNO
+═══════════════════════════════════════ -->
+<div id="pg-lp-externo" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-coord-lista-presenca')">‹</span>
+    <div><div class="hdr-title">Cadastro</div><div class="hdr-sub">Participante não encontrado na base</div></div>
+  </div>
+  <div class="cnt">
+    <div class="warn-box">CPF não encontrado na base EBSERH. Preencha os dados para registrar presença.</div>
+    <div class="card">
+      <div class="fg"><label class="fl">CPF</label>
+        <input type="tel" id="lp-ext-cpf" readonly style="background:var(--cinza);"/></div>
+      <div class="fg"><label class="fl">Nome completo *</label>
+        <input type="text" id="lp-ext-nome" placeholder="Nome como aparecerá no certificado"/></div>
+      <div class="fg"><label class="fl">E-mail *</label>
+        <input type="email" id="lp-ext-email" placeholder="email@instituicao.br"/>
+        <div class="fh">Necessário para emissão do certificado.</div></div>
+      <div class="fg"><label class="fl">Vínculo *</label>
+        <select id="lp-ext-vinculo">
+          <option>UFPE/RJU</option>
+          <option>Residente</option>
+          <option>Externo</option>
+          <option>Outro</option>
+        </select></div>
+      <div class="fg"><label class="fl">Cargo / função</label>
+        <input type="text" id="lp-ext-cargo"/></div>
+      <div class="fg"><label class="fl">Instituição / unidade</label>
+        <input type="text" id="lp-ext-unidade"/></div>
+      <div class="fg">
+        <label style="display:flex;align-items:center;gap:10px;font-size:15px;cursor:pointer;">
+          <input type="checkbox" id="lp-ext-chefia" style="width:22px;height:22px;"/>
+          É chefia / gestor desta unidade
+        </label>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-outline" onclick="ir('pg-coord-lista-presenca')">Cancelar</button>
+        <button class="btn btn-green" onclick="registrarLPExterno()">✓ Registrar presença</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════════════════════════════
@@ -887,6 +983,7 @@ const S = {
   nota:0,
   coordCPF:'', coordNome:'',
   coordAcaoSel:null,
+  lpAcaoSel:null,
 };
 
 // ── Navegação ─────────────────────────────────────────────────────────────
@@ -1356,19 +1453,33 @@ function renderCoordAcoes(){
     avSel.innerHTML='<option value="">-- selecione --</option>';
     acoesDele.forEach(a=>{
       const o=document.createElement('option');
-      o.value=a[0]; o.textContent=`${a[0]} — ${a[1]}`;
+      o.value=a[0]; o.textContent=a[0]+' — '+a[1];
       avSel.appendChild(o);
     });
   }
-
+  // Popular select lista de presença
+  const lpSel=document.getElementById('lp-acao-sel');
+  if(lpSel){
+    lpSel.innerHTML='<option value="">-- selecione --</option>';
+    acoesDele.forEach(a=>{
+      const o=document.createElement('option');
+      o.value=a[0]; o.textContent=a[0]+' — '+a[1];
+      lpSel.appendChild(o);
+    });
+  }
   // Popular select manual
   const sel=document.getElementById('manual-evento');
-  sel.innerHTML='<option value="">-- selecione --</option>';
-  acoesDele.forEach(a=>{
-    const o=document.createElement('option');
-    o.value=a[0]; o.textContent=`${a[0]} — ${a[1]}`;
-    sel.appendChild(o);
-  });
+
+  // Popular select manual
+  const selManual=document.getElementById('manual-evento');
+  if(selManual){
+    sel.innerHTML='<option value="">-- selecione --</option>';
+    acoesDele.forEach(a=>{
+      const o=document.createElement('option');
+      o.value=a[0]; o.textContent=a[0]+' — '+a[1];
+      sel.appendChild(o);
+    });
+  }
 
   const el=document.getElementById('coord-lista-acoes');
   if(!acoesDele.length){el.innerHTML='<div class="info-box">Nenhuma ação vinculada ao seu CPF. Solicite à UDP que vincule suas ações.</div>';return;}
@@ -1492,8 +1603,162 @@ function irExternoManual(cpf){
 }
 
 function exportarAnexoIVCoord(){
-  if(!S.coordAcaoSel){return;}
-  exportarAnexoIV(S.coordAcaoSel[0]);
+  // Usar ação da lista de presença se disponível, senão a da tela de presentes
+  const idAcao = S.lpAcaoSel ? S.lpAcaoSel[0] : (S.coordAcaoSel ? S.coordAcaoSel[0] : null);
+  if(!idAcao){ alert('Selecione uma ação.'); return; }
+  exportarAnexoIV(idAcao);
+}
+
+function carregarListaPresenca(){
+  const idAcao = document.getElementById('lp-acao-sel').value;
+  if(!idAcao){
+    document.getElementById('lp-busca-area').style.display='none';
+    return;
+  }
+  const acao = S.acoes.find(a=>a[0]===idAcao);
+  S.lpAcaoSel = acao;
+  S.coordAcaoSel = acao;
+  document.getElementById('lp-busca-area').style.display='block';
+  document.getElementById('lp-cpf').value='';
+  document.getElementById('lp-busca-resultado').innerHTML='';
+  renderListaPresenca();
+}
+
+function renderListaPresenca(){
+  const idAcao = S.lpAcaoSel ? S.lpAcaoSel[0] : '';
+  const lista  = S.participantes.filter(p=>p[1]===idAcao&&p[13]!=='Inscrito');
+  const inscritos = S.participantes.filter(p=>p[1]===idAcao&&p[13]==='Inscrito');
+  const el = document.getElementById('lp-lista');
+  const contador = document.getElementById('lp-contador');
+  if(contador) contador.textContent = lista.length+' presente(s)';
+
+  let html = '';
+
+  // Inscritos ainda não confirmados
+  const naoConfirmados = inscritos.filter(ins=>
+    !lista.find(p=>limparCPF(p[3])===limparCPF(ins[3]))
+  );
+  if(naoConfirmados.length){
+    html += '<div style="font-size:12px;font-weight:700;color:var(--txt3);margin-bottom:8px;">INSCRITOS — AGUARDANDO CONFIRMAÇÃO</div>';
+    html += naoConfirmados.map(p=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--cinza);">
+        <div>
+          <div style="font-size:14px;font-weight:600;">${p[4]||''}</div>
+          <div style="font-size:12px;color:var(--txt3);">${p[8]||''} · ${p[6]||''}</div>
+        </div>
+        <button class="btn btn-green btn-sm" onclick="marcarPresente('${limparCPF(p[3])}','${(p[4]||'').replace(/'/g,"\'")}','${p[5]||''}','${p[6]||''}','${p[7]||''}','${p[8]||''}','${p[9]||''}','${p[10]||'Não'}')">
+          ✓ Presente
+        </button>
+      </div>`).join('');
+  }
+
+  // Já confirmados
+  if(lista.length){
+    html += '<div style="font-size:12px;font-weight:700;color:var(--verde);margin:14px 0 8px;">PRESENTES CONFIRMADOS</div>';
+    html += lista.map(p=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--cinza);">
+        <div>
+          <div style="font-size:14px;font-weight:600;">${p[4]||''}</div>
+          <div style="font-size:12px;color:var(--txt3);">${p[8]||''} · ${p[6]||''} ${p[10]==='Sim'?'· <span class=\"badge badge-roxo\">Chefia</span>':''}</div>
+          <div style="font-size:11px;color:var(--txt3);">${p[11]||''}</div>
+        </div>
+        <span class="badge badge-green">✓</span>
+      </div>`).join('');
+  }
+
+  if(!html) html = '<div class="info-box">Nenhum participante ainda. Use o campo acima para adicionar.</div>';
+  el.innerHTML = html;
+}
+
+function buscarLPCPF(){
+  const cpf = limparCPF(document.getElementById('lp-cpf').value);
+  if(cpf.length!==11){ alert('CPF inválido.'); return; }
+  if(!S.lpAcaoSel){ alert('Selecione uma ação primeiro.'); return; }
+
+  // Verificar se já está presente
+  const jaPresente = S.participantes.find(p=>limparCPF(p[3])===cpf&&p[1]===S.lpAcaoSel[0]&&p[13]!=='Inscrito');
+  if(jaPresente){
+    document.getElementById('lp-busca-resultado').innerHTML=`
+      <div class="success-box">✓ ${jaPresente[4]} já está confirmado(a).</div>`;
+    return;
+  }
+
+  const srv = buscarServidor(cpf);
+  const part = S.participantes.find(p=>limparCPF(p[3])===cpf);
+  const nome = srv?srv[1]:(part?part[4]:'');
+
+  if(srv){
+    document.getElementById('lp-busca-resultado').innerHTML=`
+      <div class="found-card">
+        <div style="font-size:16px;font-weight:700;color:var(--verde);">${srv[1]}</div>
+        <div style="font-size:13px;color:var(--verde);margin-top:3px;">${srv[4]||''} · ${srv[6]||''}</div>
+        <div style="font-size:12px;color:var(--verde);">${srv[5]||''} · SIAPE ${srv[3]||''}</div>
+        ${ehChefia(srv)==='Sim'?'<div style="margin-top:6px;"><span class="badge badge-roxo">Chefia identificada</span></div>':''}
+        <button class="btn btn-green" style="margin-top:12px;"
+          onclick="marcarPresente('${cpf}','${srv[1].replace(/'/g,"\'")}','${srv[2]||''}','${srv[5]||''}','${srv[3]||''}','${srv[4]||''}','${srv[6]||''}','${ehChefia(srv)}')">
+          ✓ Marcar como presente
+        </button>
+      </div>`;
+  } else if(nome){
+    document.getElementById('lp-busca-resultado').innerHTML=`
+      <div class="found-card">
+        <div style="font-size:16px;font-weight:700;color:var(--verde);">${nome}</div>
+        <button class="btn btn-green" style="margin-top:12px;"
+          onclick="marcarPresente('${cpf}','${nome.replace(/'/g,"\'")}','${part?.[5]||''}','${part?.[6]||''}','${part?.[7]||''}','${part?.[8]||''}','${part?.[9]||''}','${part?.[10]||'Não'}')">
+          ✓ Marcar como presente
+        </button>
+      </div>`;
+  } else {
+    document.getElementById('lp-busca-resultado').innerHTML=`
+      <div class="notfound-card">
+        <div style="font-size:15px;font-weight:700;color:var(--amber);">CPF não encontrado na base.</div>
+        <div style="font-size:13px;color:var(--amber);margin-top:4px;">Preencha os dados para registrar presença.</div>
+        <button class="btn btn-amber" style="margin-top:10px;" onclick="irLPExterno('${cpf}')">Cadastrar</button>
+      </div>`;
+  }
+}
+
+async function marcarPresente(cpf, nome, email, vinculo, siape, cargo, unidade, chefia){
+  if(!S.lpAcaoSel){ alert('Selecione uma ação.'); return; }
+  const agora = new Date().toLocaleString('pt-BR');
+  const idPre = 'PRE'+Date.now();
+  const hoje = new Date().toLocaleDateString('pt-BR');
+  const dataReal = S.lpAcaoSel[13]||'';
+  const validado = (!dataReal||dataReal===hoje)?'Válido':'Fora da data';
+  const linha = [idPre,S.lpAcaoSel[0],S.lpAcaoSel[1]||'',cpf,nome,email,vinculo,siape,cargo,unidade,chefia,agora,'Coordenador',validado,'Não'];
+  S.participantes.push(linha);
+  await gravarLinha('PARTICIPANTES',linha,'APPEND');
+  document.getElementById('lp-cpf').value='';
+  document.getElementById('lp-busca-resultado').innerHTML='';
+  renderListaPresenca();
+}
+
+function irLPExterno(cpf){
+  document.getElementById('lp-ext-cpf').value=cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
+  document.getElementById('lp-ext-nome').value='';
+  document.getElementById('lp-ext-email').value='';
+  document.getElementById('lp-ext-cargo').value='';
+  document.getElementById('lp-ext-unidade').value='';
+  document.getElementById('lp-ext-chefia').checked=false;
+  ir('pg-lp-externo');
+}
+
+async function registrarLPExterno(){
+  const cpf     = limparCPF(document.getElementById('lp-ext-cpf').value);
+  const nome    = document.getElementById('lp-ext-nome').value.trim().toUpperCase();
+  const email   = document.getElementById('lp-ext-email').value.trim();
+  const vinculo = document.getElementById('lp-ext-vinculo').value;
+  const cargo   = document.getElementById('lp-ext-cargo').value.trim();
+  const unidade = document.getElementById('lp-ext-unidade').value.trim();
+  const chefia  = document.getElementById('lp-ext-chefia').checked?'Sim':'Não';
+  if(!cpf||!nome||!email){ alert('Preencha CPF, nome e e-mail.'); return; }
+  if(!S.lpAcaoSel){ alert('Nenhuma ação selecionada.'); return; }
+  const agora = new Date().toLocaleString('pt-BR');
+  const linha = ['PRE'+Date.now(),S.lpAcaoSel[0],S.lpAcaoSel[1]||'',cpf,nome,email,vinculo,'',cargo,unidade,chefia,agora,'Coordenador-Manual','Válido','Não'];
+  S.participantes.push(linha);
+  await gravarLinha('PARTICIPANTES',linha,'APPEND');
+  ir('pg-coord-lista-presenca');
+  renderListaPresenca();
 }
 
 // ── UDP ───────────────────────────────────────────────────────────────────
