@@ -885,7 +885,7 @@ function montarListaEventosInscricao(lista){
     const inscritos=S.participantes.filter(p=>p[1]===a[0]&&p[13]==='Inscrito').length;
     const cheio=vagas&&inscritos>=vagas;
     return `<div class="ev-card${jaInscrito?' sel':''}" id="evinsc-${a[0]}" onclick="${jaInscrito||cheio?'':'selecionarEventoInscricao(''+a[0]+'')'}" style="${cheio&&!jaInscrito?'opacity:.6;cursor:not-allowed;':''}">
-      ${a[14]?`<div style="font-size:11px;font-weight:700;color:var(--azul2);">SEI: ${a[14]}</div>`:''}
+      ${a[14]?'<div style="font-size:11px;font-weight:700;color:var(--azul2);">SEI: '+a[14]+'</div>':''}
       <div class="ev-titulo">${a[1]||''}</div>
       <div class="ev-meta">${a[3]||''} · ${a[5]||''} · Inscrições até ${a[15]}</div>
       ${vagas?`<div style="font-size:12px;color:var(--txt3);margin-top:4px;">${inscritos}/${vagas} inscritos</div>`:''}
@@ -1213,7 +1213,7 @@ function renderCoordAcoes(){
     const stAV=a[10]||'Pendente';
     const presentes=S.participantes.filter(p=>p[1]===a[0]).length;
     return `<div class="card" style="margin-bottom:12px;">
-      ${a[14]?`<div style="font-size:11px;font-weight:700;color:var(--azul2);background:var(--azul-cl);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">SEI: ${a[14]}</div>`:''}
+      ${a[14]?'<div style="font-size:11px;font-weight:700;color:var(--azul2);background:var(--azul-cl);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">SEI: '+a[14]+'</div>':''}
       <div style="font-size:15px;font-weight:700;margin-bottom:4px;">${a[1]||''}</div>
       <div style="font-size:13px;color:var(--txt3);margin-bottom:10px;">${a[3]||''} · ${a[5]||''} · ${presentes} presente(s)${a[13]?' · 📅 '+a[13]:''}${a[15]?' · Inscrições até '+a[15]:''}</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
@@ -1370,7 +1370,7 @@ function renderUDPAcoes(){
     const stCI=a[9]||'Pendente'; const stAV=a[10]||'Pendente';
     const pr=S.participantes.filter(p=>p[1]===a[0]).length;
     return `<div class="card" style="margin-bottom:10px;">
-      ${a[14]?`<div style="font-size:11px;font-weight:700;color:var(--azul2);background:var(--azul-cl);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">SEI: ${a[14]}</div>`:''}
+      ${a[14]?'<div style="font-size:11px;font-weight:700;color:var(--azul2);background:var(--azul-cl);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">SEI: '+a[14]+'</div>':''}
       <div style="font-size:15px;font-weight:700;">${a[1]||''}</div>
       <div style="font-size:12px;color:var(--txt3);margin:4px 0 8px;">${a[2]||''} · ${a[3]||''} · ${a[5]||''} · ${pr} presente(s)${a[15]?' · Inscrições até '+a[15]:''}${a[16]?' · '+a[16]+' vagas':''}</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;">
