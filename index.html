@@ -182,8 +182,13 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
       <div><div class="hcard-title">Avaliar capacitação</div><div class="hcard-sub">Pesquisa de reação</div></div>
       <div class="hcard-arrow">›</div>
     </div>
-    <div class="hcard" onclick="ir('pg-coord-login')">
+    <div class="hcard" onclick="irInscricao()">
       <div class="hcard-icon" style="background:var(--azul-cl);">📋</div>
+      <div><div class="hcard-title">Inscrever-se</div><div class="hcard-sub">Inscrição prévia em evento</div></div>
+      <div class="hcard-arrow">›</div>
+    </div>
+    <div class="hcard" onclick="ir('pg-coord-login')">
+      <div class="hcard-icon" style="background:var(--cinza);">⚙️</div>
       <div><div class="hcard-title">Área do coordenador</div><div class="hcard-sub">Gerenciar eventos</div></div>
       <div class="hcard-arrow">›</div>
     </div>
@@ -278,6 +283,69 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
       <div class="suc-sub" id="ci-suc-evento" style="margin-top:4px;font-size:13px;"></div>
     </div>
     <button class="btn btn-outline" onclick="ir('pg-home')">Voltar ao início</button>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     INSCRIÇÃO
+═══════════════════════════════════════ -->
+<div id="pg-inscricao" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-home')">‹</span>
+    <div><div class="hdr-title">Inscrição</div><div class="hdr-sub">Confirmar participação prévia</div></div>
+  </div>
+  <div class="cnt">
+    <div id="insc-fechado" class="encerrado-box" style="display:none;">
+      <div style="font-size:48px;">🔒</div>
+      <div style="font-size:18px;font-weight:700;color:#A32D2D;margin:12px 0 8px;">Inscrições encerradas</div>
+      <div style="font-size:14px;color:var(--txt3);">O prazo de inscrição para este evento já passou.</div>
+    </div>
+    <div id="insc-form">
+      <div class="card">
+        <div class="fg">
+          <label class="fl">Digite seu CPF</label>
+          <input type="tel" id="insc-cpf" placeholder="00000000000" maxlength="14"
+                 oninput="formatarCPF(this)" inputmode="numeric"/>
+        </div>
+        <button class="btn btn-primary" onclick="buscarInscricao()">Continuar</button>
+      </div>
+      <div id="insc-resultado"></div>
+    </div>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     INSCRIÇÃO: ESCOLHER EVENTO
+═══════════════════════════════════════ -->
+<div id="pg-insc-evento" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-inscricao')">‹</span>
+    <div><div class="hdr-title">Escolha o evento</div><div class="hdr-sub">Inscrição prévia</div></div>
+  </div>
+  <div class="cnt">
+    <div id="insc-lista-eventos"></div>
+    <div id="insc-confirmar-btn" style="display:none;margin-top:8px;">
+      <button class="btn btn-primary" onclick="confirmarInscricao()">Confirmar inscrição</button>
+    </div>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     INSCRIÇÃO: SUCESSO
+═══════════════════════════════════════ -->
+<div id="pg-insc-sucesso" class="pg">
+  <div class="cnt" style="padding-top:40px;">
+    <div class="suc-big">
+      <div class="suc-icon">📋</div>
+      <div class="suc-title" style="color:var(--azul);">Inscrição confirmada!</div>
+      <div class="suc-sub" id="insc-suc-nome"></div>
+      <div class="suc-sub" id="insc-suc-evento" style="margin-top:4px;font-size:13px;"></div>
+      <div style="margin-top:16px;font-size:13px;color:var(--txt3);">No dia do evento, faça o check-in pelo QR Code disponibilizado.</div>
+    </div>
+    <button class="btn btn-outline" onclick="ir('pg-home')" style="margin-top:20px;">Voltar ao início</button>
   </div>
   <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
 </div>
@@ -583,6 +651,19 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
             <div class="fg"><label class="fl">Coordenador (CPF)</label><input type="tel" id="na-coord-cpf" oninput="formatarCPF(this)" placeholder="CPF do coordenador"/></div>
           </div>
           <div class="fg"><label class="fl">Unidade</label><input type="text" id="na-unidade"/></div>
+          <div class="fg"><label class="fl">Número do processo SEI</label>
+            <input type="text" id="na-sei" placeholder="Ex: 23480.012345/2025-01"/>
+            <div class="fh">Aparecerá em destaque na ação e no Anexo IV.</div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="fg"><label class="fl">Prazo de inscrição</label>
+              <input type="date" id="na-prazo-inscricao"/>
+              <div class="fh">Deixe em branco se não houver inscrição prévia.</div>
+            </div>
+            <div class="fg"><label class="fl">Vagas (opcional)</label>
+              <input type="number" id="na-vagas" placeholder="Ex: 30"/>
+            </div>
+          </div>
           <div class="btn-row">
             <button class="btn btn-outline" onclick="udpIr('udp-acoes',null)">Cancelar</button>
             <button class="btn btn-primary" onclick="salvarAcao()">Criar ação</button>
@@ -614,6 +695,17 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
             </div>
           </div>
           <div class="fg"><label class="fl">Unidade</label><input type="text" id="ed-unidade"/></div>
+          <div class="fg"><label class="fl">Número do processo SEI</label>
+            <input type="text" id="ed-sei" placeholder="Ex: 23480.012345/2025-01"/>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="fg"><label class="fl">Prazo de inscrição</label>
+              <input type="date" id="ed-prazo-inscricao"/>
+            </div>
+            <div class="fg"><label class="fl">Vagas (opcional)</label>
+              <input type="number" id="ed-vagas" placeholder="Ex: 30"/>
+            </div>
+          </div>
           <div class="btn-row">
             <button class="btn btn-outline" onclick="udpIr('udp-acoes',null)">Cancelar</button>
             <button class="btn btn-primary" onclick="salvarEdicao()">Salvar alterações</button>
@@ -731,6 +823,104 @@ const S = {
 
 // ── Navegação ─────────────────────────────────────────────────────────────
 function ir(id){ document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active')); const el=document.getElementById(id); if(el){el.classList.add('active');window.scrollTo(0,0);} }
+
+// ── INSCRIÇÃO ─────────────────────────────────────────────────────────────
+function irInscricao(){
+  const hoje = new Date().toISOString().slice(0,10);
+  const abertos = S.acoes.filter(a=>{
+    if(!a[15]) return false; // sem prazo = sem inscrição
+    return a[15] >= hoje; // dentro do prazo
+  });
+  if(!abertos.length){
+    ir('pg-inscricao');
+    document.getElementById('insc-fechado').style.display='block';
+    document.getElementById('insc-form').style.display='none';
+  } else {
+    ir('pg-inscricao');
+    document.getElementById('insc-fechado').style.display='none';
+    document.getElementById('insc-form').style.display='block';
+  }
+}
+
+function buscarInscricao(){
+  const cpf=limparCPF(document.getElementById('insc-cpf').value);
+  if(cpf.length!==11){alert('CPF inválido.');return;}
+  S.cpf=cpf;
+  const srv=buscarServidor(cpf);
+  const part=S.participantes.find(p=>limparCPF(p[3])===cpf);
+  S.srv=srv;
+  S.nome=srv?srv[1]:(part?part[4]:'');
+
+  if(srv){
+    document.getElementById('insc-resultado').innerHTML=`
+      <div class="found-card">
+        <div style="font-size:17px;font-weight:700;color:var(--verde);">${srv[1]}</div>
+        <div style="font-size:13px;color:var(--verde);margin-top:3px;">${srv[4]||''} · ${srv[6]||''}</div>
+      </div>`;
+  } else if(S.nome){
+    document.getElementById('insc-resultado').innerHTML=`
+      <div class="found-card">
+        <div style="font-size:17px;font-weight:700;color:var(--verde);">${S.nome}</div>
+      </div>`;
+  } else {
+    document.getElementById('insc-resultado').innerHTML=`
+      <div class="warn-box">CPF não encontrado na base. Você poderá se cadastrar no dia do evento no check-in.</div>`;
+    return;
+  }
+
+  // Eventos com inscrição aberta
+  const hoje=new Date().toISOString().slice(0,10);
+  const abertos=S.acoes.filter(a=>a[15]&&a[15]>=hoje);
+  montarListaEventosInscricao(abertos);
+  ir('pg-insc-evento');
+}
+
+function montarListaEventosInscricao(lista){
+  const el=document.getElementById('insc-lista-eventos');
+  if(!lista.length){el.innerHTML='<div class="warn-box">Nenhum evento com inscrição aberta.</div>';return;}
+  el.innerHTML=lista.map(a=>{
+    // Verificar se já inscrito
+    const jaInscrito=S.participantes.find(p=>limparCPF(p[3])===S.cpf&&p[1]===a[0]&&p[13]==='Inscrito');
+    const vagas=a[16]?Number(a[16]):null;
+    const inscritos=S.participantes.filter(p=>p[1]===a[0]&&p[13]==='Inscrito').length;
+    const cheio=vagas&&inscritos>=vagas;
+    return `<div class="ev-card${jaInscrito?' sel':''}" id="evinsc-${a[0]}" onclick="${jaInscrito||cheio?'':'selecionarEventoInscricao(''+a[0]+'')'}" style="${cheio&&!jaInscrito?'opacity:.6;cursor:not-allowed;':''}">
+      ${a[14]?`<div style="font-size:11px;font-weight:700;color:var(--azul2);">SEI: ${a[14]}</div>`:''}
+      <div class="ev-titulo">${a[1]||''}</div>
+      <div class="ev-meta">${a[3]||''} · ${a[5]||''} · Inscrições até ${a[15]}</div>
+      ${vagas?`<div style="font-size:12px;color:var(--txt3);margin-top:4px;">${inscritos}/${vagas} inscritos</div>`:''}
+      ${jaInscrito?'<div style="margin-top:6px;"><span class="badge badge-green">✓ Já inscrito</span></div>':''}
+      ${cheio&&!jaInscrito?'<div style="margin-top:6px;"><span class="badge badge-amber">Vagas esgotadas</span></div>':''}
+    </div>`;
+  }).join('');
+  if(lista.length===1&&!S.participantes.find(p=>limparCPF(p[3])===S.cpf&&p[1]===lista[0][0]&&p[13]==='Inscrito')){
+    selecionarEventoInscricao(lista[0][0]);
+  }
+}
+
+function selecionarEventoInscricao(id){
+  S.eventoSel=S.acoes.find(a=>a[0]===id);
+  document.querySelectorAll('#insc-lista-eventos .ev-card').forEach(c=>c.classList.remove('sel'));
+  const el=document.getElementById('evinsc-'+id); if(el) el.classList.add('sel');
+  document.getElementById('insc-confirmar-btn').style.display='block';
+}
+
+async function confirmarInscricao(){
+  if(!S.eventoSel){alert('Selecione um evento.');return;}
+  const jaInscrito=S.participantes.find(p=>limparCPF(p[3])===S.cpf&&p[1]===S.eventoSel[0]&&p[13]==='Inscrito');
+  if(jaInscrito){alert('Você já está inscrito neste evento!');return;}
+  const srv=S.srv;
+  const agora=new Date().toLocaleString('pt-BR');
+  const idPre='INS'+Date.now();
+  const linha=[idPre,S.eventoSel[0],S.eventoSel[1]||'',S.cpf,S.nome,
+    srv?srv[2]:'',srv?srv[5]:'',srv?srv[3]:'',srv?srv[4]:'',srv?srv[6]:'',
+    ehChefia(srv),agora,'Inscrição','Inscrito'];
+  S.participantes.push(linha);
+  await gravarLinha('PARTICIPANTES',linha,'APPEND');
+  document.getElementById('insc-suc-nome').textContent=S.nome;
+  document.getElementById('insc-suc-evento').textContent=S.eventoSel[1]||'';
+  ir('pg-insc-sucesso');
+}
 
 function irCheckin(){
   const abertos = S.acoes.filter(a=>a[9]==='Aberto');
@@ -888,11 +1078,13 @@ async function confirmarPresenca(){
   const agora=new Date().toLocaleString('pt-BR');
   const idPre='PRE'+Date.now();
   const chefia=ehChefia(srv);
+  // Verificar se estava inscrito previamente
+  const eraInscrito=S.participantes.find(p=>limparCPF(p[3])===S.cpf&&p[1]===S.eventoSel[0]&&p[13]==='Inscrito')?'Sim':'Não';
   // Verificar se check-in está sendo feito na data de realização
   const dataRealizacao = S.eventoSel[13]||'';
   const hoje = new Date().toLocaleDateString('pt-BR');
   const validado = (!dataRealizacao || dataRealizacao===hoje) ? 'Válido' : 'Fora da data';
-  const linha=[idPre,S.eventoSel[0],S.eventoSel[1]||'',S.cpf,S.nome,srv?srv[2]:'',srv?srv[5]:'',srv?srv[3]:'',srv?srv[4]:'',srv?srv[6]:'',chefia,agora,'Sistema',validado];
+  const linha=[idPre,S.eventoSel[0],S.eventoSel[1]||'',S.cpf,S.nome,srv?srv[2]:'',srv?srv[5]:'',srv?srv[3]:'',srv?srv[4]:'',srv?srv[6]:'',chefia,agora,'Sistema',validado,eraInscrito];
   S.participantes.push(linha);
   // Salvar equidade automaticamente
   if(srv&&(srv[8]||srv[9]||srv[10])){
@@ -1021,8 +1213,9 @@ function renderCoordAcoes(){
     const stAV=a[10]||'Pendente';
     const presentes=S.participantes.filter(p=>p[1]===a[0]).length;
     return `<div class="card" style="margin-bottom:12px;">
+      ${a[14]?`<div style="font-size:11px;font-weight:700;color:var(--azul2);background:var(--azul-cl);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">SEI: ${a[14]}</div>`:''}
       <div style="font-size:15px;font-weight:700;margin-bottom:4px;">${a[1]||''}</div>
-      <div style="font-size:13px;color:var(--txt3);margin-bottom:10px;">${a[3]||''} · ${a[5]||''} · ${presentes} presente(s)${a[13]?' · 📅 '+a[13]:''}</div>
+      <div style="font-size:13px;color:var(--txt3);margin-bottom:10px;">${a[3]||''} · ${a[5]||''} · ${presentes} presente(s)${a[13]?' · 📅 '+a[13]:''}${a[15]?' · Inscrições até '+a[15]:''}</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
         <span>Check-in: <span class="badge ${stCI==='Aberto'?'badge-green':'badge-gray'}">${stCI}</span></span>
         <span>Avaliação: <span class="badge ${stAV==='Aberto'?'badge-amber':'badge-gray'}">${stAV}</span></span>
@@ -1030,6 +1223,7 @@ function renderCoordAcoes(){
       <div style="display:flex;gap:8px;flex-wrap:wrap;">
         <button class="btn btn-sm ${stCI==='Aberto'?'btn-danger':'btn-green'}" onclick="toggleStatus('${a[0]}','checkin')">${stCI==='Aberto'?'Fechar check-in':'Abrir check-in'}</button>
         <button class="btn btn-sm ${stAV==='Aberto'?'btn-danger':'btn-amber'}" onclick="toggleStatus('${a[0]}','avaliacao')">${stAV==='Aberto'?'Fechar avaliação':'Abrir avaliação'}</button>
+        ${a[15]?`<button class="btn btn-outline btn-sm" onclick="verInscritos('${a[0]}')">📋 Inscritos (${S.participantes.filter(p=>p[1]==='${a[0]}'&&p[13]==='Inscrito').length})</button>`:''}
         <button class="btn btn-outline btn-sm" onclick="verPresentes('${a[0]}')">Ver presentes</button>
       </div>
     </div>`;
@@ -1061,6 +1255,24 @@ Você pode reabrir a qualquer momento clicando novamente no botão.`);
   // Atualizar tela certa
   const naUDP=document.getElementById('pg-udp')?.classList.contains('active');
   if(naUDP) renderUDPAcoes(); else renderCoordAcoes();
+}
+
+function verInscritos(idAcao){
+  const acao=S.acoes.find(a=>a[0]===idAcao);
+  S.coordAcaoSel=acao;
+  document.getElementById('presentes-hdr-sub').textContent=(acao?acao[1]:'')+' — Inscritos';
+  const lista=S.participantes.filter(p=>p[1]===idAcao&&p[13]==='Inscrito');
+  const el=document.getElementById('presentes-lista');
+  if(!lista.length){el.innerHTML='<div class="info-box">Nenhum inscrito ainda.</div>';return;}
+  el.innerHTML=lista.map(p=>`
+    <div class="part-row">
+      <div>
+        <div class="part-nome">${p[4]||''}</div>
+        <div class="part-meta">${p[8]||''} · ${p[6]||''}</div>
+      </div>
+      <div><span class="badge badge-blue">Inscrito</span></div>
+    </div>`).join('');
+  ir('pg-coord-presentes');
 }
 
 function verPresentes(idAcao){
@@ -1158,8 +1370,9 @@ function renderUDPAcoes(){
     const stCI=a[9]||'Pendente'; const stAV=a[10]||'Pendente';
     const pr=S.participantes.filter(p=>p[1]===a[0]).length;
     return `<div class="card" style="margin-bottom:10px;">
+      ${a[14]?`<div style="font-size:11px;font-weight:700;color:var(--azul2);background:var(--azul-cl);padding:3px 8px;border-radius:4px;display:inline-block;margin-bottom:6px;">SEI: ${a[14]}</div>`:''}
       <div style="font-size:15px;font-weight:700;">${a[1]||''}</div>
-      <div style="font-size:12px;color:var(--txt3);margin:4px 0 8px;">${a[2]||''} · ${a[3]||''} · ${a[5]||''} · ${pr} presente(s)</div>
+      <div style="font-size:12px;color:var(--txt3);margin:4px 0 8px;">${a[2]||''} · ${a[3]||''} · ${a[5]||''} · ${pr} presente(s)${a[15]?' · Inscrições até '+a[15]:''}${a[16]?' · '+a[16]+' vagas':''}</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;">
         <span class="badge ${stCI==='Aberto'?'badge-green':'badge-gray'}">CI: ${stCI}</span>
         <span class="badge ${stAV==='Aberto'?'badge-amber':'badge-gray'}">AV: ${stAV}</span>
@@ -1188,7 +1401,12 @@ async function salvarAcao(){
     coordNomeStr,
     document.getElementById('na-unidade').value,
     'Pendente', 'Pendente', '',
-    coordCPF];
+    coordCPF,
+    '', // col N = data realização
+    document.getElementById('na-sei').value,           // col O = SEI
+    document.getElementById('na-prazo-inscricao').value, // col P = prazo inscrição
+    document.getElementById('na-vagas').value||'',      // col Q = vagas
+  ];
   S.acoes.push(linha);
   await gravarLinha('ACOES',linha,'APPEND');
   alert(`Ação ${id} criada!`);
@@ -1207,7 +1425,10 @@ function editarAcao(idAcao){
   document.getElementById('ed-ch').value       = a[5]||'';
   document.getElementById('ed-local').value    = a[6]||'';
   document.getElementById('ed-unidade').value    = a[8]||'';
-  document.getElementById('ed-data-real').value  = a[13]||'';
+  document.getElementById('ed-data-real').value    = a[13]||'';
+  document.getElementById('ed-sei').value           = a[14]||'';
+  document.getElementById('ed-prazo-inscricao').value = a[15]||'';
+  document.getElementById('ed-vagas').value          = a[16]||'';
   // CPF do coordenador (coluna 12)
   const coordCPF = a[12]||'';
   const coordFmt = coordCPF.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
@@ -1258,7 +1479,13 @@ async function salvarEdicao(){
     {col:9,  val:S.acoes[idx][8]},
     {col:13, val:coordCPF},
     {col:14, val:dataReal},
+    {col:15, val:document.getElementById('ed-sei').value},
+    {col:16, val:document.getElementById('ed-prazo-inscricao').value},
+    {col:17, val:document.getElementById('ed-vagas').value||''},
   ];
+  S.acoes[idx][14] = document.getElementById('ed-sei').value;
+  S.acoes[idx][15] = document.getElementById('ed-prazo-inscricao').value;
+  S.acoes[idx][16] = document.getElementById('ed-vagas').value||'';
   console.log('Gravando CPF coordenador:', coordCPF, 'na coluna 13 da ação', id);
   for(const c of campos){
     await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({
@@ -1548,8 +1775,8 @@ function exportarAnexoIV(idAcao){
   const dados=[
     ['ANEXO IV - RELATÓRIO CONSOLIDADO DE CARGA HORÁRIA - PARTICIPANTES'],
     ['TÍTULO DA AÇÃO:',acao?.[1]||''],
-    ['DATA/PERÍODO:',acao?.[4]||'','','LOCAL:',acao?.[6]||''],
-    ['CARGA HORÁRIA:',acao?.[5]||''],
+    ['PROCESSO SEI:',acao?.[14]||'','','DATA/PERÍODO:',acao?.[4]||'','','LOCAL:',acao?.[6]||''],
+    ['CARGA HORÁRIA:',acao?.[5]||'','','COORDENADOR:',acao?.[7]||'','','UNIDADE:',acao?.[8]||''],
     ['Enviar documento sem abreviar os nomes. Não transformar em PDF.'],
     [],
     ['Nº','NOME COMPLETO (LETRA MAIÚSCULA)','E-MAIL INSTITUCIONAL','SIAPE/MATRÍCULA','CARGO','VÍNCULO','LOTAÇÃO','CH TOTAL','CHEFIA (X)','CPF'],
