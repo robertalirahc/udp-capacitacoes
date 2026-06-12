@@ -670,6 +670,7 @@ function irUDP(){
   document.getElementById('link-ci').value = BASE_URL + '?tipo=checkin';
   document.getElementById('link-av').value = BASE_URL + '?tipo=avaliacao';
   if(S.sheetId && S.apiKey) sincronizar();
+  else { udpIr('udp-config', null); }
 }
 
 function udpIr(id, navEl){
@@ -681,8 +682,8 @@ function udpIr(id, navEl){
   const tt=t[id]||['',''];
   document.getElementById('udp-title').textContent=tt[0];
   document.getElementById('udp-sub').textContent=tt[1];
-  if(id==='udp-acoes') renderUDPAcoes();
-  if(id==='udp-relatorio'||id==='udp-avaliacoes') popularSelects();
+  if(id==='udp-acoes'){ sincronizar().then(()=>renderUDPAcoes()); }
+  else if(id==='udp-relatorio'||id==='udp-avaliacoes'){ sincronizar().then(()=>popularSelects()); }
 }
 
 // ── Utilitários ───────────────────────────────────────────────────────────
@@ -874,7 +875,7 @@ function loginCoord(){
   if(!srv||srv[7]===undefined){
     // Verificar se é coordenador na coluna COORDENADOR (não existe na base atual)
     // Verificar se tem ações vinculadas ao CPF
-    const acoesDele=S.acoes.filter(a=>limparCPF(a[12]||'')===cpf||limparCPF(a[7]||'')===cpf);
+    const acoesDele=S.acoes.filter(a=>limparCPF(a[12]||'')===cpf);
     if(!acoesDele.length&&!srv){
       document.getElementById('coord-login-erro').innerHTML='<div class="warn-box">CPF não encontrado como coordenador.</div>';
       return;
@@ -894,10 +895,7 @@ function sairCoord(){
 
 function renderCoordAcoes(){
   // Ações vinculadas ao CPF do coordenador (campo na coluna 12 = coord CPF)
-  const acoesDele=S.acoes.filter(a=>
-    limparCPF(a[12]||'')===S.coordCPF ||
-    limparCPF(a[7]||'')===S.coordCPF
-  );
+  const acoesDele=S.acoes.filter(a=>limparCPF(a[12]||'')===S.coordCPF);
   const abertosCI=acoesDele.filter(a=>a[9]==='Aberto').length;
   const abertosAV=acoesDele.filter(a=>a[10]==='Aberto').length;
   document.getElementById('coord-info-abertos').textContent=
@@ -939,13 +937,26 @@ async function toggleStatus(idAcao, tipo){
   if(idx<0) return;
   const col=tipo==='checkin'?9:10;
   const atual=S.acoes[idx][col]||'Pendente';
+  const tipoLabel=tipo==='checkin'?'check-in':'avaliação';
+
+  // Confirmação apenas ao FECHAR para evitar clique acidental
+  if(atual==='Aberto'){
+    const confirmar=confirm(`Fechar o ${tipoLabel}?
+
+Você pode reabrir a qualquer momento clicando novamente no botão.`);
+    if(!confirmar) return;
+  }
+
   const novo=atual==='Aberto'?'Encerrado':'Aberto';
   S.acoes[idx][col]=novo;
-  // Gravar na planilha via Apps Script
+
   await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({
     aba:'ACOES',acao:'UPDATE',colChave:1,chave:idAcao,col:col+1,valor:novo
   })});
-  renderCoordAcoes();
+
+  // Atualizar tela certa
+  const naUDP=document.getElementById('pg-udp')?.classList.contains('active');
+  if(naUDP) renderUDPAcoes(); else renderCoordAcoes();
 }
 
 function verPresentes(idAcao){
@@ -1062,15 +1073,17 @@ async function salvarAcao(){
   const coordCPF=limparCPF(document.getElementById('na-coord-cpf').value);
   const coordSrv=buscarServidor(coordCPF);
   const id='CAP'+String(S.acoes.length+1).padStart(3,'0');
-  const linha=[id,titulo,
+  const coordNomeStr = coordSrv ? coordSrv[1] : document.getElementById('na-coord-cpf').value;
+  const linha=[id, titulo,
     document.getElementById('na-tipo').value,
     document.getElementById('na-modal').value,
     document.getElementById('na-data').value,
     document.getElementById('na-ch').value,
     document.getElementById('na-local').value,
-    coordSrv?coordSrv[1]:(document.getElementById('na-coord-cpf').value),
+    coordNomeStr,
     document.getElementById('na-unidade').value,
-    'Pendente','Pendente','',coordCPF];
+    'Pendente', 'Pendente', '',
+    coordCPF];
   S.acoes.push(linha);
   await gravarLinha('ACOES',linha,'APPEND');
   alert(`Ação ${id} criada!`);
@@ -1215,8 +1228,13 @@ async function lerAba(aba){
 }
 
 async function sincronizar(){
-  if(!S.sheetId||!S.apiKey){alert('Configure a planilha em Configurações.');udpIr('udp-config',null);return;}
-  document.getElementById('sync-st').textContent='● Sincronizando...';
+  if(!S.sheetId||!S.apiKey){
+    const cfg=document.getElementById('udp-config');
+    if(cfg) udpIr('udp-config',null);
+    return;
+  }
+  const syncEl=document.getElementById('sync-st');
+  if(syncEl) syncEl.textContent='● Sincronizando...';
   try{
     const [a,p,pf,av,sv]=await Promise.all([
       lerAba('ACOES!A3:M1000'),
@@ -1230,10 +1248,11 @@ async function sincronizar(){
     S.perfis=pf.filter(r=>r[0]);
     S.avaliacoes=av.filter(r=>r[0]);
     S.servidores=sv.filter(r=>r[0]);
-    document.getElementById('sync-st').innerHTML='● Sincronizado';
-    document.getElementById('sync-st').style.color='var(--verde)';
+    const stel=document.getElementById('sync-st');
+    if(stel){stel.innerHTML='● Sincronizado';stel.style.color='var(--verde)';}
     atualizarPainel();
     popularSelects();
+    renderUDPAcoes();
   }catch(e){
     document.getElementById('sync-st').textContent='● Erro';
     document.getElementById('sync-st').style.color='#A32D2D';
