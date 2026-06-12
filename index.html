@@ -902,7 +902,10 @@ function loginCoord(){
   if(!srv||srv[7]===undefined){
     // Verificar se é coordenador na coluna COORDENADOR (não existe na base atual)
     // Verificar se tem ações vinculadas ao CPF
-    const acoesDele=S.acoes.filter(a=>limparCPF(a[12]||'')===cpf);
+    // Buscar ações pelo CPF do coordenador (coluna 12, índice 12)
+  const acoesDele=S.acoes.filter(a=>limparCPF(a[12]||'')===limparCPF(cpf));
+  console.log('Login coordenador CPF:', cpf, '| Ações encontradas:', acoesDele.length);
+  console.log('Todas as ações:', S.acoes.map(a=>[a[0],a[12]]));
     if(!acoesDele.length&&!srv){
       document.getElementById('coord-login-erro').innerHTML='<div class="warn-box">CPF não encontrado como coordenador.</div>';
       return;
@@ -922,7 +925,7 @@ function sairCoord(){
 
 function renderCoordAcoes(){
   // Ações vinculadas ao CPF do coordenador (campo na coluna 12 = coord CPF)
-  const acoesDele=S.acoes.filter(a=>limparCPF(a[12]||'')===S.coordCPF);
+  const acoesDele=S.acoes.filter(a=>limparCPF(a[12]||'')===limparCPF(S.coordCPF));
   const abertosCI=acoesDele.filter(a=>a[9]==='Aberto').length;
   const abertosAV=acoesDele.filter(a=>a[10]==='Aberto').length;
   document.getElementById('coord-info-abertos').textContent=
@@ -1146,9 +1149,10 @@ async function salvarEdicao(){
   const id    = document.getElementById('ed-id').value;
   const titulo = document.getElementById('ed-titulo').value.trim();
   if(!titulo){alert('Informe o título.');return;}
-  const coordCPF = limparCPF(document.getElementById('ed-coord-cpf').value);
+  const coordCPFraw = document.getElementById('ed-coord-cpf').value;
+  const coordCPF = limparCPF(coordCPFraw);
   const coordSrv = buscarServidor(coordCPF);
-  const coordNome = coordSrv ? coordSrv[1] : document.getElementById('ed-coord-cpf').value;
+  const coordNome = coordSrv ? coordSrv[1] : coordCPFraw;
 
   const idx = S.acoes.findIndex(a=>a[0]===id);
   if(idx<0){alert('Ação não encontrada.');return;}
@@ -1164,18 +1168,19 @@ async function salvarEdicao(){
   S.acoes[idx][8]  = document.getElementById('ed-unidade').value;
   S.acoes[idx][12] = coordCPF;
 
-  // Gravar cada campo alterado na planilha
+  // Gravar na planilha — coluna 13 = M = CPF do coordenador
   const campos = [
-    {col:2, val:titulo},
-    {col:3, val:S.acoes[idx][2]},
-    {col:4, val:S.acoes[idx][3]},
-    {col:5, val:S.acoes[idx][4]},
-    {col:6, val:S.acoes[idx][5]},
-    {col:7, val:S.acoes[idx][6]},
-    {col:8, val:coordNome},
-    {col:9, val:S.acoes[idx][8]},
-    {col:13,val:coordCPF},
+    {col:2,  val:titulo},
+    {col:3,  val:S.acoes[idx][2]},
+    {col:4,  val:S.acoes[idx][3]},
+    {col:5,  val:S.acoes[idx][4]},
+    {col:6,  val:S.acoes[idx][5]},
+    {col:7,  val:S.acoes[idx][6]},
+    {col:8,  val:coordNome},
+    {col:9,  val:S.acoes[idx][8]},
+    {col:13, val:coordCPF},
   ];
+  console.log('Gravando CPF coordenador:', coordCPF, 'na coluna 13 da ação', id);
   for(const c of campos){
     await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({
       aba:'ACOES',acao:'UPDATE',colChave:1,chave:id,col:c.col,valor:c.val
