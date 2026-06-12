@@ -1284,7 +1284,7 @@ async function salvarEdicaoCoord(){
   S.acoes[idx][6]  = document.getElementById('coord-ed-local').value;
   S.acoes[idx][13] = document.getElementById('coord-ed-data-real').value;
   S.acoes[idx][14] = document.getElementById('coord-ed-sei').value;
-  S.acoes[idx][15] = document.getElementById('coord-ed-periodo-inscricao').value;
+  S.acoes[idx][15] = document.getElementById('coord-ed-inscricao-fim').value;
   S.acoes[idx][16] = document.getElementById('coord-ed-vagas').value||'';
 
   // Gravar na planilha
@@ -1578,10 +1578,11 @@ function editarAcao(idAcao){
   document.getElementById('ed-ch').value       = a[5]||'';
   document.getElementById('ed-local').value    = a[6]||'';
   document.getElementById('ed-unidade').value    = a[8]||'';
-  document.getElementById('ed-data-real').value    = a[13]||'';
-  document.getElementById('ed-sei').value           = a[14]||'';
-  document.getElementById('ed-periodo-inscricao').value = a[15]||'';
-  document.getElementById('ed-vagas').value          = a[16]||'';
+  document.getElementById('ed-data-real').value       = a[13]||'';
+  document.getElementById('ed-sei').value             = a[14]||'';
+  document.getElementById('ed-inscricao-inicio').value = a[15]||'';
+  document.getElementById('ed-inscricao-fim').value   = a[16]||'';
+  document.getElementById('ed-vagas').value           = a[17]||'';
   // CPF do coordenador (coluna 12)
   const coordCPF = a[12]||'';
   const coordFmt = coordCPF.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
