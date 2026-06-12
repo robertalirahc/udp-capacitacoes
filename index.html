@@ -1178,9 +1178,13 @@ async function salvarEdicao(){
       aba:'ACOES',acao:'UPDATE',colChave:1,chave:id,col:c.col,valor:c.val
     })});
   }
-  alert(`Ação ${id} atualizada!`);
-  udpIr('udp-acoes',null);
-  renderUDPAcoes();
+  // Feedback visual
+  const btn = document.querySelector('#udp-editar .btn-primary');
+  if(btn){ btn.textContent='✓ Salvo!'; btn.style.background='var(--verde)'; }
+  setTimeout(()=>{
+    udpIr('udp-acoes',null);
+    renderUDPAcoes();
+  }, 1200);
 }
 
 // Auto-preencher nome ao digitar CPF do coordenador na edição
