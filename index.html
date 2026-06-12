@@ -438,8 +438,9 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
   <div class="cnt">
     <div class="info-box" id="coord-info-abertos"></div>
     <div id="coord-lista-acoes"></div>
-    <div style="margin-top:8px;">
+    <div style="margin-top:8px;display:flex;flex-direction:column;gap:10px;">
       <button class="btn btn-outline" onclick="ir('pg-coord-checkin-manual')">👤 Confirmar presença manualmente</button>
+      <button class="btn btn-outline" onclick="ir('pg-coord-avaliacoes')">⭐ Ver avaliações das minhas ações</button>
     </div>
   </div>
   <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
@@ -469,6 +470,26 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
       <button class="btn btn-primary" onclick="buscarManual()">Buscar</button>
     </div>
     <div id="manual-resultado"></div>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     COORDENADOR: AVALIAÇÕES
+═══════════════════════════════════════ -->
+<div id="pg-coord-avaliacoes" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-coord-painel')">‹</span>
+    <div><div class="hdr-title">Avaliações</div><div class="hdr-sub">Resultados anônimos das minhas ações</div></div>
+  </div>
+  <div class="cnt">
+    <div class="fg">
+      <label class="fl">Selecione a ação</label>
+      <select id="coord-av-sel" onchange="renderCoordAvaliacoes()">
+        <option value="">-- selecione --</option>
+      </select>
+    </div>
+    <div id="coord-av-resultado"></div>
   </div>
   <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
 </div>
@@ -582,6 +603,10 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
               <select id="ed-modal"><option>Presencial</option><option>Remoto</option><option>Híbrido</option></select></div>
             <div class="fg"><label class="fl">Data prevista</label><input type="date" id="ed-data"/></div>
             <div class="fg"><label class="fl">Carga horária</label><input type="text" id="ed-ch"/></div>
+            <div class="fg"><label class="fl">Data de realização</label>
+              <input type="text" id="ed-data-real" placeholder="DD/MM/AAAA"/>
+              <div class="fh">Data em que o evento acontecerá de fato. Usada para validar presenças.</div>
+            </div>
             <div class="fg"><label class="fl">Local</label><input type="text" id="ed-local"/></div>
             <div class="fg"><label class="fl">Coordenador (CPF)</label>
               <input type="tel" id="ed-coord-cpf" oninput="formatarCPF(this)" placeholder="CPF do coordenador"/>
@@ -615,11 +640,40 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
       <!-- Avaliações -->
       <div id="udp-avaliacoes" class="udp-sc" style="display:none;">
         <div class="card">
-          <div style="display:flex;gap:10px;margin-bottom:14px;align-items:flex-end;">
-            <div style="flex:1;"><label class="fl">Ação</label><select id="av-acao-sel"><option value="">Todas</option></select></div>
+          <div style="display:flex;gap:10px;margin-bottom:14px;align-items:flex-end;flex-wrap:wrap;">
+            <div style="flex:1;min-width:180px;"><label class="fl">Ação</label><select id="av-acao-sel"><option value="">Todas</option></select></div>
             <button class="btn btn-primary btn-sm" onclick="filtrarAv()">Filtrar</button>
+            <button class="btn btn-outline btn-sm" onclick="exportarAvaliacoesExcel()">Excel</button>
           </div>
-          <div id="av-tabela" style="overflow-x:auto;"></div>
+          <!-- Métricas gerais -->
+          <div id="av-metricas" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px;"></div>
+          <!-- Índices das perguntas -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div class="card" style="margin:0;">
+              <div class="card-title">Avaliação da capacitação</div>
+              <div id="av-graf-cap"></div>
+            </div>
+            <div class="card" style="margin:0;">
+              <div class="card-title">Avaliação do instrutor</div>
+              <div id="av-graf-inst"></div>
+            </div>
+          </div>
+          <!-- Participantes por unidade -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div class="card" style="margin:0;">
+              <div class="card-title">Participantes por unidade</div>
+              <div id="av-graf-unidade"></div>
+            </div>
+            <div class="card" style="margin:0;">
+              <div class="card-title">Perfil do participante</div>
+              <div id="av-graf-vinculo"></div>
+            </div>
+          </div>
+          <!-- Comentários -->
+          <div class="card" style="margin:0;">
+            <div class="card-title">Comentários</div>
+            <div id="av-comentarios"></div>
+          </div>
         </div>
       </div>
 
@@ -834,7 +888,11 @@ async function confirmarPresenca(){
   const agora=new Date().toLocaleString('pt-BR');
   const idPre='PRE'+Date.now();
   const chefia=ehChefia(srv);
-  const linha=[idPre,S.eventoSel[0],S.eventoSel[1]||'',S.cpf,S.nome,srv?srv[2]:'',srv?srv[5]:'',srv?srv[3]:'',srv?srv[4]:'',srv?srv[6]:'',chefia,agora,'Sistema',''];
+  // Verificar se check-in está sendo feito na data de realização
+  const dataRealizacao = S.eventoSel[13]||'';
+  const hoje = new Date().toLocaleDateString('pt-BR');
+  const validado = (!dataRealizacao || dataRealizacao===hoje) ? 'Válido' : 'Fora da data';
+  const linha=[idPre,S.eventoSel[0],S.eventoSel[1]||'',S.cpf,S.nome,srv?srv[2]:'',srv?srv[5]:'',srv?srv[3]:'',srv?srv[4]:'',srv?srv[6]:'',chefia,agora,'Sistema',validado];
   S.participantes.push(linha);
   // Salvar equidade automaticamente
   if(srv&&(srv[8]||srv[9]||srv[10])){
@@ -936,6 +994,17 @@ function renderCoordAcoes(){
   document.getElementById('coord-info-abertos').textContent=
     `${acoesDele.length} ação(ões) vinculada(s) · ${abertosCI} check-in aberto · ${abertosAV} avaliação aberta`;
 
+  // Popular select de avaliações do coordenador
+  const avSel=document.getElementById('coord-av-sel');
+  if(avSel){
+    avSel.innerHTML='<option value="">-- selecione --</option>';
+    acoesDele.forEach(a=>{
+      const o=document.createElement('option');
+      o.value=a[0]; o.textContent=`${a[0]} — ${a[1]}`;
+      avSel.appendChild(o);
+    });
+  }
+
   // Popular select manual
   const sel=document.getElementById('manual-evento');
   sel.innerHTML='<option value="">-- selecione --</option>';
@@ -953,7 +1022,7 @@ function renderCoordAcoes(){
     const presentes=S.participantes.filter(p=>p[1]===a[0]).length;
     return `<div class="card" style="margin-bottom:12px;">
       <div style="font-size:15px;font-weight:700;margin-bottom:4px;">${a[1]||''}</div>
-      <div style="font-size:13px;color:var(--txt3);margin-bottom:10px;">${a[3]||''} · ${a[5]||''} · ${presentes} presente(s)</div>
+      <div style="font-size:13px;color:var(--txt3);margin-bottom:10px;">${a[3]||''} · ${a[5]||''} · ${presentes} presente(s)${a[13]?' · 📅 '+a[13]:''}</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px;">
         <span>Check-in: <span class="badge ${stCI==='Aberto'?'badge-green':'badge-gray'}">${stCI}</span></span>
         <span>Avaliação: <span class="badge ${stAV==='Aberto'?'badge-amber':'badge-gray'}">${stAV}</span></span>
@@ -1137,7 +1206,8 @@ function editarAcao(idAcao){
   document.getElementById('ed-data').value     = a[4]||'';
   document.getElementById('ed-ch').value       = a[5]||'';
   document.getElementById('ed-local').value    = a[6]||'';
-  document.getElementById('ed-unidade').value  = a[8]||'';
+  document.getElementById('ed-unidade').value    = a[8]||'';
+  document.getElementById('ed-data-real').value  = a[13]||'';
   // CPF do coordenador (coluna 12)
   const coordCPF = a[12]||'';
   const coordFmt = coordCPF.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
@@ -1174,6 +1244,9 @@ async function salvarEdicao(){
   S.acoes[idx][12] = coordCPF;
 
   // Gravar na planilha — coluna 13 = M = CPF do coordenador
+  const dataReal = document.getElementById('ed-data-real').value.trim();
+  S.acoes[idx][13] = dataReal;
+
   const campos = [
     {col:2,  val:titulo},
     {col:3,  val:S.acoes[idx][2]},
@@ -1184,6 +1257,7 @@ async function salvarEdicao(){
     {col:8,  val:coordNome},
     {col:9,  val:S.acoes[idx][8]},
     {col:13, val:coordCPF},
+    {col:14, val:dataReal},
   ];
   console.log('Gravando CPF coordenador:', coordCPF, 'na coluna 13 da ação', id);
   for(const c of campos){
@@ -1254,7 +1328,7 @@ function filtrarRel(){
   if(!lista.length){el.innerHTML='<p style="text-align:center;color:var(--txt3);padding:20px;">Nenhum resultado.</p>';return;}
   el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px;">
     <thead><tr style="background:var(--azul);color:#fff;">
-      <th style="padding:8px;">Nome</th><th>CPF</th><th>E-mail</th><th>Cargo</th><th>Vínculo</th><th>Chefia</th><th>Ação</th><th>Check-in</th>
+      <th style="padding:8px;">Nome</th><th>CPF</th><th>E-mail</th><th>Cargo</th><th>Vínculo</th><th>Chefia</th><th>Ação</th><th>Check-in</th><th>Validação</th>
     </tr></thead>
     <tbody>${lista.map((p,i)=>`<tr style="background:${i%2?'var(--cinza)':'#fff'};">
       <td style="padding:8px;font-weight:600;">${p[4]||''}</td>
@@ -1265,6 +1339,7 @@ function filtrarRel(){
       <td>${p[10]==='Sim'?'<span class="badge badge-roxo">Sim</span>':''}</td>
       <td style="font-size:11px;">${p[2]||p[1]||''}</td>
       <td style="font-size:11px;">${p[11]||''}</td>
+      <td>${p[13]==='Fora da data'?'<span class="badge badge-amber">⚠️ Fora da data</span>':(p[13]==='Válido'?'<span class="badge badge-green">✓</span>':'')}</td>
     </tr>`).join('')}</tbody></table>`;
 }
 
@@ -1272,25 +1347,154 @@ function filtrarAv(){
   const idAcao=document.getElementById('av-acao-sel').value;
   let lista=S.avaliacoes;
   if(idAcao) lista=lista.filter(a=>a[2]===idAcao);
-  const pm={};S.participantes.forEach(p=>{pm[limparCPF(p[3])]=p[4];});
-  const el=document.getElementById('av-tabela');
-  if(!lista.length){el.innerHTML='<p style="text-align:center;color:var(--txt3);padding:20px;">Nenhuma avaliação.</p>';return;}
-  el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px;">
-    <thead><tr style="background:var(--azul);color:#fff;">
-      <th style="padding:8px;">Nome</th><th>Ação</th><th>Nota</th><th>Positivo</th><th>Melhoria</th>
-    </tr></thead>
-    <tbody>${lista.map((a,i)=>{
-      const nome=pm[limparCPF(a[1])]||'—';
-      const nota=Number(a[19])||0;
-      const cor=nota>=4?'badge-green':nota>=3?'badge-amber':'badge-gray';
-      return `<tr style="background:${i%2?'var(--cinza)':'#fff'};">
-        <td style="padding:8px;font-weight:600;">${nome}</td>
-        <td style="font-size:11px;">${a[3]||a[2]||''}</td>
-        <td><span class="badge ${cor}">${nota}★</span></td>
-        <td style="font-size:12px;">${a[17]||''}</td>
-        <td style="font-size:12px;">${a[18]||''}</td>
-      </tr>`;
-    }).join('')}</tbody></table>`;
+  renderRelatorioAvaliacoes(lista, true);
+}
+
+function renderRelatorioAvaliacoes(lista, comIdentificacao){
+  if(!lista.length){
+    ['av-metricas','av-graf-cap','av-graf-inst','av-graf-unidade','av-graf-vinculo','av-comentarios'].forEach(id=>{
+      const el=document.getElementById(id); if(el) el.innerHTML='<p style="color:var(--txt3);padding:10px;">Nenhuma avaliação.</p>';
+    });
+    return;
+  }
+
+  const total=lista.length;
+  const media=arr=>arr.length?( arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(1):'-';
+  const notas=lista.map(a=>Number(a[19])||0).filter(n=>n>0);
+  const mediaGeral=media(notas);
+
+  // Métricas gerais
+  const mEl=document.getElementById('av-metricas');
+  if(mEl) mEl.innerHTML=`
+    <div class="metric"><div class="metric-val" style="color:var(--amber);">${total}</div><div class="metric-lbl">Respostas</div></div>
+    <div class="metric"><div class="metric-val" style="color:var(--verde);">${mediaGeral}★</div><div class="metric-lbl">Nota média geral</div></div>
+    <div class="metric"><div class="metric-val" style="color:var(--azul);">${lista.filter(a=>Number(a[19])>=4).length}</div><div class="metric-lbl">Notas 4 ou 5</div></div>
+    <div class="metric"><div class="metric-val" style="color:var(--roxo);">${lista.filter(a=>a[17]||a[18]).length}</div><div class="metric-lbl">Com comentários</div></div>`;
+
+  // Perguntas capacitação (cols 4-11, índices 4-11)
+  const qCap=[
+    'Atingiu objetivo','CH bem distribuída','Programa desenvolvido',
+    'Abordagem prática','Instalações adequadas','Material didático',
+    'Aproveitamento','Aplicará conhecimentos'
+  ];
+  const capEl=document.getElementById('av-graf-cap');
+  if(capEl) capEl.innerHTML=renderMatrizIndices(lista, qCap, 4, ['SIM','PARCIAL','NÃO','N/A']);
+
+  // Perguntas instrutor (cols 12-16, índices 12-16)
+  const qInst=['Clareza','Métodos','Conhecimento','Recursos didáticos','Relacionamento'];
+  const instEl=document.getElementById('av-graf-inst');
+  if(instEl) instEl.innerHTML=renderMatrizIndices(lista, qInst, 12, ['Ótimo','Bom','Regular','Fraco']);
+
+  // Participantes por unidade — cruzar com PARTICIPANTES
+  const partMap={};
+  S.participantes.forEach(p=>{partMap[limparCPF(p[3])]={unidade:p[9]||'Não informado',vinculo:p[6]||'Não informado'};});
+  const unidades={}, vinculos={};
+  lista.forEach(a=>{
+    const inf=partMap[limparCPF(a[1])];
+    const un=inf?inf.unidade:'Não informado';
+    const vi=inf?inf.vinculo:'Não informado';
+    unidades[un]=(unidades[un]||0)+1;
+    vinculos[vi]=(vinculos[vi]||0)+1;
+  });
+  const unEl=document.getElementById('av-graf-unidade');
+  if(unEl) unEl.innerHTML=renderBarras(unidades,'#378ADD');
+  const viEl=document.getElementById('av-graf-vinculo');
+  if(viEl) viEl.innerHTML=renderBarras(vinculos,'#1D9E75');
+
+  // Comentários anônimos
+  const comEl=document.getElementById('av-comentarios');
+  if(comEl){
+    const positivos=lista.filter(a=>a[17]).map(a=>`<div style="padding:8px;border-left:3px solid var(--verde);margin-bottom:8px;font-size:13px;">👍 ${a[17]}</div>`);
+    const melhorias=lista.filter(a=>a[18]).map(a=>`<div style="padding:8px;border-left:3px solid var(--amber);margin-bottom:8px;font-size:13px;">💡 ${a[18]}</div>`);
+    comEl.innerHTML=(positivos.length?'<p style="font-weight:700;font-size:13px;margin-bottom:8px;">Pontos positivos</p>'+positivos.join(''):'')
+      +(melhorias.length?'<p style="font-weight:700;font-size:13px;margin:12px 0 8px;">Pontos de melhoria</p>'+melhorias.join(''):'')
+      ||'<p style="color:var(--txt3);">Nenhum comentário.</p>';
+  }
+}
+
+function renderMatrizIndices(lista, perguntas, colInicio, opcoes){
+  const cores={'SIM':'#1D9E75','Ótimo':'#1D9E75','Bom':'#378ADD','PARCIAL':'#EF9F27','Regular':'#EF9F27','NÃO':'#E24B4A','Fraco':'#E24B4A','N/A':'#888780'};
+  let html='<table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:4px;">';
+  html+=`<thead><tr style="background:var(--azul);color:#fff;"><th style="padding:6px;text-align:left;">Pergunta</th>${opcoes.map(o=>`<th style="padding:6px;text-align:center;">${o}</th>`).join('')}</tr></thead><tbody>`;
+  perguntas.forEach((q,qi)=>{
+    const col=colInicio+qi;
+    const total=lista.filter(a=>a[col]).length||1;
+    html+=`<tr style="border-bottom:1px solid var(--cinza);"><td style="padding:6px;font-size:12px;">${q}</td>`;
+    opcoes.forEach(op=>{
+      const cnt=lista.filter(a=>a[col]===op).length;
+      const pct=Math.round(cnt/total*100);
+      html+=`<td style="padding:6px;text-align:center;">
+        <div style="font-weight:700;color:${cores[op]||'#888'};">${pct}%</div>
+        <div style="font-size:10px;color:var(--txt3);">${cnt}</div>
+      </td>`;
+    });
+    html+='</tr>';
+  });
+  html+='</tbody></table>';
+  return html;
+}
+
+function renderBarras(obj, cor){
+  const total=Object.values(obj).reduce((a,b)=>a+b,0)||1;
+  return Object.entries(obj).sort((a,b)=>b[1]-a[1]).map(([k,v])=>{
+    const pct=Math.round(v/total*100);
+    return `<div class="bar-row"><span class="bar-lbl" style="width:140px;font-size:11px;">${k}</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${cor};color:#fff;">${pct}%</div></div><span class="bar-cnt">${v}</span></div>`;
+  }).join('')||'<p style="font-size:12px;color:var(--txt3);">Sem dados.</p>';
+}
+
+// Avaliações do coordenador (anônimas)
+function renderCoordAvaliacoes(){
+  const idAcao=document.getElementById('coord-av-sel').value;
+  if(!idAcao){document.getElementById('coord-av-resultado').innerHTML='';return;}
+  let lista=S.avaliacoes.filter(a=>a[2]===idAcao);
+  const el=document.getElementById('coord-av-resultado');
+  if(!lista.length){el.innerHTML='<div class="info-box">Nenhuma avaliação registrada para esta ação.</div>';return;}
+
+  // Renderizar sem identificação
+  const total=lista.length;
+  const notas=lista.map(a=>Number(a[19])||0).filter(n=>n>0);
+  const mediaGeral=notas.length?(notas.reduce((a,b)=>a+b,0)/notas.length).toFixed(1):'-';
+
+  let html=`<div class="metrics" style="grid-template-columns:1fr 1fr;">
+    <div class="metric"><div class="metric-val" style="color:var(--amber);">${total}</div><div class="metric-lbl">Respostas</div></div>
+    <div class="metric"><div class="metric-val" style="color:var(--verde);">${mediaGeral}★</div><div class="metric-lbl">Nota média</div></div>
+  </div>`;
+
+  // Índices capacitação
+  const qCap=['Atingiu objetivo','CH distribuída','Programa desenvolvido','Abordagem prática','Instalações','Material didático','Aproveitamento','Aplicará conhecimentos'];
+  html+=`<div class="card"><div class="card-title">Avaliação da capacitação</div>${renderMatrizIndices(lista,qCap,4,['SIM','PARCIAL','NÃO','N/A'])}</div>`;
+
+  // Índices instrutor
+  const qInst=['Clareza','Métodos','Conhecimento','Recursos didáticos','Relacionamento'];
+  html+=`<div class="card"><div class="card-title">Avaliação do instrutor</div>${renderMatrizIndices(lista,qInst,12,['Ótimo','Bom','Regular','Fraco'])}</div>`;
+
+  // Comentários anônimos
+  const positivos=lista.filter(a=>a[17]).map(a=>`<div style="padding:8px;border-left:3px solid var(--verde);margin-bottom:8px;font-size:13px;">👍 ${a[17]}</div>`);
+  const melhorias=lista.filter(a=>a[18]).map(a=>`<div style="padding:8px;border-left:3px solid var(--amber);margin-bottom:8px;font-size:13px;">💡 ${a[18]}</div>`);
+  if(positivos.length||melhorias.length){
+    html+=`<div class="card"><div class="card-title">Comentários anônimos</div>`;
+    if(positivos.length) html+='<p style="font-weight:700;font-size:13px;margin-bottom:8px;">Pontos positivos</p>'+positivos.join('');
+    if(melhorias.length) html+='<p style="font-weight:700;font-size:13px;margin:12px 0 8px;">Pontos de melhoria</p>'+melhorias.join('');
+    html+='</div>';
+  }
+  el.innerHTML=html;
+}
+
+function exportarAvaliacoesExcel(){
+  const idAcao=document.getElementById('av-acao-sel').value;
+  let lista=S.avaliacoes;
+  if(idAcao) lista=lista.filter(a=>a[2]===idAcao);
+  const acao=S.acoes.find(a=>a[0]===idAcao);
+  const wb=XLSX.utils.book_new();
+  const header=['Data','CPF','ID Ação','Título',
+    'Q1-Objetivo','Q2-CH','Q3-Programa','Q4-Prática','Q5-Instalações','Q6-Material','Q7-Aproveitamento','Q8-Aplicação',
+    'I1-Clareza','I2-Métodos','I3-Conhecimento','I4-Recursos','I5-Relacionamento',
+    'Ponto positivo','Ponto melhoria','Nota geral'];
+  const dados=[header,...lista];
+  const ws=XLSX.utils.aoa_to_sheet(dados);
+  ws['!cols']=[{wch:18},{wch:14},{wch:10},{wch:35},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:12},{wch:30},{wch:30},{wch:10}];
+  XLSX.utils.book_append_sheet(wb,ws,'Avaliações');
+  XLSX.writeFile(wb,`Avaliacoes_${idAcao||'todas'}_${new Date().toISOString().slice(0,10)}.xlsx`);
 }
 
 // ── EXPORTAR ──────────────────────────────────────────────────────────────
