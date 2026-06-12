@@ -606,6 +606,9 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
         <div class="fg"><label class="fl">Vagas (opcional)</label>
           <input type="number" id="coord-ed-vagas" placeholder="Ex: 30"/></div>
       </div>
+      <div class="info-box" style="margin-top:4px;">
+        💡 O salvamento pode levar alguns segundos pois atualiza cada campo diretamente na planilha.
+      </div>
       <div class="btn-row">
         <button class="btn btn-outline" onclick="ir('pg-coord-painel')">Cancelar</button>
         <button class="btn btn-primary" id="coord-ed-salvar-btn" onclick="salvarEdicaoCoord()">Salvar alterações</button>
@@ -767,6 +770,9 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
             <div class="fg"><label class="fl">Vagas (opcional)</label>
               <input type="number" id="ed-vagas" placeholder="Ex: 30"/>
             </div>
+          </div>
+          <div class="info-box" style="margin-top:4px;">
+            💡 O salvamento pode levar alguns segundos pois atualiza cada campo diretamente na planilha.
           </div>
           <div class="btn-row">
             <button class="btn btn-outline" onclick="udpIr('udp-acoes',null)">Cancelar</button>
@@ -1304,25 +1310,32 @@ async function salvarEdicaoCoord(){
   S.acoes[idx][15] = document.getElementById('coord-ed-inscricao-inicio').value;
   S.acoes[idx][16] = document.getElementById('coord-ed-inscricao-fim').value;
   S.acoes[idx][17] = document.getElementById('coord-ed-vagas').value||'';
-  for(const c of campos){
-    await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({
-      aba:'ACOES',acao:'UPDATE',colChave:1,chave:id,col:c.col,valor:c.val
-    })});
-  }
+  // Gravar em paralelo
+  await Promise.all(campos.map(c=>fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({
+    aba:'ACOES',acao:'UPDATE',colChave:1,chave:id,col:c.col,valor:c.val
+  })})));
 
   // Feedback visual
   const btn=document.getElementById('coord-ed-salvar-btn');
   if(btn){
-    btn.textContent='✓ Salvo!';
+    btn.textContent='✓ Salvo com sucesso!';
     btn.style.background='var(--verde)';
-    btn.disabled=true;
+    btn.disabled=false;
+    // Mostrar confirmação na tela
+    const infoEl = document.querySelector('#pg-coord-editar .info-box');
+    if(infoEl){
+      infoEl.style.background='var(--verde-cl)';
+      infoEl.style.borderColor='#9FE1CB';
+      infoEl.style.color='var(--verde)';
+      infoEl.textContent='✓ Alterações salvas com sucesso na planilha!';
+    }
     setTimeout(()=>{
       btn.textContent='Salvar alterações';
       btn.style.background='';
       btn.disabled=false;
       ir('pg-coord-painel');
       renderCoordAcoes();
-    }, 1500);
+    }, 2000);
   } else {
     ir('pg-coord-painel');
     renderCoordAcoes();
@@ -1589,9 +1602,14 @@ function editarAcao(idAcao){
   document.getElementById('ed-coord-cpf').value = coordFmt;
   const srv = buscarServidor(coordCPF);
   document.getElementById('ed-coord-nome').textContent = srv ? srv[1] : (a[7]||'');
-  // Resetar botão ao abrir
+  // Resetar botão e info-box ao abrir
   const btn = document.querySelector('#udp-editar .btn-primary');
   if(btn){ btn.textContent='Salvar alterações'; btn.style.background=''; btn.disabled=false; }
+  const infoEl = document.querySelector('#udp-editar .info-box');
+  if(infoEl){
+    infoEl.style.background='';infoEl.style.borderColor='';infoEl.style.color='';
+    infoEl.textContent='💡 O salvamento pode levar alguns segundos pois atualiza cada campo diretamente na planilha.';
+  }
   udpIr('udp-editar', null);
 }
 
@@ -1642,26 +1660,32 @@ async function salvarEdicao(){
   S.acoes[idx][15] = document.getElementById('ed-inscricao-inicio').value;
   S.acoes[idx][16] = document.getElementById('ed-inscricao-fim').value;
   S.acoes[idx][17] = document.getElementById('ed-vagas').value||'';
-  console.log('Gravando CPF coordenador:', coordCPF, 'na coluna 13 da ação', id);
-  for(const c of campos){
-    await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({
-      aba:'ACOES',acao:'UPDATE',colChave:1,chave:id,col:c.col,valor:c.val
-    })});
-  }
-  // Feedback visual no botão
+  // Gravar em paralelo para acelerar
+  const btn_ed = document.querySelector('#udp-editar .btn-primary');
+  if(btn_ed){ btn_ed.textContent='Salvando...'; btn_ed.disabled=true; }
+  await Promise.all(campos.map(c=>fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({
+    aba:'ACOES',acao:'UPDATE',colChave:1,chave:id,col:c.col,valor:c.val
+  })})));
+  // Feedback visual
   const btn = document.querySelector('#udp-editar .btn-primary');
   if(btn){
-    const textoOriginal = btn.textContent;
-    btn.textContent = '✓ Salvo!';
+    btn.textContent = '✓ Salvo com sucesso!';
     btn.style.background = 'var(--verde)';
-    btn.disabled = true;
+    btn.disabled = false;
+    // Mostrar caixa de confirmação na tela
+    const infoEl = document.querySelector('#udp-editar .info-box');
+    if(infoEl){
+      infoEl.style.background = 'var(--verde-cl)';
+      infoEl.style.borderColor = '#9FE1CB';
+      infoEl.style.color = 'var(--verde)';
+      infoEl.textContent = '✓ Alterações salvas com sucesso na planilha!';
+    }
     setTimeout(()=>{
-      btn.textContent = textoOriginal;
+      btn.textContent = 'Salvar alterações';
       btn.style.background = '';
-      btn.disabled = false;
       udpIr('udp-acoes', null);
       renderUDPAcoes();
-    }, 1500);
+    }, 2000);
   } else {
     udpIr('udp-acoes', null);
     renderUDPAcoes();
@@ -1677,11 +1701,14 @@ document.addEventListener('input', function(e){
       if(srv){
         document.getElementById('ed-coord-nome').textContent = srv[1];
         document.getElementById('ed-coord-nome').style.color = 'var(--verde)';
-        // Atualizar unidade automaticamente com a lotação do coordenador
+        // Atualizar unidade com lotação do coordenador (coluna G = índice 6)
         const unidadeEl = document.getElementById('ed-unidade');
         if(unidadeEl && srv[6]) unidadeEl.value = srv[6];
+        // Também atualizar no coordenador se existir
+        const unidadeEl2 = document.getElementById('coord-ed-unidade');
+        if(unidadeEl2 && srv[6]) unidadeEl2.value = srv[6];
       } else {
-        document.getElementById('ed-coord-nome').textContent = 'CPF não encontrado na base';
+        document.getElementById('ed-coord-nome').textContent = 'CPF não encontrado na base SERVIDORES';
         document.getElementById('ed-coord-nome').style.color = 'var(--amber)';
       }
     } else {
