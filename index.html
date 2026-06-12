@@ -1136,6 +1136,9 @@ function editarAcao(idAcao){
   document.getElementById('ed-coord-cpf').value = coordFmt;
   const srv = buscarServidor(coordCPF);
   document.getElementById('ed-coord-nome').textContent = srv ? srv[1] : (a[7]||'');
+  // Resetar botão ao abrir
+  const btn = document.querySelector('#udp-editar .btn-primary');
+  if(btn){ btn.textContent='Salvar alterações'; btn.style.background=''; btn.disabled=false; }
   udpIr('udp-editar', null);
 }
 
@@ -1178,13 +1181,24 @@ async function salvarEdicao(){
       aba:'ACOES',acao:'UPDATE',colChave:1,chave:id,col:c.col,valor:c.val
     })});
   }
-  // Feedback visual
+  // Feedback visual no botão
   const btn = document.querySelector('#udp-editar .btn-primary');
-  if(btn){ btn.textContent='✓ Salvo!'; btn.style.background='var(--verde)'; }
-  setTimeout(()=>{
-    udpIr('udp-acoes',null);
+  if(btn){
+    const textoOriginal = btn.textContent;
+    btn.textContent = '✓ Salvo!';
+    btn.style.background = 'var(--verde)';
+    btn.disabled = true;
+    setTimeout(()=>{
+      btn.textContent = textoOriginal;
+      btn.style.background = '';
+      btn.disabled = false;
+      udpIr('udp-acoes', null);
+      renderUDPAcoes();
+    }, 1500);
+  } else {
+    udpIr('udp-acoes', null);
     renderUDPAcoes();
-  }, 1200);
+  }
 }
 
 // Auto-preencher nome ao digitar CPF do coordenador na edição
