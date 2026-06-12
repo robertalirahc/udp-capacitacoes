@@ -1815,8 +1815,8 @@ async function sincronizar(){
   if(syncEl) syncEl.textContent='● Sincronizando...';
   try{
     const [a,p,pf,av,sv]=await Promise.all([
-      lerAba('ACOES!A3:M1000'),
-      lerAba('PARTICIPANTES!A3:N5000'),
+      lerAba('ACOES!A3:Q1000'),
+      lerAba('PARTICIPANTES!A3:O5000'),
       lerAba('PERFIL_EQUIDADE!A4:H5000'),
       lerAba('AVALIACAO!A4:T5000'),
       lerAba('SERVIDORES!A2:L5000'),
@@ -1842,8 +1842,8 @@ async function sincronizarSilencioso(){
   if(!S.sheetId||!S.apiKey) return;
   try{
     const [a,p,pf,sv]=await Promise.all([
-      lerAba('ACOES!A3:M1000'),
-      lerAba('PARTICIPANTES!A3:N5000'),
+      lerAba('ACOES!A3:Q1000'),
+      lerAba('PARTICIPANTES!A3:O5000'),
       lerAba('PERFIL_EQUIDADE!A4:H5000'),
       lerAba('SERVIDORES!A2:L5000'),
     ]);
@@ -1851,7 +1851,7 @@ async function sincronizarSilencioso(){
     S.participantes=p.filter(r=>r[0]);
     S.perfis=pf.filter(r=>r[0]);
     S.servidores=sv.filter(r=>r[0]);
-  }catch(e){}
+  }catch(e){ console.warn('sincronizarSilencioso erro:',e); }
 }
 
 async function gravarLinha(aba,linha,acao){
@@ -1895,14 +1895,20 @@ async function testarConexao(){
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 window.onload=async()=>{
-  S.sheetId=localStorage.getItem('udp_sheet_id')||'';
-  S.apiKey=localStorage.getItem('udp_api_key')||'';
-  // Verificar params de URL (links fixos)
-  const p=new URLSearchParams(window.location.search);
-  const tipo=p.get('tipo');
-  if(S.sheetId&&S.apiKey) await sincronizarSilencioso();
-  if(tipo==='checkin') irCheckin();
-  else if(tipo==='avaliacao') irAvaliacao();
+  try {
+    S.sheetId=localStorage.getItem('udp_sheet_id')||'';
+    S.apiKey=localStorage.getItem('udp_api_key')||'';
+    // Verificar params de URL (links fixos)
+    const p=new URLSearchParams(window.location.search);
+    const tipo=p.get('tipo');
+    if(S.sheetId&&S.apiKey){
+      try { await sincronizarSilencioso(); } catch(e){ console.warn('Sync falhou:',e); }
+    }
+    if(tipo==='checkin') irCheckin();
+    else if(tipo==='avaliacao') irAvaliacao();
+  } catch(e) {
+    console.error('Erro no onload:',e);
+  }
 };
 </script>
 </body>
