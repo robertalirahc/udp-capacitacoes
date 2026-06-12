@@ -569,6 +569,33 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
         </div>
       </div>
 
+      <!-- Editar ação -->
+      <div id="udp-editar" class="udp-sc" style="display:none;">
+        <div class="card" style="max-width:600px;">
+          <div class="info-box">Editando ação — altere os campos desejados e salve.</div>
+          <input type="hidden" id="ed-id"/>
+          <div class="fg"><label class="fl">Título *</label><input type="text" id="ed-titulo"/></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="fg"><label class="fl">Tipo</label>
+              <select id="ed-tipo"><option>Treinamento/Turma</option><option>Palestra/Evento</option><option>Curso Online</option><option>Workshop</option><option>Outro</option></select></div>
+            <div class="fg"><label class="fl">Modalidade</label>
+              <select id="ed-modal"><option>Presencial</option><option>Remoto</option><option>Híbrido</option></select></div>
+            <div class="fg"><label class="fl">Data prevista</label><input type="date" id="ed-data"/></div>
+            <div class="fg"><label class="fl">Carga horária</label><input type="text" id="ed-ch"/></div>
+            <div class="fg"><label class="fl">Local</label><input type="text" id="ed-local"/></div>
+            <div class="fg"><label class="fl">Coordenador (CPF)</label>
+              <input type="tel" id="ed-coord-cpf" oninput="formatarCPF(this)" placeholder="CPF do coordenador"/>
+              <div class="fh" id="ed-coord-nome" style="margin-top:6px;font-weight:600;color:var(--verde);"></div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Unidade</label><input type="text" id="ed-unidade"/></div>
+          <div class="btn-row">
+            <button class="btn btn-outline" onclick="udpIr('udp-acoes',null)">Cancelar</button>
+            <button class="btn btn-primary" onclick="salvarEdicao()">Salvar alterações</button>
+          </div>
+        </div>
+      </div>
+
       <!-- Relatório -->
       <div id="udp-relatorio" class="udp-sc" style="display:none;">
         <div class="card">
@@ -1062,6 +1089,7 @@ function renderUDPAcoes(){
         <button class="btn btn-outline btn-sm" onclick="toggleStatus('${a[0]}','checkin')">${stCI==='Aberto'?'Fechar CI':'Abrir CI'}</button>
         <button class="btn btn-outline btn-sm" onclick="toggleStatus('${a[0]}','avaliacao')">${stAV==='Aberto'?'Fechar AV':'Abrir AV'}</button>
         <button class="btn btn-outline btn-sm" onclick="exportarAnexoIV('${a[0]}')">Anexo IV</button>
+        <button class="btn btn-outline btn-sm" onclick="editarAcao('${a[0]}')">✏️ Editar</button>
       </div>
     </div>`;
   }).join('');
@@ -1090,6 +1118,84 @@ async function salvarAcao(){
   udpIr('udp-acoes',null);
   renderUDPAcoes();
 }
+
+function editarAcao(idAcao){
+  const a=S.acoes.find(x=>x[0]===idAcao);
+  if(!a) return;
+  document.getElementById('ed-id').value       = a[0];
+  document.getElementById('ed-titulo').value   = a[1]||'';
+  document.getElementById('ed-tipo').value     = a[2]||'Treinamento/Turma';
+  document.getElementById('ed-modal').value    = a[3]||'Presencial';
+  document.getElementById('ed-data').value     = a[4]||'';
+  document.getElementById('ed-ch').value       = a[5]||'';
+  document.getElementById('ed-local').value    = a[6]||'';
+  document.getElementById('ed-unidade').value  = a[8]||'';
+  // CPF do coordenador (coluna 12)
+  const coordCPF = a[12]||'';
+  const coordFmt = coordCPF.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/,'$1.$2.$3-$4');
+  document.getElementById('ed-coord-cpf').value = coordFmt;
+  const srv = buscarServidor(coordCPF);
+  document.getElementById('ed-coord-nome').textContent = srv ? srv[1] : (a[7]||'');
+  udpIr('udp-editar', null);
+}
+
+async function salvarEdicao(){
+  const id    = document.getElementById('ed-id').value;
+  const titulo = document.getElementById('ed-titulo').value.trim();
+  if(!titulo){alert('Informe o título.');return;}
+  const coordCPF = limparCPF(document.getElementById('ed-coord-cpf').value);
+  const coordSrv = buscarServidor(coordCPF);
+  const coordNome = coordSrv ? coordSrv[1] : document.getElementById('ed-coord-cpf').value;
+
+  const idx = S.acoes.findIndex(a=>a[0]===id);
+  if(idx<0){alert('Ação não encontrada.');return;}
+
+  // Atualizar memória
+  S.acoes[idx][1]  = titulo;
+  S.acoes[idx][2]  = document.getElementById('ed-tipo').value;
+  S.acoes[idx][3]  = document.getElementById('ed-modal').value;
+  S.acoes[idx][4]  = document.getElementById('ed-data').value;
+  S.acoes[idx][5]  = document.getElementById('ed-ch').value;
+  S.acoes[idx][6]  = document.getElementById('ed-local').value;
+  S.acoes[idx][7]  = coordNome;
+  S.acoes[idx][8]  = document.getElementById('ed-unidade').value;
+  S.acoes[idx][12] = coordCPF;
+
+  // Gravar cada campo alterado na planilha
+  const campos = [
+    {col:2, val:titulo},
+    {col:3, val:S.acoes[idx][2]},
+    {col:4, val:S.acoes[idx][3]},
+    {col:5, val:S.acoes[idx][4]},
+    {col:6, val:S.acoes[idx][5]},
+    {col:7, val:S.acoes[idx][6]},
+    {col:8, val:coordNome},
+    {col:9, val:S.acoes[idx][8]},
+    {col:13,val:coordCPF},
+  ];
+  for(const c of campos){
+    await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({
+      aba:'ACOES',acao:'UPDATE',colChave:1,chave:id,col:c.col,valor:c.val
+    })});
+  }
+  alert(`Ação ${id} atualizada!`);
+  udpIr('udp-acoes',null);
+  renderUDPAcoes();
+}
+
+// Auto-preencher nome ao digitar CPF do coordenador na edição
+document.addEventListener('input', function(e){
+  if(e.target.id==='ed-coord-cpf'){
+    const cpf=limparCPF(e.target.value);
+    if(cpf.length===11){
+      const srv=buscarServidor(cpf);
+      document.getElementById('ed-coord-nome').textContent = srv?srv[1]:'CPF não encontrado na base';
+      document.getElementById('ed-coord-nome').style.color = srv?'var(--verde)':'var(--amber)';
+    } else {
+      document.getElementById('ed-coord-nome').textContent='';
+    }
+  }
+});
 
 function popularSelects(){
   ['rel-acao','av-acao-sel'].forEach(id=>{
