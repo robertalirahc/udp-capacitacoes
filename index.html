@@ -717,10 +717,15 @@ function udpIr(id, navEl){
 function formatarCPF(el){
   let v=el.value.replace(/\D/g,'');
   if(v.length>11) v=v.slice(0,11);
-  v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');
-  el.value=v;
+  if(v.length<=3) el.value=v;
+  else if(v.length<=6) el.value=v.slice(0,3)+'.'+v.slice(3);
+  else if(v.length<=9) el.value=v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6);
+  else el.value=v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6,9)+'-'+v.slice(9);
 }
-function limparCPF(c){ return (c||'').replace(/\D/g,''); }
+function limparCPF(c){
+  const s=(c||'').replace(/\D/g,'');
+  return s.padStart(11,'0'); // garante 11 dígitos com zero à esquerda
+}
 
 function buscarServidor(cpf){
   const cl=limparCPF(cpf);
@@ -1206,14 +1211,22 @@ async function salvarEdicao(){
   }
 }
 
-// Auto-preencher nome ao digitar CPF do coordenador na edição
+// Auto-preencher nome e unidade ao digitar CPF do coordenador na edição
 document.addEventListener('input', function(e){
   if(e.target.id==='ed-coord-cpf'){
     const cpf=limparCPF(e.target.value);
     if(cpf.length===11){
       const srv=buscarServidor(cpf);
-      document.getElementById('ed-coord-nome').textContent = srv?srv[1]:'CPF não encontrado na base';
-      document.getElementById('ed-coord-nome').style.color = srv?'var(--verde)':'var(--amber)';
+      if(srv){
+        document.getElementById('ed-coord-nome').textContent = srv[1];
+        document.getElementById('ed-coord-nome').style.color = 'var(--verde)';
+        // Atualizar unidade automaticamente com a lotação do coordenador
+        const unidadeEl = document.getElementById('ed-unidade');
+        if(unidadeEl && srv[6]) unidadeEl.value = srv[6];
+      } else {
+        document.getElementById('ed-coord-nome').textContent = 'CPF não encontrado na base';
+        document.getElementById('ed-coord-nome').style.color = 'var(--amber)';
+      }
     } else {
       document.getElementById('ed-coord-nome').textContent='';
     }
