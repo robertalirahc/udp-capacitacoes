@@ -1094,14 +1094,35 @@ async function confirmarInscricao(){
 
 function irCheckin(){
   const abertos = S.acoes.filter(a=>a[9]==='Aberto');
-  if(!abertos.length){ ir('pg-ci-cpf'); document.getElementById('ci-fechado').style.display='block'; document.getElementById('ci-form').style.display='none'; }
-  else{ ir('pg-ci-cpf'); document.getElementById('ci-fechado').style.display='none'; document.getElementById('ci-form').style.display='block'; }
+  ir('pg-ci-cpf');
+  if(!abertos.length){
+    document.getElementById('ci-fechado').style.display='block';
+    document.getElementById('ci-form').style.display='none';
+    // Se não há dados, pode ser que ainda não sincronizou
+    if(!S.acoes.length && S.sheetId && S.apiKey){
+      document.getElementById('ci-fechado').innerHTML='<div style="font-size:48px;">⏳</div><div style="font-size:18px;font-weight:700;color:var(--azul2);margin:12px 0 8px;">Carregando eventos...</div><div style="font-size:14px;color:var(--txt3);">Aguarde um momento.</div>';
+      sincronizarSilencioso().then(()=>irCheckin());
+    }
+  } else {
+    document.getElementById('ci-fechado').style.display='none';
+    document.getElementById('ci-form').style.display='block';
+  }
 }
 
 function irAvaliacao(){
-  const abertos = S.acoes.filter(a=>a[10]==='Aberto'); // coluna K = status avaliação
-  if(!abertos.length){ ir('pg-av-cpf'); document.getElementById('av-fechado').style.display='block'; document.getElementById('av-form-cpf').style.display='none'; }
-  else{ ir('pg-av-cpf'); document.getElementById('av-fechado').style.display='none'; document.getElementById('av-form-cpf').style.display='block'; }
+  const abertos = S.acoes.filter(a=>a[10]==='Aberto');
+  ir('pg-av-cpf');
+  if(!abertos.length){
+    document.getElementById('av-fechado').style.display='block';
+    document.getElementById('av-form-cpf').style.display='none';
+    if(!S.acoes.length && S.sheetId && S.apiKey){
+      document.getElementById('av-fechado').innerHTML='<div style="font-size:48px;">⏳</div><div style="font-size:18px;font-weight:700;color:var(--azul2);margin:12px 0 8px;">Carregando eventos...</div><div style="font-size:14px;color:var(--txt3);">Aguarde um momento.</div>';
+      sincronizarSilencioso().then(()=>irAvaliacao());
+    }
+  } else {
+    document.getElementById('av-fechado').style.display='none';
+    document.getElementById('av-form-cpf').style.display='block';
+  }
 }
 
 function irUDP(){
@@ -2341,14 +2362,24 @@ window.onload=async()=>{
   try {
     S.sheetId=localStorage.getItem('udp_sheet_id')||'';
     S.apiKey=localStorage.getItem('udp_api_key')||'';
-    // Verificar params de URL (links fixos)
     const p=new URLSearchParams(window.location.search);
     const tipo=p.get('tipo');
-    if(S.sheetId&&S.apiKey){
-      try { await sincronizarSilencioso(); } catch(e){ console.warn('Sync falhou:',e); }
+
+    if(tipo==='checkin'||tipo==='avaliacao'){
+      // Sincronizar PRIMEIRO, depois navegar
+      if(S.sheetId&&S.apiKey){
+        try { await sincronizarSilencioso(); } catch(e){ console.warn('Sync:',e); }
+      }
+      // Agora os dados estão carregados
+      if(tipo==='checkin') irCheckin();
+      else if(tipo==='avaliacao') irAvaliacao();
+      return;
     }
-    if(tipo==='checkin') irCheckin();
-    else if(tipo==='avaliacao') irAvaliacao();
+
+    // Para outras páginas, sync em background
+    if(S.sheetId&&S.apiKey){
+      try { await sincronizarSilencioso(); } catch(e){ console.warn('Sync:',e); }
+    }
   } catch(e) {
     console.error('Erro no onload:',e);
   }
