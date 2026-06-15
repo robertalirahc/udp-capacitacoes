@@ -153,7 +153,7 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
   .udp-nav.active{background:rgba(255,255,255,.15);border-left-color:#fff;font-weight:700;color:#fff;}
   .udp-main{margin-left:220px;flex:1;}
   .udp-top{background:var(--white);border-bottom:1px solid var(--borda);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
-  .udp-cnt{padding:24px;max-width:1000px;}
+  .udp-cnt{padding:24px 24px 80px;max-width:1000px;}
   .metrics{grid-template-columns:repeat(4,1fr);}
 }
 
@@ -732,9 +732,33 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
 </div>
 
 <!-- ═══════════════════════════════════════
+     UDP: LOGIN
+═══════════════════════════════════════ -->
+<div id="pg-udp-login" class="pg">
+  <div class="hdr">
+    <span class="hdr-back" onclick="ir('pg-home')">‹</span>
+    <div><div class="hdr-title">Painel UDP</div><div class="hdr-sub">Acesso restrito</div></div>
+  </div>
+  <div class="cnt">
+    <div class="card">
+      <div class="lgpd-box">Acesso restrito à Unidade de Desenvolvimento de Pessoal — UDP/DIVGP.</div>
+      <div class="fg">
+        <label class="fl">Seu CPF</label>
+        <input type="tel" id="udp-login-cpf" placeholder="00000000000" maxlength="14"
+               oninput="formatarCPF(this)" inputmode="numeric"
+               onkeydown="if(event.key==='Enter') loginUDP()"/>
+      </div>
+      <button class="btn btn-primary" onclick="loginUDP()">Entrar</button>
+      <div id="udp-login-erro" style="margin-top:10px;"></div>
+    </div>
+  </div>
+  <div class="rodape">Sistema elaborado pela UDP/DIVGP do HC-UFPE/HU Brasil</div>
+</div>
+
+<!-- ═══════════════════════════════════════
      UDP: PAINEL COMPLETO
 ═══════════════════════════════════════ -->
-<div id="pg-udp" class="pg">
+<div id="pg-udp" class="pg" style="padding-bottom:0;">
 <div class="udp-wrap">
   <div class="udp-side">
     <div class="udp-logo"><div class="t">UDP Capacitações</div><div class="s">HC-UFPE · EBSERH</div></div>
@@ -978,6 +1002,15 @@ const BASE_URL   = window.location.href.split('?')[0];
 const DEFAULT_SHEET_ID = '1s_0BifQNFKzl6iOBJyJODNGJ6f6gPdp-BGEstQxS2u8';
 const DEFAULT_API_KEY  = 'AIzaSyBbrvCfYHMmEvchu-kIeOnvwfiJ7aJ1iVo';
 
+// CPFs autorizados ao painel UDP
+const UDP_CPFS = [
+  '06614805428', // Enilda
+  '04686697441', // Roberta
+  '00081685122', // Suellen
+  '06257164427', // Emanuelle
+  '40038564491', // Lenita
+];
+
 const S = {
   sheetId: DEFAULT_SHEET_ID,
   apiKey:  DEFAULT_API_KEY,
@@ -989,6 +1022,7 @@ const S = {
   coordCPF:'', coordNome:'',
   coordAcaoSel:null,
   lpAcaoSel:null,
+  udpNome:'',
 };
 
 // ── Navegação ─────────────────────────────────────────────────────────────
@@ -1131,13 +1165,30 @@ function irAvaliacao(){
 }
 
 function irUDP(){
+  ir('pg-udp-login');
+}
+
+function loginUDP(){
+  const cpf = limparCPF(document.getElementById('udp-login-cpf').value);
+  if(!UDP_CPFS.includes(cpf)){
+    document.getElementById('udp-login-erro').innerHTML =
+      '<div class="warn-box">CPF não autorizado para acesso ao painel UDP.</div>';
+    return;
+  }
+  const srv = buscarServidor(cpf);
+  document.getElementById('udp-login-erro').innerHTML = '';
+  S.udpNome = srv ? srv[1] : 'UDP';
   ir('pg-udp');
-  document.getElementById('cfg-id').value = S.sheetId;
-  document.getElementById('cfg-key').value = S.apiKey;
-  document.getElementById('link-ci').value = BASE_URL + '?tipo=checkin';
-  document.getElementById('link-av').value = BASE_URL + '?tipo=avaliacao';
-  if(S.sheetId && S.apiKey) sincronizar();
-  else { udpIr('udp-config', null); }
+  // Preencher configurações
+  const cfgId = document.getElementById('cfg-id');
+  const cfgKey = document.getElementById('cfg-key');
+  const linkCi = document.getElementById('link-ci');
+  const linkAv = document.getElementById('link-av');
+  if(cfgId) cfgId.value = S.sheetId;
+  if(cfgKey) cfgKey.value = S.apiKey;
+  if(linkCi) linkCi.value = BASE_URL + '?tipo=checkin';
+  if(linkAv) linkAv.value = BASE_URL + '?tipo=avaliacao';
+  sincronizar();
 }
 
 function udpIr(id, navEl){
