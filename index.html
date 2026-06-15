@@ -1009,6 +1009,7 @@ const UDP_CPFS = [
   '00081685122', // Suellen
   '06257164427', // Emanuelle
   '40038564491', // Lenita
+  '70160260434', // Luciana Leoncio
 ];
 
 const S = {
@@ -1319,8 +1320,14 @@ function selecionarEvento(id, modo){
 
 async function confirmarPresenca(){
   if(!S.eventoSel){alert('Selecione um evento.');return;}
-  const jaPresente=S.participantes.find(p=>limparCPF(p[3])===S.cpf&&p[1]===S.eventoSel[0]);
-  if(jaPresente){alert('Presença já confirmada neste evento!');ir('pg-ci-sucesso');document.getElementById('ci-suc-nome').textContent=S.nome;document.getElementById('ci-suc-evento').textContent=S.eventoSel[1];return;}
+  // Verificar se já tem check-in (não contar inscrição)
+  const jaCheckin=S.participantes.find(p=>limparCPF(p[3])===S.cpf&&p[1]===S.eventoSel[0]&&p[12]!=='Inscrito');
+  if(jaCheckin){
+    document.getElementById('ci-suc-nome').textContent=S.nome;
+    document.getElementById('ci-suc-evento').textContent=S.eventoSel[1];
+    ir('pg-ci-sucesso');
+    return;
+  }
   const srv=S.srv;
   const agora=new Date().toLocaleString('pt-BR');
   const idPre='PRE'+Date.now();
@@ -1355,6 +1362,9 @@ async function registrarExterno(){
   const unidade=document.getElementById('ext-unidade').value.trim();
   if(!cpf||!nome||!email){alert('Preencha CPF, nome e e-mail.');return;}
   if(!S.eventoSel){alert('Nenhum evento selecionado.');return;}
+  // Verificar duplicata
+  const jaCadastrado=S.participantes.find(p=>limparCPF(p[3])===cpf&&p[1]===S.eventoSel[0]&&p[12]!=='Inscrito');
+  if(jaCadastrado){alert('Este participante já tem presença confirmada neste evento!');ir('pg-ci-sucesso');return;}
   const agora=new Date().toLocaleString('pt-BR');
   const linha=['PRE'+Date.now(),S.eventoSel[0],S.eventoSel[1]||'',cpf,nome,email,vinculo,'',cargo,unidade,'Não',agora,'Checkin',''];
   S.participantes.push(linha);
@@ -1798,6 +1808,12 @@ function buscarLPCPF(){
 
 async function marcarPresente(cpf, nome, email, vinculo, siape, cargo, unidade, chefia){
   if(!S.lpAcaoSel){ alert('Selecione uma ação.'); return; }
+  // Verificar duplicata
+  const jaMarcado=S.participantes.find(p=>limparCPF(p[3])===limparCPF(cpf)&&p[1]===S.lpAcaoSel[0]&&p[12]!=='Inscrito');
+  if(jaMarcado){ 
+    document.getElementById('lp-busca-resultado').innerHTML='<div class="success-box">✓ '+nome+' já está confirmado(a).</div>';
+    return; 
+  }
   const agora = new Date().toLocaleString('pt-BR');
   const idPre = 'PRE'+Date.now();
   const hojeISO2 = new Date().toISOString().slice(0,10);
