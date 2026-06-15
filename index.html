@@ -647,7 +647,7 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
         <div class="fg"><label class="fl">Local</label>
           <input type="text" id="coord-ed-local"/></div>
         <div class="fg"><label class="fl">Data de realização</label>
-          <input type="text" id="coord-ed-data-real" placeholder="DD/MM/AAAA"/>
+          <input type="date" id="coord-ed-data-real"/>
           <div class="fh">Data em que o evento acontecerá de fato.</div></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
@@ -843,7 +843,7 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
             <div class="fg"><label class="fl">Data prevista</label><input type="date" id="ed-data"/></div>
             <div class="fg"><label class="fl">Carga horária</label><input type="text" id="ed-ch"/></div>
             <div class="fg"><label class="fl">Data de realização</label>
-              <input type="text" id="ed-data-real" placeholder="DD/MM/AAAA"/>
+              <input type="date" id="ed-data-real"/>
               <div class="fh">Data em que o evento acontecerá de fato. Usada para validar presenças.</div>
             </div>
             <div class="fg"><label class="fl">Local</label><input type="text" id="ed-local"/></div>
@@ -1743,9 +1743,9 @@ async function marcarPresente(cpf, nome, email, vinculo, siape, cargo, unidade, 
   if(!S.lpAcaoSel){ alert('Selecione uma ação.'); return; }
   const agora = new Date().toLocaleString('pt-BR');
   const idPre = 'PRE'+Date.now();
-  const hoje = new Date().toLocaleDateString('pt-BR');
+  const hojeISO2 = new Date().toISOString().slice(0,10);
   const dataReal = S.lpAcaoSel[13]||'';
-  const validado = (!dataReal||dataReal===hoje)?'Válido':'Fora da data';
+  const validado = (!dataReal||dataReal===hojeISO2)?'Válido':'Fora da data';
   const linha = [idPre,S.lpAcaoSel[0],S.lpAcaoSel[1]||'',cpf,nome,email,vinculo,siape,cargo,unidade,chefia,agora,'Coordenador',validado,'Não'];
   S.participantes.push(linha);
   await gravarLinha('PARTICIPANTES',linha,'APPEND');
