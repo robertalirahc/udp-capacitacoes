@@ -790,6 +790,19 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
       <!-- Indicadores -->
       <div id="udp-painel" class="udp-sc">
 
+        <!-- Filtro por ação -->
+        <div class="card" style="margin-bottom:16px;">
+          <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+            <div style="flex:1;min-width:200px;">
+              <label class="fl">Filtrar indicadores por ação</label>
+              <select id="painel-acao-sel" onchange="atualizarPainel()">
+                <option value="">Todas as ações</option>
+              </select>
+            </div>
+            <button class="btn btn-outline btn-sm" onclick="document.getElementById('painel-acao-sel').value='';atualizarPainel()">Limpar filtro</button>
+          </div>
+        </div>
+
         <!-- ── PAINEL CHECK-INS ── -->
         <div style="background:var(--verde);color:#fff;padding:10px 16px;border-radius:var(--radius);margin-bottom:14px;display:flex;align-items:center;gap:10px;">
           <span style="font-size:18px;">✅</span>
@@ -959,7 +972,7 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
                 <option value="inscritos">Só inscritos</option>
                 <option value="todos">Todos</option>
               </select></div>
-            <button class="btn btn-primary btn-sm" onclick="filtrarRel()">Filtrar</button>
+            <button class="btn btn-primary btn-sm" onclick="popularSelects();filtrarRel()">Filtrar</button>
             <button class="btn btn-outline btn-sm" onclick="exportarExcel()">Excel</button>
             <button class="btn btn-outline btn-sm" onclick="exportarPDF()">PDF</button>
           </div>
@@ -1121,9 +1134,18 @@ function buscarInscricao(){
         <div style="font-size:17px;font-weight:700;color:var(--verde);">${S.nome}</div>
       </div>`;
   } else {
+    // Não encontrado na base — mostrar formulário de cadastro externo para inscrição
     document.getElementById('insc-resultado').innerHTML=`
-      <div class="warn-box">CPF não encontrado na base. Você poderá se cadastrar no dia do evento no check-in.</div>`;
-    return;
+      <div class="warn-box" style="margin-bottom:12px;">CPF não encontrado na base EBSERH. Preencha seus dados para se inscrever.</div>
+      <div class="card">
+        <div class="fg"><label class="fl">Nome completo *</label><input type="text" id="insc-ext-nome" placeholder="Nome como aparecerá no certificado"/></div>
+        <div class="fg"><label class="fl">E-mail *</label><input type="email" id="insc-ext-email" placeholder="email@instituicao.br"/></div>
+        <div class="fg"><label class="fl">Vínculo *</label>
+          <select id="insc-ext-vinculo"><option>UFPE/RJU</option><option>Residente</option><option>Externo</option><option>Outro</option></select>
+        </div>
+        <div class="fg"><label class="fl">Cargo / função</label><input type="text" id="insc-ext-cargo"/></div>
+      </div>`;
+    // Mesmo sem estar na base, pode escolher evento
   }
 
   // Eventos com inscrição aberta
@@ -1915,11 +1937,41 @@ async function registrarLPExterno(){
 
 // ── UDP ───────────────────────────────────────────────────────────────────
 function atualizarPainel(){
+  // Popular select de ações se ainda não foi
+  const sel = document.getElementById('painel-acao-sel');
+  if(sel && sel.options.length <= 1){
+    S.acoes.forEach(a=>{
+      const o=document.createElement('option');
+      o.value=a[0]; o.textContent=a[0]+' — '+a[1];
+      sel.appendChild(o);
+    });
+  }
+  const idAcaoFiltro = sel ? sel.value : '';
+
+  // Montar mapa de perfis — prioridade: PERFIL_EQUIDADE, depois SERVIDORES
   const pm={};
-  S.perfis.forEach(p=>{pm[limparCPF(p[0])]=p;});
+  // 1. Da base SERVIDORES (cor=idx8, genero=idx9, pcd=idx10)
+  S.servidores.forEach(s=>{
+    const cpf = limparCPF(s[0]);
+    if(cpf) pm[cpf] = {
+      genero: s[9]||'',
+      cor:    s[8]||'',
+      pcd:    s[10]||''
+    };
+  });
+  // 2. Sobrescrever com PERFIL_EQUIDADE se existir (mais atualizado)
+  S.perfis.forEach(p=>{
+    const cpf=limparCPF(p[0]);
+    if(cpf) pm[cpf] = {
+      genero: p[3]||pm[cpf]?.genero||'',
+      cor:    p[4]||pm[cpf]?.cor||'',
+      pcd:    p[5]||pm[cpf]?.pcd||''
+    };
+  });
 
   // ── PAINEL CHECK-INS ──
-  const checkins = S.participantes.filter(p=>p[12]!=='Inscrito');
+  let checkins = S.participantes.filter(p=>p[12]!=='Inscrito');
+  if(idAcaoFiltro) checkins = checkins.filter(p=>p[1]===idAcaoFiltro);
   document.getElementById('m-acoes').textContent = S.acoes.length;
   document.getElementById('m-part').textContent  = checkins.length;
   const cpfsCI = new Set(checkins.map(r=>r[3]));
@@ -1929,9 +1981,12 @@ function atualizarPainel(){
   const genCI={},racaCI={},pcdCI={},vincCI={},lotaCI={};
   checkins.forEach(p=>{
     const pf=pm[limparCPF(p[3])];
-    genCI[pf?.[3]||'Sem perfil']  = (genCI[pf?.[3]||'Sem perfil'] ||0)+1;
-    racaCI[pf?.[4]||'Sem perfil'] = (racaCI[pf?.[4]||'Sem perfil']||0)+1;
-    pcdCI[pf?.[5]||'Sem perfil']  = (pcdCI[pf?.[5]||'Sem perfil'] ||0)+1;
+    const gen  = pf?.genero||'Sem perfil';
+    const raca = pf?.cor   ||'Sem perfil';
+    const pcd  = pf?.pcd   ||'Sem perfil';
+    genCI[gen]  = (genCI[gen] ||0)+1;
+    racaCI[raca]= (racaCI[raca]||0)+1;
+    pcdCI[pcd]  = (pcdCI[pcd] ||0)+1;
     vincCI[p[6]||'Não informado'] = (vincCI[p[6]||'Não informado']||0)+1;
     const lota = p[9]||'Não informado';
     lotaCI[lota] = (lotaCI[lota]||0)+1;
@@ -1944,7 +1999,8 @@ function atualizarPainel(){
   renderTop10('g-lota-bot', lotaCI, '#E24B4A', false);
 
   // ── PAINEL INSCRIÇÕES ──
-  const inscritos = S.participantes.filter(p=>p[12]==='Inscrito');
+  let inscritos = S.participantes.filter(p=>p[12]==='Inscrito');
+  if(idAcaoFiltro) inscritos = inscritos.filter(p=>p[1]===idAcaoFiltro);
   const totalInsc = inscritos.length;
   const cpfsInsc  = new Set(inscritos.map(r=>r[3]));
   // Quantos inscritos também fizeram check-in
@@ -1961,9 +2017,12 @@ function atualizarPainel(){
   const genI={},racaI={},pcdI={},vincI={},lotaI={};
   inscritos.forEach(p=>{
     const pf=pm[limparCPF(p[3])];
-    genI[pf?.[3]||'Sem perfil']  = (genI[pf?.[3]||'Sem perfil'] ||0)+1;
-    racaI[pf?.[4]||'Sem perfil'] = (racaI[pf?.[4]||'Sem perfil']||0)+1;
-    pcdI[pf?.[5]||'Sem perfil']  = (pcdI[pf?.[5]||'Sem perfil'] ||0)+1;
+    const gen  = pf?.genero||'Sem perfil';
+    const raca = pf?.cor   ||'Sem perfil';
+    const pcd  = pf?.pcd   ||'Sem perfil';
+    genI[gen]  = (genI[gen] ||0)+1;
+    racaI[raca]= (racaI[raca]||0)+1;
+    pcdI[pcd]  = (pcdI[pcd] ||0)+1;
     vincI[p[6]||'Não informado'] = (vincI[p[6]||'Não informado']||0)+1;
     const lota = p[9]||'Não informado';
     lotaI[lota] = (lotaI[lota]||0)+1;
@@ -2197,6 +2256,18 @@ document.addEventListener('input', function(e){
 });
 
 function popularSelects(){
+  // Popular select do painel também
+  const painelSel = document.getElementById('painel-acao-sel');
+  if(painelSel){
+    const atual = painelSel.value;
+    painelSel.innerHTML='<option value="">Todas as ações</option>';
+    S.acoes.forEach(a=>{
+      const o=document.createElement('option');
+      o.value=a[0]; o.textContent=a[0]+' — '+a[1];
+      painelSel.appendChild(o);
+    });
+    painelSel.value=atual;
+  }
   ['rel-acao','av-acao-sel'].forEach(id=>{
     const el=document.getElementById(id); if(!el) return;
     const atual=el.value;
@@ -2216,7 +2287,7 @@ function filtrarRel(){
   // tipo==='todos' não filtra
   if(idAcao) lista=lista.filter(p=>p[1]===idAcao);
   if(vinc)   lista=lista.filter(p=>p[6]===vinc);
-  document.getElementById('rel-total').textContent=`${lista.length} registro(s)`;
+  document.getElementById('rel-total').textContent=lista.length+' registro(s)';
   const el=document.getElementById('rel-tabela');
   if(!lista.length){el.innerHTML='<p style="text-align:center;color:var(--txt3);padding:20px;">Nenhum resultado.</p>';return;}
   el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px;">
