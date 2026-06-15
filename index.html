@@ -1632,7 +1632,8 @@ function verPresentes(idAcao){
   const acao=S.acoes.find(a=>a[0]===idAcao);
   S.coordAcaoSel=acao;
   document.getElementById('presentes-hdr-sub').textContent=acao?acao[1]:'';
-  const lista=S.participantes.filter(p=>p[1]===idAcao);
+  // Apenas quem fez check-in — excluir status 'Inscrito' (inscrição prévia sem comparecimento)
+  const lista=S.participantes.filter(p=>p[1]===idAcao && p[13]!=='Inscrito');
   const el=document.getElementById('presentes-lista');
   if(!lista.length){el.innerHTML='<div class="info-box">Nenhum participante ainda.</div>';return;}
   el.innerHTML=lista.map(p=>`
@@ -2072,7 +2073,7 @@ function popularSelects(){
 function filtrarRel(){
   const idAcao=document.getElementById('rel-acao').value;
   const vinc=document.getElementById('rel-vinc').value;
-  let lista=S.participantes;
+  let lista=S.participantes.filter(p=>p[13]!=='Inscrito'); // só check-ins confirmados
   if(idAcao) lista=lista.filter(p=>p[1]===idAcao);
   if(vinc) lista=lista.filter(p=>p[6]===vinc);
   document.getElementById('rel-total').textContent=`${lista.length} registro(s)`;
@@ -2253,7 +2254,7 @@ function exportarAvaliacoesExcel(){
 function exportarExcel(){
   const idAcao=document.getElementById('rel-acao').value;
   const vinc=document.getElementById('rel-vinc').value;
-  let lista=S.participantes;
+  let lista=S.participantes.filter(p=>p[13]!=='Inscrito'); // só check-ins confirmados
   if(idAcao) lista=lista.filter(p=>p[1]===idAcao);
   if(vinc) lista=lista.filter(p=>p[6]===vinc);
   const acao=S.acoes.find(a=>a[0]===idAcao);
@@ -2275,7 +2276,7 @@ function exportarExcel(){
 function exportarPDF(){
   const idAcao=document.getElementById('rel-acao').value;
   const vinc=document.getElementById('rel-vinc').value;
-  let lista=S.participantes;
+  let lista=S.participantes.filter(p=>p[13]!=='Inscrito'); // só check-ins confirmados
   if(idAcao) lista=lista.filter(p=>p[1]===idAcao);
   if(vinc) lista=lista.filter(p=>p[6]===vinc);
   const acao=S.acoes.find(a=>a[0]===idAcao);
@@ -2295,7 +2296,8 @@ function exportarPDF(){
 
 function exportarAnexoIV(idAcao){
   const acao=S.acoes.find(a=>a[0]===idAcao);
-  const lista=S.participantes.filter(p=>p[1]===idAcao);
+  // Apenas quem fez check-in — excluir status 'Inscrito' (inscrição prévia sem comparecimento)
+  const lista=S.participantes.filter(p=>p[1]===idAcao && p[13]!=='Inscrito');
   const wb=XLSX.utils.book_new();
   const dados=[
     ['ANEXO IV - RELATÓRIO CONSOLIDADO DE CARGA HORÁRIA - PARTICIPANTES'],
