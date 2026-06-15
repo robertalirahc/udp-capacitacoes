@@ -974,8 +974,13 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwyeRGP9t-mNxD8f766IeN5CXL-AFRdcwbFmLSYguaA0-bXQL4xK1uLyvQ8X0FX0rdTLg/exec';
 const BASE_URL   = window.location.href.split('?')[0];
 
+// Credenciais embutidas — qualquer pessoa que acessar já conecta automaticamente
+const DEFAULT_SHEET_ID = '1s_0BifQNFKzl6iOBJyJODNGJ6f6gPdp-BGEstQxS2u8';
+const DEFAULT_API_KEY  = 'AIzaSyBbrvCfYHMmEvchu-kIeOnvwfiJ7aJ1iVo';
+
 const S = {
-  sheetId:'', apiKey:'',
+  sheetId: DEFAULT_SHEET_ID,
+  apiKey:  DEFAULT_API_KEY,
   acoes:[], participantes:[], perfis:[], avaliacoes:[], servidores:[],
   // sessão atual
   cpf:'', nome:'', srv:null,
@@ -2334,8 +2339,8 @@ async function upsertPerfil(linha){
 
 // ── CONFIG ────────────────────────────────────────────────────────────────
 function salvarConfig(){
-  S.sheetId=document.getElementById('cfg-id').value.trim();
-  S.apiKey=document.getElementById('cfg-key').value.trim();
+  S.sheetId=document.getElementById('cfg-id').value.trim()||DEFAULT_SHEET_ID;
+  S.apiKey=document.getElementById('cfg-key').value.trim()||DEFAULT_API_KEY;
   localStorage.setItem('udp_sheet_id',S.sheetId);
   localStorage.setItem('udp_api_key',S.apiKey);
   document.getElementById('cfg-msg').innerHTML='<span style="color:var(--verde);">✓ Salvo.</span>';
@@ -2360,8 +2365,9 @@ async function testarConexao(){
 // ── INIT ──────────────────────────────────────────────────────────────────
 window.onload=async()=>{
   try {
-    S.sheetId=localStorage.getItem('udp_sheet_id')||'';
-    S.apiKey=localStorage.getItem('udp_api_key')||'';
+    // Usar credenciais do localStorage se disponíveis, senão usar as embutidas
+    S.sheetId=localStorage.getItem('udp_sheet_id')||DEFAULT_SHEET_ID;
+    S.apiKey=localStorage.getItem('udp_api_key')||DEFAULT_API_KEY;
     const p=new URLSearchParams(window.location.search);
     const tipo=p.get('tipo');
 
