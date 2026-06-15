@@ -789,18 +789,63 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
 
       <!-- Indicadores -->
       <div id="udp-painel" class="udp-sc">
-        <div class="metrics">
+
+        <!-- ── PAINEL CHECK-INS ── -->
+        <div style="background:var(--verde);color:#fff;padding:10px 16px;border-radius:var(--radius);margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:18px;">✅</span>
+          <span style="font-size:15px;font-weight:700;">Painel de Check-ins — Presenças confirmadas</span>
+        </div>
+        <div class="metrics" style="margin-bottom:16px;">
           <div class="metric"><div class="metric-val" style="color:var(--azul);" id="m-acoes">—</div><div class="metric-lbl">Ações</div></div>
-          <div class="metric"><div class="metric-val" style="color:var(--verde);" id="m-part">—</div><div class="metric-lbl">Participações</div></div>
+          <div class="metric"><div class="metric-val" style="color:var(--verde);" id="m-part">—</div><div class="metric-lbl">Check-ins</div></div>
           <div class="metric"><div class="metric-val" style="color:var(--azul2);" id="m-uniq">—</div><div class="metric-lbl">Pessoas únicas</div></div>
           <div class="metric"><div class="metric-val" style="color:var(--amber);" id="m-av">—</div><div class="metric-lbl">Avaliações</div></div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
           <div class="card"><div class="card-title">Raça / cor</div><div id="g-raca"></div></div>
           <div class="card"><div class="card-title">Gênero</div><div id="g-genero"></div></div>
           <div class="card"><div class="card-title">PCD</div><div id="g-pcd"></div></div>
           <div class="card"><div class="card-title">Vínculo</div><div id="g-vinculo"></div></div>
         </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;">
+          <div class="card">
+            <div class="card-title">🏆 Top 10 — Lotações com mais check-ins</div>
+            <div id="g-lota-top"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">⚠️ Top 10 — Lotações com menos check-ins</div>
+            <div id="g-lota-bot"></div>
+          </div>
+        </div>
+
+        <!-- ── PAINEL INSCRIÇÕES ── -->
+        <div style="background:var(--azul);color:#fff;padding:10px 16px;border-radius:var(--radius);margin-bottom:14px;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:18px;">📋</span>
+          <span style="font-size:15px;font-weight:700;">Painel de Inscrições — Interesse manifestado</span>
+        </div>
+        <div class="metrics" style="margin-bottom:16px;">
+          <div class="metric"><div class="metric-val" style="color:var(--azul);" id="mi-total">—</div><div class="metric-lbl">Inscrições</div></div>
+          <div class="metric"><div class="metric-val" style="color:var(--azul2);" id="mi-uniq">—</div><div class="metric-lbl">Pessoas únicas</div></div>
+          <div class="metric"><div class="metric-val" style="color:var(--roxo);" id="mi-taxa">—</div><div class="metric-lbl">Taxa comparecimento</div></div>
+          <div class="metric"><div class="metric-val" style="color:var(--amber);" id="mi-naovieram">—</div><div class="metric-lbl">Não compareceram</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div class="card"><div class="card-title">Raça / cor</div><div id="gi-raca"></div></div>
+          <div class="card"><div class="card-title">Gênero</div><div id="gi-genero"></div></div>
+          <div class="card"><div class="card-title">PCD</div><div id="gi-pcd"></div></div>
+          <div class="card"><div class="card-title">Vínculo</div><div id="gi-vinculo"></div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div class="card">
+            <div class="card-title">🏆 Top 10 — Lotações com mais inscrições</div>
+            <div id="gi-lota-top"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">⚠️ Top 10 — Lotações com menos inscrições</div>
+            <div id="gi-lota-bot"></div>
+          </div>
+        </div>
+
       </div>
 
       <!-- Ações -->
@@ -908,6 +953,12 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
             <div style="flex:1;min-width:180px;"><label class="fl">Ação</label><select id="rel-acao"><option value="">Todas</option></select></div>
             <div style="flex:1;min-width:140px;"><label class="fl">Vínculo</label>
               <select id="rel-vinc"><option value="">Todos</option><option>EBSERH</option><option>UFPE/RJU</option><option>Residente</option><option>Externo</option></select></div>
+            <div style="flex:1;min-width:160px;"><label class="fl">Tipo de registro</label>
+              <select id="rel-tipo">
+                <option value="checkin">Só check-ins</option>
+                <option value="inscritos">Só inscritos</option>
+                <option value="todos">Todos</option>
+              </select></div>
             <button class="btn btn-primary btn-sm" onclick="filtrarRel()">Filtrar</button>
             <button class="btn btn-outline btn-sm" onclick="exportarExcel()">Excel</button>
             <button class="btn btn-outline btn-sm" onclick="exportarPDF()">PDF</button>
@@ -1864,27 +1915,87 @@ async function registrarLPExterno(){
 
 // ── UDP ───────────────────────────────────────────────────────────────────
 function atualizarPainel(){
-  // Contar só check-ins confirmados, não inscrições
-  const checkins = S.participantes.filter(p=>p[12]!=='Inscrito');
-  document.getElementById('m-acoes').textContent=S.acoes.length;
-  document.getElementById('m-part').textContent=checkins.length;
-  const cpfs=new Set(checkins.map(r=>r[3]));
-  document.getElementById('m-uniq').textContent=cpfs.size;
-  document.getElementById('m-av').textContent=S.avaliacoes.length;
   const pm={};
   S.perfis.forEach(p=>{pm[limparCPF(p[0])]=p;});
-  const gen={},raca={},pcd={},vinc={};
+
+  // ── PAINEL CHECK-INS ──
+  const checkins = S.participantes.filter(p=>p[12]!=='Inscrito');
+  document.getElementById('m-acoes').textContent = S.acoes.length;
+  document.getElementById('m-part').textContent  = checkins.length;
+  const cpfsCI = new Set(checkins.map(r=>r[3]));
+  document.getElementById('m-uniq').textContent  = cpfsCI.size;
+  document.getElementById('m-av').textContent    = S.avaliacoes.length;
+
+  const genCI={},racaCI={},pcdCI={},vincCI={},lotaCI={};
   checkins.forEach(p=>{
     const pf=pm[limparCPF(p[3])];
-    gen[pf?.[3]||'Sem perfil']=(gen[pf?.[3]||'Sem perfil']||0)+1;
-    raca[pf?.[4]||'Sem perfil']=(raca[pf?.[4]||'Sem perfil']||0)+1;
-    pcd[pf?.[5]||'Sem perfil']=(pcd[pf?.[5]||'Sem perfil']||0)+1;
-    vinc[p[6]||'Não informado']=(vinc[p[6]||'Não informado']||0)+1;
+    genCI[pf?.[3]||'Sem perfil']  = (genCI[pf?.[3]||'Sem perfil'] ||0)+1;
+    racaCI[pf?.[4]||'Sem perfil'] = (racaCI[pf?.[4]||'Sem perfil']||0)+1;
+    pcdCI[pf?.[5]||'Sem perfil']  = (pcdCI[pf?.[5]||'Sem perfil'] ||0)+1;
+    vincCI[p[6]||'Não informado'] = (vincCI[p[6]||'Não informado']||0)+1;
+    const lota = p[9]||'Não informado';
+    lotaCI[lota] = (lotaCI[lota]||0)+1;
   });
-  renderGraf('g-raca',raca,'#378ADD');
-  renderGraf('g-genero',gen,'#D4537E');
-  renderGraf('g-pcd',pcd,'#1D9E75');
-  renderGraf('g-vinculo',vinc,'#BA7517');
+  renderGraf('g-raca',   racaCI, '#378ADD');
+  renderGraf('g-genero', genCI,  '#D4537E');
+  renderGraf('g-pcd',    pcdCI,  '#1D9E75');
+  renderGraf('g-vinculo',vincCI, '#BA7517');
+  renderTop10('g-lota-top', lotaCI, '#1D9E75', true);
+  renderTop10('g-lota-bot', lotaCI, '#E24B4A', false);
+
+  // ── PAINEL INSCRIÇÕES ──
+  const inscritos = S.participantes.filter(p=>p[12]==='Inscrito');
+  const totalInsc = inscritos.length;
+  const cpfsInsc  = new Set(inscritos.map(r=>r[3]));
+  // Quantos inscritos também fizeram check-in
+  const cpfsCI_set = new Set(checkins.map(r=>limparCPF(r[3])));
+  const compareceram = inscritos.filter(p=>cpfsCI_set.has(limparCPF(p[3]))).length;
+  const naoVieram = totalInsc - compareceram;
+  const taxa = totalInsc > 0 ? Math.round(compareceram/totalInsc*100)+'%' : '—';
+
+  document.getElementById('mi-total').textContent    = totalInsc;
+  document.getElementById('mi-uniq').textContent     = cpfsInsc.size;
+  document.getElementById('mi-taxa').textContent     = taxa;
+  document.getElementById('mi-naovieram').textContent = naoVieram;
+
+  const genI={},racaI={},pcdI={},vincI={},lotaI={};
+  inscritos.forEach(p=>{
+    const pf=pm[limparCPF(p[3])];
+    genI[pf?.[3]||'Sem perfil']  = (genI[pf?.[3]||'Sem perfil'] ||0)+1;
+    racaI[pf?.[4]||'Sem perfil'] = (racaI[pf?.[4]||'Sem perfil']||0)+1;
+    pcdI[pf?.[5]||'Sem perfil']  = (pcdI[pf?.[5]||'Sem perfil'] ||0)+1;
+    vincI[p[6]||'Não informado'] = (vincI[p[6]||'Não informado']||0)+1;
+    const lota = p[9]||'Não informado';
+    lotaI[lota] = (lotaI[lota]||0)+1;
+  });
+  renderGraf('gi-raca',   racaI, '#378ADD');
+  renderGraf('gi-genero', genI,  '#D4537E');
+  renderGraf('gi-pcd',    pcdI,  '#1D9E75');
+  renderGraf('gi-vinculo',vincI, '#BA7517');
+  renderTop10('gi-lota-top', lotaI, '#185FA5', true);
+  renderTop10('gi-lota-bot', lotaI, '#854F0B', false);
+}
+
+function renderTop10(id, obj, cor, top){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const total = Object.values(obj).reduce((a,b)=>a+b,0)||1;
+  const sorted = Object.entries(obj).sort((a,b)=> top ? b[1]-a[1] : a[1]-b[1]);
+  const lista = sorted.slice(0,10);
+  if(!lista.length){
+    el.innerHTML='<p style="font-size:12px;color:var(--txt3);">Sem dados.</p>';
+    return;
+  }
+  const max = lista[0][1]||1;
+  el.innerHTML = lista.map(([k,v],i)=>{
+    const pct = Math.round(v/max*100);
+    const pctTotal = Math.round(v/total*100);
+    return '<div class="bar-row">'
+      +'<span class="bar-lbl" style="width:150px;font-size:11px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="'+k+'">'+(i+1)+'. '+k+'</span>'
+      +'<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+cor+';color:#fff;">'+pctTotal+'%</div></div>'
+      +'<span class="bar-cnt">'+v+'</span>'
+      +'</div>';
+  }).join('');
 }
 
 function renderGraf(id,obj,cor){
@@ -2098,15 +2209,19 @@ function popularSelects(){
 function filtrarRel(){
   const idAcao=document.getElementById('rel-acao').value;
   const vinc=document.getElementById('rel-vinc').value;
-  let lista=S.participantes.filter(p=>p[12]!=='Inscrito'); // só check-ins confirmados
+  const tipo=document.getElementById('rel-tipo')?.value||'checkin';
+  let lista=S.participantes;
+  if(tipo==='checkin')   lista=lista.filter(p=>p[12]!=='Inscrito');
+  else if(tipo==='inscritos') lista=lista.filter(p=>p[12]==='Inscrito');
+  // tipo==='todos' não filtra
   if(idAcao) lista=lista.filter(p=>p[1]===idAcao);
-  if(vinc) lista=lista.filter(p=>p[6]===vinc);
+  if(vinc)   lista=lista.filter(p=>p[6]===vinc);
   document.getElementById('rel-total').textContent=`${lista.length} registro(s)`;
   const el=document.getElementById('rel-tabela');
   if(!lista.length){el.innerHTML='<p style="text-align:center;color:var(--txt3);padding:20px;">Nenhum resultado.</p>';return;}
   el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px;">
     <thead><tr style="background:var(--azul);color:#fff;">
-      <th style="padding:8px;">Nome</th><th>CPF</th><th>E-mail</th><th>Cargo</th><th>Vínculo</th><th>Chefia</th><th>Ação</th><th>Check-in</th><th>Validação</th>
+      <th style="padding:8px;">Nome</th><th>CPF</th><th>E-mail</th><th>Cargo</th><th>Vínculo</th><th>Chefia</th><th>Tipo</th><th>Ação</th><th>Check-in</th><th>Validação</th>
     </tr></thead>
     <tbody>${lista.map((p,i)=>`<tr style="background:${i%2?'var(--cinza)':'#fff'};">
       <td style="padding:8px;font-weight:600;">${p[4]||''}</td>
@@ -2115,6 +2230,7 @@ function filtrarRel(){
       <td>${p[8]||''}</td>
       <td><span class="badge badge-gray">${p[6]||''}</span></td>
       <td>${p[10]==='Sim'?'<span class="badge badge-roxo">Sim</span>':''}</td>
+      <td><span class="badge ${p[12]==='Inscrito'?'badge-blue':'badge-green'}">${p[12]==='Inscrito'?'Inscrito':'Check-in'}</span></td>
       <td style="font-size:11px;">${p[2]||p[1]||''}</td>
       <td style="font-size:11px;">${p[11]||''}</td>
       <td>${p[13]==='Fora da data'?'<span class="badge badge-amber">⚠️ Fora da data</span>':(p[13]==='Válido'?'<span class="badge badge-green">✓</span>':'')}</td>
