@@ -1123,7 +1123,7 @@ async function confirmarInscricao(){
   const idPre='INS'+Date.now();
   const linha=[idPre,S.eventoSel[0],S.eventoSel[1]||'',S.cpf,S.nome,
     srv?srv[2]:'',srv?srv[5]:'',srv?srv[3]:'',srv?srv[4]:'',srv?srv[6]:'',
-    ehChefia(srv),agora,'Inscrição','Inscrito'];
+    ehChefia(srv),agora,'Inscrito',''];
   S.participantes.push(linha);
   await gravarLinha('PARTICIPANTES',linha,'APPEND');
   document.getElementById('insc-suc-nome').textContent=S.nome;
@@ -1331,7 +1331,7 @@ async function confirmarPresenca(){
   const dataRealizacao = S.eventoSel[13]||'';
   const hoje = new Date().toLocaleDateString('pt-BR');
   const validado = (!dataRealizacao || dataRealizacao===hoje) ? 'Válido' : 'Fora da data';
-  const linha=[idPre,S.eventoSel[0],S.eventoSel[1]||'',S.cpf,S.nome,srv?srv[2]:'',srv?srv[5]:'',srv?srv[3]:'',srv?srv[4]:'',srv?srv[6]:'',chefia,agora,'Sistema',validado,eraInscrito];
+  const linha=[idPre,S.eventoSel[0],S.eventoSel[1]||'',S.cpf,S.nome,srv?srv[2]:'',srv?srv[5]:'',srv?srv[3]:'',srv?srv[4]:'',srv?srv[6]:'',chefia,agora,'Checkin',validado];
   S.participantes.push(linha);
   // Salvar equidade automaticamente
   if(srv&&(srv[8]||srv[9]||srv[10])){
@@ -1356,7 +1356,7 @@ async function registrarExterno(){
   if(!cpf||!nome||!email){alert('Preencha CPF, nome e e-mail.');return;}
   if(!S.eventoSel){alert('Nenhum evento selecionado.');return;}
   const agora=new Date().toLocaleString('pt-BR');
-  const linha=['PRE'+Date.now(),S.eventoSel[0],S.eventoSel[1]||'',cpf,nome,email,vinculo,'',cargo,unidade,'Não',agora,'Manual',''];
+  const linha=['PRE'+Date.now(),S.eventoSel[0],S.eventoSel[1]||'',cpf,nome,email,vinculo,'',cargo,unidade,'Não',agora,'Checkin',''];
   S.participantes.push(linha);
   await gravarLinha('PARTICIPANTES',linha,'APPEND');
   document.getElementById('ci-suc-nome').textContent=nome;
@@ -1633,7 +1633,7 @@ function verPresentes(idAcao){
   S.coordAcaoSel=acao;
   document.getElementById('presentes-hdr-sub').textContent=acao?acao[1]:'';
   // Apenas quem fez check-in — excluir status 'Inscrito' (inscrição prévia sem comparecimento)
-  const lista=S.participantes.filter(p=>p[1]===idAcao && p[13]!=='Inscrito');
+  const lista=S.participantes.filter(p=>p[1]===idAcao && p[12]!=='Inscrito');
   const el=document.getElementById('presentes-lista');
   if(!lista.length){el.innerHTML='<div class="info-box">Nenhum participante ainda.</div>';return;}
   el.innerHTML=lista.map(p=>`
@@ -1704,8 +1704,8 @@ function carregarListaPresenca(){
 
 function renderListaPresenca(){
   const idAcao = S.lpAcaoSel ? S.lpAcaoSel[0] : '';
-  const lista  = S.participantes.filter(p=>p[1]===idAcao&&p[13]!=='Inscrito');
-  const inscritos = S.participantes.filter(p=>p[1]===idAcao&&p[13]==='Inscrito');
+  const lista  = S.participantes.filter(p=>p[1]===idAcao&&p[12]!=='Inscrito');
+  const inscritos = S.participantes.filter(p=>p[1]===idAcao&&p[12]==='Inscrito');
   const el = document.getElementById('lp-lista');
   const contador = document.getElementById('lp-contador');
   if(contador) contador.textContent = lista.length+' presente(s)';
@@ -1714,7 +1714,7 @@ function renderListaPresenca(){
 
   // Inscritos ainda não confirmados
   const naoConfirmados = inscritos.filter(ins=>
-    !lista.find(p=>limparCPF(p[3])===limparCPF(ins[3]))
+    !lista.find(p=>limparCPF(p[3])===limparCPF(ins[3])&&p[12]!=='Inscrito')
   );
   if(naoConfirmados.length){
     html += '<div style="font-size:12px;font-weight:700;color:var(--txt3);margin-bottom:8px;">INSCRITOS — AGUARDANDO CONFIRMAÇÃO</div>';
@@ -1803,7 +1803,7 @@ async function marcarPresente(cpf, nome, email, vinculo, siape, cargo, unidade, 
   const hojeISO2 = new Date().toISOString().slice(0,10);
   const dataReal = S.lpAcaoSel[13]||'';
   const validado = (!dataReal||dataReal===hojeISO2)?'Válido':'Fora da data';
-  const linha = [idPre,S.lpAcaoSel[0],S.lpAcaoSel[1]||'',cpf,nome,email,vinculo,siape,cargo,unidade,chefia,agora,'Coordenador',validado,'Não'];
+  const linha = [idPre,S.lpAcaoSel[0],S.lpAcaoSel[1]||'',cpf,nome,email,vinculo,siape,cargo,unidade,chefia,agora,'Checkin',validado];
   S.participantes.push(linha);
   await gravarLinha('PARTICIPANTES',linha,'APPEND');
   document.getElementById('lp-cpf').value='';
@@ -1832,7 +1832,7 @@ async function registrarLPExterno(){
   if(!cpf||!nome||!email){ alert('Preencha CPF, nome e e-mail.'); return; }
   if(!S.lpAcaoSel){ alert('Nenhuma ação selecionada.'); return; }
   const agora = new Date().toLocaleString('pt-BR');
-  const linha = ['PRE'+Date.now(),S.lpAcaoSel[0],S.lpAcaoSel[1]||'',cpf,nome,email,vinculo,'',cargo,unidade,chefia,agora,'Coordenador-Manual','Válido','Não'];
+  const linha = ['PRE'+Date.now(),S.lpAcaoSel[0],S.lpAcaoSel[1]||'',cpf,nome,email,vinculo,'',cargo,unidade,chefia,agora,'Checkin','Válido'];
   S.participantes.push(linha);
   await gravarLinha('PARTICIPANTES',linha,'APPEND');
   ir('pg-coord-lista-presenca');
@@ -1841,15 +1841,17 @@ async function registrarLPExterno(){
 
 // ── UDP ───────────────────────────────────────────────────────────────────
 function atualizarPainel(){
+  // Contar só check-ins confirmados, não inscrições
+  const checkins = S.participantes.filter(p=>p[12]!=='Inscrito');
   document.getElementById('m-acoes').textContent=S.acoes.length;
-  document.getElementById('m-part').textContent=S.participantes.length;
-  const cpfs=new Set(S.participantes.map(r=>r[3]));
+  document.getElementById('m-part').textContent=checkins.length;
+  const cpfs=new Set(checkins.map(r=>r[3]));
   document.getElementById('m-uniq').textContent=cpfs.size;
   document.getElementById('m-av').textContent=S.avaliacoes.length;
   const pm={};
   S.perfis.forEach(p=>{pm[limparCPF(p[0])]=p;});
   const gen={},raca={},pcd={},vinc={};
-  S.participantes.forEach(p=>{
+  checkins.forEach(p=>{
     const pf=pm[limparCPF(p[3])];
     gen[pf?.[3]||'Sem perfil']=(gen[pf?.[3]||'Sem perfil']||0)+1;
     raca[pf?.[4]||'Sem perfil']=(raca[pf?.[4]||'Sem perfil']||0)+1;
@@ -2073,7 +2075,7 @@ function popularSelects(){
 function filtrarRel(){
   const idAcao=document.getElementById('rel-acao').value;
   const vinc=document.getElementById('rel-vinc').value;
-  let lista=S.participantes.filter(p=>p[13]!=='Inscrito'); // só check-ins confirmados
+  let lista=S.participantes.filter(p=>p[12]!=='Inscrito'); // só check-ins confirmados
   if(idAcao) lista=lista.filter(p=>p[1]===idAcao);
   if(vinc) lista=lista.filter(p=>p[6]===vinc);
   document.getElementById('rel-total').textContent=`${lista.length} registro(s)`;
@@ -2254,7 +2256,7 @@ function exportarAvaliacoesExcel(){
 function exportarExcel(){
   const idAcao=document.getElementById('rel-acao').value;
   const vinc=document.getElementById('rel-vinc').value;
-  let lista=S.participantes.filter(p=>p[13]!=='Inscrito'); // só check-ins confirmados
+  let lista=S.participantes.filter(p=>p[12]!=='Inscrito'); // só check-ins confirmados
   if(idAcao) lista=lista.filter(p=>p[1]===idAcao);
   if(vinc) lista=lista.filter(p=>p[6]===vinc);
   const acao=S.acoes.find(a=>a[0]===idAcao);
@@ -2276,7 +2278,7 @@ function exportarExcel(){
 function exportarPDF(){
   const idAcao=document.getElementById('rel-acao').value;
   const vinc=document.getElementById('rel-vinc').value;
-  let lista=S.participantes.filter(p=>p[13]!=='Inscrito'); // só check-ins confirmados
+  let lista=S.participantes.filter(p=>p[12]!=='Inscrito'); // só check-ins confirmados
   if(idAcao) lista=lista.filter(p=>p[1]===idAcao);
   if(vinc) lista=lista.filter(p=>p[6]===vinc);
   const acao=S.acoes.find(a=>a[0]===idAcao);
@@ -2297,7 +2299,7 @@ function exportarPDF(){
 function exportarAnexoIV(idAcao){
   const acao=S.acoes.find(a=>a[0]===idAcao);
   // Apenas quem fez check-in — excluir status 'Inscrito' (inscrição prévia sem comparecimento)
-  const lista=S.participantes.filter(p=>p[1]===idAcao && p[13]!=='Inscrito');
+  const lista=S.participantes.filter(p=>p[1]===idAcao && p[12]!=='Inscrito');
   const wb=XLSX.utils.book_new();
   const dados=[
     ['ANEXO IV - RELATÓRIO CONSOLIDADO DE CARGA HORÁRIA - PARTICIPANTES'],
@@ -2338,7 +2340,7 @@ async function sincronizar(){
   try{
     const [a,p,pf,av,sv]=await Promise.all([
       lerAba('ACOES!A3:Q1000'),
-      lerAba('PARTICIPANTES!A3:O5000'),
+      lerAba('PARTICIPANTES!A3:N5000'),
       lerAba('PERFIL_EQUIDADE!A4:H5000'),
       lerAba('AVALIACAO!A4:T5000'),
       lerAba('SERVIDORES!A2:L5000'),
@@ -2365,7 +2367,7 @@ async function sincronizarSilencioso(){
   try{
     const [a,p,pf,sv]=await Promise.all([
       lerAba('ACOES!A3:Q1000'),
-      lerAba('PARTICIPANTES!A3:O5000'),
+      lerAba('PARTICIPANTES!A3:N5000'),
       lerAba('PERFIL_EQUIDADE!A4:H5000'),
       lerAba('SERVIDORES!A2:L5000'),
     ]);
