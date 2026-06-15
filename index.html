@@ -1024,6 +1024,8 @@ const S = {
   coordAcaoSel:null,
   lpAcaoSel:null,
   udpNome:'',
+  _inscricaoEmAndamento: false,
+  _checkinEmAndamento: false,
 };
 
 // ── Navegação ─────────────────────────────────────────────────────────────
@@ -1127,6 +1129,7 @@ async function confirmarInscricao(){
     ehChefia(srv),agora,'Inscrito',''];
   S.participantes.push(linha);
   await gravarLinha('PARTICIPANTES',linha,'APPEND');
+  S._inscricaoEmAndamento = false;
   document.getElementById('insc-suc-nome').textContent=S.nome;
   document.getElementById('insc-suc-evento').textContent=S.eventoSel[1]||'';
   ir('pg-insc-sucesso');
@@ -1320,9 +1323,12 @@ function selecionarEvento(id, modo){
 
 async function confirmarPresenca(){
   if(!S.eventoSel){alert('Selecione um evento.');return;}
+  if(S._checkinEmAndamento){return;}
+  S._checkinEmAndamento = true;
   // Verificar se já tem check-in (não contar inscrição)
   const jaCheckin=S.participantes.find(p=>limparCPF(p[3])===S.cpf&&p[1]===S.eventoSel[0]&&p[12]!=='Inscrito');
   if(jaCheckin){
+    S._checkinEmAndamento = false;
     document.getElementById('ci-suc-nome').textContent=S.nome;
     document.getElementById('ci-suc-evento').textContent=S.eventoSel[1];
     ir('pg-ci-sucesso');
@@ -1348,6 +1354,7 @@ async function confirmarPresenca(){
     upsertPerfil(lp);
   }
   await gravarLinha('PARTICIPANTES',linha,'APPEND');
+  S._checkinEmAndamento = false;
   document.getElementById('ci-suc-nome').textContent=S.nome;
   document.getElementById('ci-suc-evento').textContent=S.eventoSel[1]||'';
   ir('pg-ci-sucesso');
