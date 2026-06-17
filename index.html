@@ -325,6 +325,7 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
     <div><div class="hdr-title">Escolha o evento</div><div class="hdr-sub">Inscrição prévia</div></div>
   </div>
   <div class="cnt">
+    <div id="insc-cadastro-externo" style="display:none;"></div>
     <div id="insc-lista-eventos"></div>
     <div id="insc-confirmar-btn" style="display:none;margin-top:8px;">
       <button class="btn btn-primary" onclick="confirmarInscricao()">Confirmar inscrição</button>
@@ -1141,20 +1142,28 @@ function buscarInscricao(){
   S.srv=srv;
   S.nome=srv?srv[1]:(part?part[4]:'');
 
+  const cadEl=document.getElementById('insc-cadastro-externo');
+
   if(srv){
     document.getElementById('insc-resultado').innerHTML=`
       <div class="found-card">
         <div style="font-size:17px;font-weight:700;color:var(--verde);">${srv[1]}</div>
         <div style="font-size:13px;color:var(--verde);margin-top:3px;">${srv[4]||''} · ${srv[6]||''}</div>
       </div>`;
+    cadEl.style.display='none'; cadEl.innerHTML='';
   } else if(S.nome){
     document.getElementById('insc-resultado').innerHTML=`
       <div class="found-card">
         <div style="font-size:17px;font-weight:700;color:var(--verde);">${S.nome}</div>
       </div>`;
+    cadEl.style.display='none'; cadEl.innerHTML='';
   } else {
-    // Não encontrado na base — mostrar formulário de cadastro externo para inscrição
-    document.getElementById('insc-resultado').innerHTML=`
+    // Não encontrado na base — limpar resultado da tela de CPF
+    document.getElementById('insc-resultado').innerHTML='';
+    // Mostrar formulário de cadastro externo na tela de escolha de evento,
+    // onde o usuário efetivamente estará ao clicar em "Confirmar inscrição".
+    cadEl.style.display='block';
+    cadEl.innerHTML=`
       <div class="warn-box" style="margin-bottom:12px;">CPF não encontrado na base EBSERH. Preencha seus dados para se inscrever.</div>
       <div class="card">
         <div class="fg"><label class="fl">Nome completo *</label><input type="text" id="insc-ext-nome" placeholder="Nome como aparecerá no certificado"/></div>
@@ -1164,7 +1173,6 @@ function buscarInscricao(){
         </div>
         <div class="fg"><label class="fl">Cargo / função</label><input type="text" id="insc-ext-cargo"/></div>
       </div>`;
-    // Mesmo sem estar na base, pode escolher evento
   }
 
   // Eventos com inscrição aberta
