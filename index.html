@@ -790,18 +790,25 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
       <!-- Indicadores -->
       <div id="udp-painel" class="udp-sc">
 
-        <!-- Filtro por ação -->
+        <!-- Filtro por ano e ação -->
         <div class="card" style="margin-bottom:16px;">
           <div style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap;">
+            <div style="min-width:120px;">
+              <label class="fl">Ano</label>
+              <select id="painel-ano-sel" onchange="atualizarPainel()">
+                <option value="">Todos</option>
+              </select>
+            </div>
             <div style="flex:1;min-width:200px;">
               <label class="fl">Filtrar indicadores por ação</label>
               <select id="painel-acao-sel" onchange="atualizarPainel()">
                 <option value="">Todas as ações</option>
               </select>
             </div>
-            <button class="btn btn-outline btn-sm" onclick="document.getElementById('painel-acao-sel').value='';atualizarPainel()">Limpar filtro</button>
+            <button class="btn btn-outline btn-sm" onclick="document.getElementById('painel-ano-sel').value='';document.getElementById('painel-acao-sel').value='';atualizarPainel()">Limpar filtro</button>
           </div>
         </div>
+
 
         <!-- ── PAINEL CHECK-INS ── -->
         <div style="background:var(--verde);color:#fff;padding:10px 16px;border-radius:var(--radius);margin-bottom:14px;display:flex;align-items:center;gap:10px;">
@@ -863,9 +870,16 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
 
       <!-- Ações -->
       <div id="udp-acoes" class="udp-sc" style="display:none;">
-        <div style="display:flex;justify-content:flex-end;margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:14px;align-items:flex-end;flex-wrap:wrap;">
+          <div style="min-width:120px;">
+            <label class="fl">Ano</label>
+            <select id="acoes-ano-sel" onchange="renderUDPAcoes()">
+              <option value="">Todos</option>
+            </select>
+          </div>
           <button class="btn btn-primary btn-sm" onclick="udpIr('udp-nova',null)">+ Nova ação</button>
         </div>
+
         <div id="udp-lista-acoes"></div>
       </div>
 
@@ -963,6 +977,8 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
       <div id="udp-relatorio" class="udp-sc" style="display:none;">
         <div class="card">
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:flex-end;">
+            <div style="min-width:110px;"><label class="fl">Ano</label>
+              <select id="rel-ano" onchange="popularSelects()"><option value="">Todos</option></select></div>
             <div style="flex:1;min-width:180px;"><label class="fl">Ação</label><select id="rel-acao"><option value="">Todas</option></select></div>
             <div style="flex:1;min-width:140px;"><label class="fl">Vínculo</label>
               <select id="rel-vinc"><option value="">Todos</option><option>EBSERH</option><option>UFPE/RJU</option><option>Residente</option><option>Externo</option></select></div>
@@ -981,10 +997,13 @@ input[readonly]{background:var(--cinza);color:var(--txt3);}
         </div>
       </div>
 
+
       <!-- Avaliações -->
       <div id="udp-avaliacoes" class="udp-sc" style="display:none;">
         <div class="card">
           <div style="display:flex;gap:10px;margin-bottom:14px;align-items:flex-end;flex-wrap:wrap;">
+            <div style="min-width:110px;"><label class="fl">Ano</label>
+              <select id="av-ano-sel" onchange="popularSelects()"><option value="">Todos</option></select></div>
             <div style="flex:1;min-width:180px;"><label class="fl">Ação</label><select id="av-acao-sel"><option value="">Todas</option></select></div>
             <button class="btn btn-primary btn-sm" onclick="filtrarAv()">Filtrar</button>
             <button class="btn btn-outline btn-sm" onclick="exportarAvaliacoesExcel()">Excel</button>
@@ -1192,18 +1211,42 @@ function selecionarEventoInscricao(id){
 
 async function confirmarInscricao(){
   if(!S.eventoSel){alert('Selecione um evento.');return;}
+  if(S._inscricaoEmAndamento){return;}
+
+  const srv=S.srv;
+  let nome=S.nome, email='', vinculo='', cargo='';
+
+  // CPF não encontrado na base EBSERH nem em PARTICIPANTES — usar dados do cadastro externo
+  if(!srv && !S.nome){
+    const elNome=document.getElementById('insc-ext-nome');
+    const elEmail=document.getElementById('insc-ext-email');
+    const elVinc=document.getElementById('insc-ext-vinculo');
+    const elCargo=document.getElementById('insc-ext-cargo');
+    nome=elNome?elNome.value.trim().toUpperCase():'';
+    email=elEmail?elEmail.value.trim():'';
+    vinculo=elVinc?elVinc.value:'';
+    cargo=elCargo?elCargo.value.trim():'';
+    if(!nome||!email){alert('Preencha nome e e-mail para se inscrever.');return;}
+    S.nome=nome;
+  }
+
   const jaInscrito=S.participantes.find(p=>limparCPF(p[3])===S.cpf&&p[1]===S.eventoSel[0]&&p[13]==='Inscrito');
   if(jaInscrito){alert('Você já está inscrito neste evento!');return;}
-  const srv=S.srv;
+
+  S._inscricaoEmAndamento = true;
   const agora=new Date().toLocaleString('pt-BR');
   const idPre='INS'+Date.now();
-  const linha=[idPre,S.eventoSel[0],S.eventoSel[1]||'',S.cpf,S.nome,
-    srv?srv[2]:'',srv?srv[5]:'',srv?srv[3]:'',srv?srv[4]:'',srv?srv[6]:'',
+  const linha=[idPre,S.eventoSel[0],S.eventoSel[1]||'',S.cpf,nome,
+    srv?srv[2]:email,        // e-mail
+    srv?srv[5]:vinculo,      // vínculo
+    srv?srv[3]:'',           // SIAPE
+    srv?srv[4]:cargo,        // cargo
+    srv?srv[6]:'',           // unidade
     ehChefia(srv),agora,'Inscrito',''];
   S.participantes.push(linha);
   await gravarLinha('PARTICIPANTES',linha,'APPEND');
   S._inscricaoEmAndamento = false;
-  document.getElementById('insc-suc-nome').textContent=S.nome;
+  document.getElementById('insc-suc-nome').textContent=nome;
   document.getElementById('insc-suc-evento').textContent=S.eventoSel[1]||'';
   ir('pg-insc-sucesso');
 }
@@ -1293,6 +1336,16 @@ function formatarCPF(el){
 function limparCPF(c){
   const s=(c||'').replace(/\D/g,'');
   return s.padStart(11,'0'); // garante 11 dígitos com zero à esquerda
+}
+function anoDaAcao(a){
+  // Prioridade: data de realização (col N, idx13) > data prevista (col E, idx4)
+  const d = (a&&a[13]) || (a&&a[4]) || '';
+  const m = String(d).match(/(\d{4})/);
+  return m ? m[1] : '';
+}
+function anosDisponiveis(){
+  const anos = new Set(S.acoes.map(anoDaAcao).filter(Boolean));
+  return Array.from(anos).sort((a,b)=>b-a); // mais recente primeiro
 }
 
 function buscarServidor(cpf){
@@ -1937,16 +1990,23 @@ async function registrarLPExterno(){
 
 // ── UDP ───────────────────────────────────────────────────────────────────
 function atualizarPainel(){
-  // Popular select de ações se ainda não foi
   const sel = document.getElementById('painel-acao-sel');
-  if(sel && sel.options.length <= 1){
-    S.acoes.forEach(a=>{
+  const anoFiltro = document.getElementById('painel-ano-sel')?.value||'';
+  // Repopula sempre o select de ações do painel, respeitando o ano filtrado
+  if(sel){
+    const atual = sel.value;
+    sel.innerHTML='<option value="">Todas as ações</option>';
+    S.acoes.filter(a=>!anoFiltro||anoDaAcao(a)===anoFiltro).forEach(a=>{
       const o=document.createElement('option');
       o.value=a[0]; o.textContent=a[0]+' — '+a[1];
       sel.appendChild(o);
     });
+    sel.value=[...sel.options].some(o=>o.value===atual)?atual:'';
   }
   const idAcaoFiltro = sel ? sel.value : '';
+  // IDs de ações que pertencem ao ano filtrado (vazio = todas)
+  const idsAnoFiltro = anoFiltro ? new Set(S.acoes.filter(a=>anoDaAcao(a)===anoFiltro).map(a=>a[0])) : null;
+  const acoesNoFiltro = anoFiltro ? S.acoes.filter(a=>idsAnoFiltro.has(a[0])) : S.acoes;
 
   // Montar mapa de perfis — prioridade: PERFIL_EQUIDADE, depois SERVIDORES
   const pm={};
@@ -1971,12 +2031,16 @@ function atualizarPainel(){
 
   // ── PAINEL CHECK-INS ──
   let checkins = S.participantes.filter(p=>p[12]!=='Inscrito');
+  if(idsAnoFiltro) checkins = checkins.filter(p=>idsAnoFiltro.has(p[1]));
   if(idAcaoFiltro) checkins = checkins.filter(p=>p[1]===idAcaoFiltro);
-  document.getElementById('m-acoes').textContent = S.acoes.length;
+  document.getElementById('m-acoes').textContent = acoesNoFiltro.length;
   document.getElementById('m-part').textContent  = checkins.length;
   const cpfsCI = new Set(checkins.map(r=>r[3]));
   document.getElementById('m-uniq').textContent  = cpfsCI.size;
-  document.getElementById('m-av').textContent    = S.avaliacoes.length;
+  let avaliacoesFiltradas = S.avaliacoes;
+  if(idsAnoFiltro) avaliacoesFiltradas = avaliacoesFiltradas.filter(av=>idsAnoFiltro.has(av[2]));
+  if(idAcaoFiltro) avaliacoesFiltradas = avaliacoesFiltradas.filter(av=>av[2]===idAcaoFiltro);
+  document.getElementById('m-av').textContent    = avaliacoesFiltradas.length;
 
   const genCI={},racaCI={},pcdCI={},vincCI={},lotaCI={};
   checkins.forEach(p=>{
@@ -2068,8 +2132,17 @@ function renderGraf(id,obj,cor){
 
 function renderUDPAcoes(){
   const el=document.getElementById('udp-lista-acoes');
-  if(!S.acoes.length){el.innerHTML='<div class="info-box">Nenhuma ação. Crie uma nova ou sincronize.</div>';return;}
-  el.innerHTML=S.acoes.map(a=>{
+  const anoSel=document.getElementById('acoes-ano-sel')?.value||'';
+  // Popular o seletor de ano se ainda vazio
+  const anoSelEl=document.getElementById('acoes-ano-sel');
+  if(anoSelEl && anoSelEl.options.length<=1){
+    const anos=anosDisponiveis();
+    anoSelEl.innerHTML='<option value="">Todos</option>'+anos.map(a=>`<option value="${a}">${a}</option>`).join('');
+    anoSelEl.value=anoSel;
+  }
+  const acoesFiltradas = anoSel ? S.acoes.filter(a=>anoDaAcao(a)===anoSel) : S.acoes;
+  if(!acoesFiltradas.length){el.innerHTML='<div class="info-box">Nenhuma ação. Crie uma nova ou sincronize.</div>';return;}
+  el.innerHTML=acoesFiltradas.map(a=>{
     const stCI=a[9]||'Pendente'; const stAV=a[10]||'Pendente';
     const pr=S.participantes.filter(p=>p[1]===a[0]).length;
     return `<div class="card" style="margin-bottom:10px;">
@@ -2256,28 +2329,45 @@ document.addEventListener('input', function(e){
 });
 
 function popularSelects(){
-  // Popular select do painel também
+  // Popular seletores de ANO (uma vez, preservando seleção atual)
+  ['painel-ano-sel','acoes-ano-sel','rel-ano','av-ano-sel'].forEach(id=>{
+    const el=document.getElementById(id); if(!el) return;
+    const atual=el.value;
+    const anos=anosDisponiveis();
+    el.innerHTML='<option value="">Todos</option>'+anos.map(a=>`<option value="${a}">${a}</option>`).join('');
+    el.value=anos.includes(atual)?atual:'';
+  });
+
+  // Popular select do painel também (filtrado pelo ano escolhido em painel-ano-sel)
+  const anoPainel = document.getElementById('painel-ano-sel')?.value||'';
   const painelSel = document.getElementById('painel-acao-sel');
   if(painelSel){
     const atual = painelSel.value;
     painelSel.innerHTML='<option value="">Todas as ações</option>';
-    S.acoes.forEach(a=>{
+    S.acoes.filter(a=>!anoPainel||anoDaAcao(a)===anoPainel).forEach(a=>{
       const o=document.createElement('option');
       o.value=a[0]; o.textContent=a[0]+' — '+a[1];
       painelSel.appendChild(o);
     });
-    painelSel.value=atual;
+    painelSel.value=[...painelSel.options].some(o=>o.value===atual)?atual:'';
   }
-  ['rel-acao','av-acao-sel'].forEach(id=>{
+
+  // rel-acao filtrado por rel-ano / av-acao-sel filtrado por av-ano-sel
+  const anosPorSel = {'rel-acao':'rel-ano','av-acao-sel':'av-ano-sel'};
+  Object.entries(anosPorSel).forEach(([id,anoId])=>{
     const el=document.getElementById(id); if(!el) return;
+    const anoSel=document.getElementById(anoId)?.value||'';
     const atual=el.value;
     el.innerHTML='<option value="">Todas</option>';
-    S.acoes.forEach(a=>{const o=document.createElement('option');o.value=a[0];o.textContent=`${a[0]} — ${a[1]}`;el.appendChild(o);});
-    el.value=atual;
+    S.acoes.filter(a=>!anoSel||anoDaAcao(a)===anoSel).forEach(a=>{
+      const o=document.createElement('option');o.value=a[0];o.textContent=`${a[0]} — ${a[1]}`;el.appendChild(o);
+    });
+    el.value=[...el.options].some(o=>o.value===atual)?atual:'';
   });
 }
 
 function filtrarRel(){
+  const anoSel=document.getElementById('rel-ano')?.value||'';
   const idAcao=document.getElementById('rel-acao').value;
   const vinc=document.getElementById('rel-vinc').value;
   const tipo=document.getElementById('rel-tipo')?.value||'checkin';
@@ -2285,6 +2375,10 @@ function filtrarRel(){
   if(tipo==='checkin')   lista=lista.filter(p=>p[12]!=='Inscrito');
   else if(tipo==='inscritos') lista=lista.filter(p=>p[12]==='Inscrito');
   // tipo==='todos' não filtra
+  if(anoSel){
+    const idsAno=new Set(S.acoes.filter(a=>anoDaAcao(a)===anoSel).map(a=>a[0]));
+    lista=lista.filter(p=>idsAno.has(p[1]));
+  }
   if(idAcao) lista=lista.filter(p=>p[1]===idAcao);
   if(vinc)   lista=lista.filter(p=>p[6]===vinc);
   document.getElementById('rel-total').textContent=lista.length+' registro(s)';
@@ -2309,8 +2403,13 @@ function filtrarRel(){
 }
 
 function filtrarAv(){
+  const anoSel=document.getElementById('av-ano-sel')?.value||'';
   const idAcao=document.getElementById('av-acao-sel').value;
   let lista=S.avaliacoes;
+  if(anoSel){
+    const idsAno=new Set(S.acoes.filter(a=>anoDaAcao(a)===anoSel).map(a=>a[0]));
+    lista=lista.filter(a=>idsAno.has(a[2]));
+  }
   if(idAcao) lista=lista.filter(a=>a[2]===idAcao);
   renderRelatorioAvaliacoes(lista, true);
 }
@@ -2562,8 +2661,8 @@ async function sincronizar(){
     S.servidores=sv.filter(r=>r[0]);
     const stel=document.getElementById('sync-st');
     if(stel){stel.innerHTML='● Sincronizado';stel.style.color='var(--verde)';}
-    atualizarPainel();
     popularSelects();
+    atualizarPainel();
     renderUDPAcoes();
   }catch(e){
     document.getElementById('sync-st').textContent='● Erro';
